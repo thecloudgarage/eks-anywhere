@@ -1,0 +1,16 @@
+# Change the dataSource value by referencing the output of kubectl get volumesnapshot and the snapshot name that you want to use
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-new-pvc-from-snapshot
+spec:
+  storageClassName: csi-hostpath-sc
+  dataSource:
+    name: mysql-pv-snapshot-sg1403221213am
+    kind: VolumeSnapshot
+    apiGroup: snapshot.storage.k8s.io
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi
