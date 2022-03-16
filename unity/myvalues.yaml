@@ -1,0 +1,7 @@
+storageArrayList:
+- arrayId: "aaaaaaaaaaaaa"
+  username: "bbbbbbbbbbbb"
+  password: "cccccccccccc"
+  endpoint: "https://172.24.165.5/"
+  skipCertificateValidation: true
+  isDefault: true
