@@ -1,0 +1,4 @@
+#!bin/bash
+read -p 'mgmtClusterName: ' mgmtClusterName
+export $mgmtClusterName
+eksctl anywhere create cluster -f eksa-$mgmtClusterName-cluster.yaml
