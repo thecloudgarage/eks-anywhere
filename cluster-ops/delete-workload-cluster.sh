@@ -7,3 +7,4 @@ export MANAGEMENT_KUBECONFIG=$mgmtClusterName/$mgmtClusterName-eks-a-cluster.kub
 cd /home/ubuntu
 eksctl anywhere delete cluster $workloadClusterName --kubeconfig ${MANAGEMENT_KUBECONFIG}
 rm -rf $workloadClusterName
+rm -rf /home/ubuntu/$workloadClusterName-eks-a-cluster.yaml
