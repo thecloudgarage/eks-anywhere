@@ -56,7 +56,7 @@ metadata:
 spec:
   datastore: "CommonDS"
   diskGiB: 25
-  folder: "eks-anywhere"
+  folder: "test-eks-anywhere"
   memoryMiB: 8192
   numCPUs: 2
   osFamily: ubuntu
@@ -74,7 +74,7 @@ metadata:
 spec:
   datastore: "CommonDS"
   diskGiB: 25
-  folder: "eks-anywhere"
+  folder: "test-eks-anywhere"
   memoryMiB: 8192
   numCPUs: 2
   osFamily: ubuntu
@@ -92,7 +92,7 @@ metadata:
 spec:
   datastore: "CommonDS"
   diskGiB: 25
-  folder: "eks-anywhere"
+  folder: "test-eks-anywhere"
   memoryMiB: 8192
   numCPUs: 2
   osFamily: ubuntu
