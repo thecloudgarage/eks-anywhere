@@ -14,7 +14,7 @@ spec:
   controlPlaneConfiguration:
     count: 2
     endpoint:
-      host: "172.24.165.11"
+      host: "staticIp"
     machineGroupRef:
       kind: VSphereMachineConfig
       name: mgmt-cp
