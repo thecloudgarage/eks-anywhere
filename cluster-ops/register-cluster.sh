@@ -9,8 +9,8 @@ AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KE
  --region $AWS_REGION
 CLUSTER_NAME=$workloadClusterName
 KUBECONFIG=/home/ubuntu/$workloadClusterName/$workloadClusterName-eks-a-cluster.kubeconfig
-kubectl apply -f eks-connector.yaml
-kubectl apply -f eks-connector-clusterrole.yaml
-kubectl apply -f eks-connector-console-dashboard-full-access-group.yaml
+kubectl apply -f /home/ubuntu/$workloadClusterName/eks-connector/eks-connector.yaml
+kubectl apply -f /home/ubuntu/$workloadClusterName/eks-connector/eks-connector-clusterrole.yaml
+kubectl apply -f /home/ubuntu/$workloadClusterName/eks-connector/eks-connector-console-dashboard-full-access-group.yaml
 cd /home/ubuntu
 echo "Don't forget to switch the cluster in case you want to interact with $workloadClusterName cluster"
