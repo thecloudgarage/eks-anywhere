@@ -14,7 +14,7 @@ spec:
   controlPlaneConfiguration:
     count: 2
     endpoint:
-      host: "172.24.167.199"
+      host: "172.24.165.11"
     machineGroupRef:
       kind: VSphereMachineConfig
       name: mgmt-cp
