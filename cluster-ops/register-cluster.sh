@@ -4,19 +4,9 @@ read -sp 'AWS_ACCESS_KEY_ID: ' AWS_ACCESS_KEY_ID
 read -sp 'AWS_SECRET_ACCESS_KEY: ' AWS_SECRET_ACCESS_KEY
 read -p 'AWS_REGION: ' AWS_REGION
 cd /home/ubuntu/$workloadClusterName
-#
-#
-var=$(AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
-        eksctl register cluster --name $workloadClusterName --provider eks_anywhere --region $AWS_REGION \
-        | grep propagating)
-
-if [ $var > 0 ]; then
-echo "DON'T FRET RETRY IN PROGRESS, WAIT FOR 20 SECONDS"
-echo "DON'T FRET RETRY IN PROGRESS, WAIT FOR 20 SECONDS"
-echo "DON'T FRET RETRY IN PROGRESS, WAIT FOR 20 SECONDS"
-sleep 20
-AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+if AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
         eksctl register cluster --name $workloadClusterName --provider eks_anywhere --region $AWS_REGION
+then
 CLUSTER_NAME=$workloadClusterName
 KUBECONFIG=/home/ubuntu/$workloadClusterName/$workloadClusterName-eks-a-cluster.kubeconfig
 mkdir eks-connector
@@ -31,6 +21,12 @@ echo "Don't forget to switch the cluster in case you want to interact with $work
 #
 #
 else
+echo "DON'T FRET SERVICE-ROLE PROPAGATION IS IN PROGRESS, WAIT FOR 30 SECONDS"
+echo "DON'T FRET SERVICE-ROLE PROPAGATION IS IN PROGRESS, WAIT FOR 30 SECONDS"
+echo "DON'T FRET SERVICE-ROLE PROPAGATION IS IN PROGRESS, WAIT FOR 30 SECONDS"
+sleep 30
+AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
+        eksctl register cluster --name $workloadClusterName --provider eks_anywhere --region $AWS_REGION
 CLUSTER_NAME=$workloadClusterName
 KUBECONFIG=/home/ubuntu/$workloadClusterName/$workloadClusterName-eks-a-cluster.kubeconfig
 mkdir eks-connector
@@ -41,5 +37,7 @@ kubectl apply -f /home/ubuntu/$workloadClusterName/eks-connector/eks-connector.y
 kubectl apply -f /home/ubuntu/$workloadClusterName/eks-connector/eks-connector-clusterrole.yaml
 kubectl apply -f /home/ubuntu/$workloadClusterName/eks-connector/eks-connector-console-dashboard-full-access-group.yaml
 cd /home/ubuntu
-echo "Don't forget to switch the cluster in case you want to interact with $workloadClusterName cluster"
+echo "DON'T FORGET TO SWITCH TO THE  $workloadClusterName CLUSTER"
+echo "DON'T FORGET TO SWITCH TO THE  $workloadClusterName CLUSTER"
+echo "DON'T FORGET TO SWITCH TO THE  $workloadClusterName CLUSTER"
 fi
