@@ -1,0 +1,58 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "CreateManageIAMRolesForEKSAConnectorAgent",
+            "Effect": "Allow",
+            "Action": [
+                "iam:AttachRolePolicy",
+                "iam:DeleteRolePolicy",
+                "iam:DetachRolePolicy",
+                "iam:GetRole",
+                "iam:GetRolePolicy",
+                "iam:ListAttachedRolePolicies",
+                "iam:ListRolePolicies",
+                "iam:PutRolePolicy",
+                "iam:UpdateRole",
+                "iam:UpdateRoleDescription",
+                "iam:GetPolicy",
+                "iam:ListRoles",
+                "iam:AttachRolePolicy",
+                "iam:CreateRole",
+                "iam:DeleteRole",
+                "iam:PutRolePolicy",
+                "iam:TagRole",
+                "iam:CreateServiceLinkedRole"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "RegisterDeregisterEKSAClusters",
+            "Effect": "Allow",
+            "Action": [
+                "eks:RegisterCluster",
+                "eks:DeregisterCluster",
+                "ssm:CreateActivation",
+                "ssm:DeleteActivation",
+                "ssm:DeregisterManagedInstance",
+                "iam:PassRole"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "ViewClusterDetails",
+            "Effect": "Allow",
+            "Action": [
+                "eks:DescribeNodegroup",
+                "eks:ListNodegroups",
+                "eks:DescribeCluster",
+                "eks:ListClusters",
+                "eks:AccessKubernetesApi",
+                "ssm:GetParameter",
+                "eks:ListUpdates",
+                "eks:ListFargateProfiles"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
