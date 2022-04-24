@@ -13,6 +13,9 @@ apt-cache policy docker-ce
 sudo apt install docker-ce -y
 sudo usermod -aG docker ubuntu
 sudo apt update -y
+# Uncomment below if challenged with Homebrew installation
+#git config --global --unset http.proxy 
+#git config --global --unset https.proxy
 wget https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
 chmod +x install.sh
 ./install.sh
