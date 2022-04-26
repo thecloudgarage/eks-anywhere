@@ -1,0 +1,12 @@
+kubectl get configmap kube-proxy -n kube-system -o yaml | \
+sed -e "s/strictARP: false/strictARP: true/" | \
+kubectl apply -f - -n kube-system
+
+IP_START=172.24.165.26  # Use the static IP
+IP_END=172.24.165.30  # Use the same static IP as this is for testing
+kubectl create configmap --namespace kube-system kubevip --from-literal range-global=${IP_START}-${IP_END}
+
+ubectl apply -f https://kube-vip.io/manifests/controller.yaml
+kubectl apply -f https://kube-vip.io/manifests/rbac.yaml
+alias kube-vip="docker run --network host --rm plndr/kube-vip:v0.3.5"
+kube-vip manifest daemonset --services --inCluster --arp --interface eth0 | kubectl apply -f -
