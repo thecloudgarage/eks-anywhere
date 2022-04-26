@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: anh-whiteboard
+  labels:
+    app: anh-whiteboard
+spec:
+  type: LoadBalancer
+  selector:
+    app: anh-whiteboard
+  ports:
+    - port: 80
+      targetPort: 80
