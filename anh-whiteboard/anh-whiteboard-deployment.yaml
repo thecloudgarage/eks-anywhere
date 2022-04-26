@@ -1,0 +1,21 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: anh-whiteboard
+  labels:
+    app: anh-whiteboard
+spec:
+  selector:
+    matchLabels:
+      app: anh-whiteboard
+  template:
+    metadata:
+      labels:
+        app: anh-whiteboard
+    spec:
+      containers:
+        - name: anh-whiteboard
+          image: thecloudgarage/anh-new-whiteboard
+          ports:
+            - containerPort: 80
