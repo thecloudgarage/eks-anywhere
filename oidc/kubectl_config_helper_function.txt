@@ -26,5 +26,7 @@ kubectl_config(){
     --auth-provider-arg=id-token=$ID_TOKEN \
     --auth-provider-arg=refresh-token=$REFRESH_TOKEN \
     --auth-provider-arg=idp-certificate-authority-data=$CA_DATA
-  kubectl config set-context $1 --cluster=mgmt --user=$1
+  kubectl config set-context $1 --cluster=testmgmt01 --user=$1
+  kubectl config set-context $1 --cluster=testwk01 --user=$1
+  kubectl config set-context $1 --cluster=testwk01 --user=$1
 }
