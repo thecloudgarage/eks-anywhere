@@ -1,0 +1,118 @@
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: Cluster
+metadata:
+  name: mgmt
+spec:
+  identityProviderRefs:
+  - kind: OIDCConfig
+    name: mgmt
+  clusterNetwork:
+    cni: cilium
+    pods:
+      cidrBlocks:
+      - 192.168.0.0/16
+    services:
+      cidrBlocks:
+      - 10.96.0.0/12
+  controlPlaneConfiguration:
+    count: 2
+    endpoint:
+      host: "172.24.165.16"
+    machineGroupRef:
+      kind: VSphereMachineConfig
+      name: mgmt-cp
+  datacenterRef:
+    kind: VSphereDatacenterConfig
+    name: mgmt
+  externalEtcdConfiguration:
+    count: 3
+    machineGroupRef:
+      kind: VSphereMachineConfig
+      name: mgmt-etcd
+  kubernetesVersion: "1.21"
+  managementCluster:
+    name: mgmt
+  workerNodeGroupConfigurations:
+  - count: 2
+    machineGroupRef:
+      kind: VSphereMachineConfig
+      name: mgmt
+    name: md-0
+
+
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: OIDCConfig
+metadata:
+   name: mgmt
+spec:
+    clientId: "kube"
+    groupsClaim: "groups"
+    issuerUrl: "https://keycloak.oidc.thecloudgarage.com/auth/realms/master"
+    usernameClaim: "email"
+
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: VSphereDatacenterConfig
+metadata:
+  name: mgmt
+spec:
+  datacenter: "IAC-SSC"
+  insecure: false
+  network: "iac_pg"
+  server: "vc.iac.ssc"
+  thumbprint: "F7:A3:92:55:2D:73:B1:BA:1C:77:A8:AC:A3:AD:F3:62:8A:E0:53:CE"
+
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: VSphereMachineConfig
+metadata:
+  name: mgmt-cp
+spec:
+  datastore: "CommonDS"
+  diskGiB: 25
+  folder: "test-eks-anywhere"
+  memoryMiB: 8192
+  numCPUs: 2
+  osFamily: ubuntu
+  resourcePool: "Test"
+  users:
+  - name: capv
+    sshAuthorizedKeys:
+    - ""
+
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: VSphereMachineConfig
+metadata:
+  name: mgmt
+spec:
+  datastore: "CommonDS"
+  diskGiB: 25
+  folder: "test-eks-anywhere"
+  memoryMiB: 8192
+  numCPUs: 2
+  osFamily: ubuntu
+  resourcePool: "Test"
+  users:
+  - name: capv
+    sshAuthorizedKeys:
+    - ""
+
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: VSphereMachineConfig
+metadata:
+  name: mgmt-etcd
+spec:
+  datastore: "CommonDS"
+  diskGiB: 25
+  folder: "test-eks-anywhere"
+  memoryMiB: 8192
+  numCPUs: 2
+  osFamily: ubuntu
+  resourcePool: "Test"
+  users:
+  - name: capv
+    sshAuthorizedKeys:
+    - ""
