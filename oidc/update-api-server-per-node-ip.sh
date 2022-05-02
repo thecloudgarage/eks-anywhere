@@ -1,5 +1,5 @@
 #!bin/bash
-keycloakCert=$(cat /home/ubuntu/kube-oidc/tls.crt | base64 -w 0)
+keycloakCert=$(cat /home/ubuntu/eks-anywhere/oidc/tls.crt | base64 -w 0)
 read -p 'clusterName: ' clusterName
 read -p 'nodeIp: ' nodeIp
 ssh \
