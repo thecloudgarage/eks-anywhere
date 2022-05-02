@@ -11,7 +11,7 @@ provider "keycloak" {
   client_id                = "admin-cli"
   username                 = "admin"
   password                 = "admin"
-  url                      = "https://keycloak.oidc.thecloudgarage.com"
+  url                      = "https://fqdnOfKeycloakServer"
   tls_insecure_skip_verify = true
 }
 locals {
