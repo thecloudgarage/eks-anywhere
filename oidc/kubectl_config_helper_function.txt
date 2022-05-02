@@ -1,5 +1,5 @@
 kubectl_config(){
-  local ISSUER=https://keycloak.oidc.thecloudgarage.com/auth/realms/master
+  local ISSUER=https://<fqdnOfKeycloakServer>/auth/realms/master
   local ENDPOINT=$ISSUER/protocol/openid-connect/token
   local ID_TOKEN=$(curl -k -X POST $ENDPOINT \
     -d grant_type=password \
