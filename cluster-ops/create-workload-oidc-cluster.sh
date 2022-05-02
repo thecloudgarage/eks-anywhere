@@ -17,9 +17,9 @@ sed -i "s/staticIp/$staticIp/g" $workloadClusterName-eks-a-oidc-cluster.yaml
 eksctl anywhere create cluster -f /home/ubuntu/$workloadClusterName-eks-a-oidc-cluster.yaml
 else
 cd /home/ubuntu/
-cp /home/ubuntu/eks-anywhere/cluster-samples/workload-eks-a-cluster-soidc-ample.yaml \
+cp /home/ubuntu/eks-anywhere/cluster-samples/workload-eks-a-cluster-oidc-sample.yaml \
         /home/ubuntu/$workloadClusterName-eks-a-oidc-cluster.yaml
-sed -i "s/workloadclustername/$workloadClusterName/g" $workloadClusterName-eks-a-oidccluster.yaml
+sed -i "s/workloadclustername/$workloadClusterName/g" $workloadClusterName-eks-a-oidc-cluster.yaml
 sed -i "s/staticIp/$staticIp/g" $workloadClusterName-eks-a-oidc-cluster.yaml
 eksctl anywhere create cluster \
   -f /home/ubuntu/$workloadClusterName-eks-a-oidc-cluster.yaml  \
