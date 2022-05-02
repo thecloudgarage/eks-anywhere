@@ -23,6 +23,6 @@ sed -i "s/workloadclustername/$workloadClusterName/g" $workloadClusterName-eks-a
 sed -i "s/staticIp/$staticIp/g" $workloadClusterName-eks-a-oidc-cluster.yaml
 eksctl anywhere create cluster \
   -f /home/ubuntu/$workloadClusterName-eks-a-oidc-cluster.yaml  \
-  --kubeconfig /home/ubuntu/$mgmtClusterName/$mgmtClusterName-eks-a-oidc-cluster.kubeconfig
+  --kubeconfig /home/ubuntu/$mgmtClusterName/$mgmtClusterName-eks-a-cluster.kubeconfig
 fi
 fi
