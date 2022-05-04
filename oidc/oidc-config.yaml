@@ -1,0 +1,5 @@
+    - --oidc-issuer-url=https://keycloak.oidc.thecloudgarage.com/auth/realms/master
+    - --oidc-client-id=kube
+    - --oidc-username-claim=email
+    - --oidc-groups-claim=groups
+    - --oidc-ca-file=/usr/local/share/ca-certificates/keycloak.crt
