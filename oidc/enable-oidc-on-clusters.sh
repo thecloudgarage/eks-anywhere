@@ -14,6 +14,6 @@ ssh \
     capv@$HOST \
     "sudo echo $keycloakCert > keycloakbase64.crt && cat keycloakbase64.crt | base64 --decode > keycloak.crt \
     && sudo cp keycloak.crt /usr/local/share/ca-certificates && sudo update-ca-certificates \
-    && sudo sed -i '/oidc-username/ a\ \ \ \ \- --oidc-ca-file=/usr/local/share/ca-certificates/keycloak.crt' \
+    && sudo sed -i '/tls-private-key-file/r oidc-config.yaml' \
     /etc/kubernetes/manifests/kube-apiserver.yaml"
 done
