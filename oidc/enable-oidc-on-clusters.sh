@@ -1,11 +1,10 @@
 #!bin/bash
+read -p 'clusterName: ' clusterName
 HOSTS=$(kubectl get nodes --selector='node-role.kubernetes.io/master' \
     -o template \
     --template='{{range.items}}{{range.status.addresses}}{{if eq .type "ExternalIP"}}{{.address}}{{end}}{{end}} {{end}}')
 keycloakCert=$(cat /home/ubuntu/eks-anywhere/oidc/tls.crt | base64 -w 0)
 oidcConfig=$(cat /home/ubuntu/eks-anywhere/oidc/oidc-config.yaml | base64 -w 0)
-read -p 'clusterName: ' clusterName
-#read -p 'nodeIp: ' nodeIp
 for HOST in $HOSTS
 do
 ssh \
