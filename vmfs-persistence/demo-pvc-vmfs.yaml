@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: demo-sc-pvc-vmfs
+  name: demo-pvc-vmfs
 spec:
   storageClassName: standard
   accessModes:
