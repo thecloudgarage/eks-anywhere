@@ -1,0 +1,8 @@
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: mysql-snapshot-unity-nas-datetime
+spec:
+  volumeSnapshotClassName: unity-nas-snapclass
+  source:
+    persistentVolumeClaimName: mysql-pv-claim-unity-nas
