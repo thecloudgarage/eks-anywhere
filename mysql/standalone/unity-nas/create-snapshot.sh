@@ -1,6 +1,6 @@
 #!/bin/bash
 NOW=$(date "+%Y%m%d%H%M%S")
-rm -rf mysql-snapshot-unity-nas.yaml
-cp mysql-snapshot-unity-nas-sample.yaml mysql-snapshot-unity-nas.yaml
-sed -i "s/datetime/$NOW/g" mysql-snapshot-unity-nas.yaml
-kubectl create -f mysql-snapshot-unity-nas.yaml
+rm -rf snapshot.yaml
+cp snapshot-sample.yaml snapshot.yaml
+sed -i "s/datetime/$NOW/g" snapshot.yaml
+kubectl create -f snapshot.yaml
