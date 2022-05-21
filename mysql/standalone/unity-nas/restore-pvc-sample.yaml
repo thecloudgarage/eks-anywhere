@@ -6,7 +6,7 @@ metadata:
 spec:
   storageClassName: unity-nas
   dataSource:
-    name: snapshotName
+    name: volumeSnapshotName
     kind: VolumeSnapshot
     apiGroup: snapshot.storage.k8s.io
   accessModes:
