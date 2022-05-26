@@ -21,4 +21,4 @@ spec:
             - containerPort: 8080
           env:
             - name: ADMINER_DESIGN
-              value: "pappu786"
+              value: "pappu687"
