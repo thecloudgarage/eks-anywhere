@@ -1,0 +1,10 @@
+helm install kubeapps bitnami/kubeapps --namespace kubeapps \
+  --set ingress.enabled=true \
+  --set ingress.hostname=kubeapps.eksa.workload01.thecloudgarage.com \
+  --set ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
+  --set authProxy.enabled=true \
+  --set authProxy.provider=oidc \
+  --set authProxy.clientID=kubeapps \
+  --set authProxy.clientSecret=XcmyPEEhkqnA1zB7C2MootlZYu3f490R \
+  --set authProxy.cookieSecret=$(echo "not-good-secret" | base64) \
+  --set authProxy.extraFlags="{--ssl-insecure-skip-verify,--scope=openid email groups,--cookie-secure=false,--oidc-issuer-url=https://keycloak.oidc.thecloudgarage.com/auth/realms/master}"
