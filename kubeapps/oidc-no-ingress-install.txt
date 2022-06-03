@@ -1,6 +1,8 @@
 # NON-INGRESS
 # VERIFIED OK
 
+Ensure that keycloak redirect uri is set to http
+
   helm install kubeapps bitnami/kubeapps --namespace kubeapps \
   --set frontend.service.type=LoadBalancer \
   --set authProxy.enabled=true \
