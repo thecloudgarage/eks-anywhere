@@ -1,3 +1,7 @@
+Apply the nginx ingress controller yaml
+
+Ensure that keycloak redirect uri is set to http
+
 helm install kubeapps bitnami/kubeapps --namespace kubeapps \
   --set ingress.enabled=true \
   --set ingress.hostname=kubeapps.eksa.workload01.thecloudgarage.com \
