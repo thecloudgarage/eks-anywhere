@@ -1,0 +1,44 @@
+Install the NGINX ingress template
+Ensure that redirect uri in keycloak is set to https
+Ensure that the same ssl cert incluing entries for keycloak and kubeapps
+
+Verified OK!!!
+
+keycloakSslKey=$HOME/eks-anywhere/oidc/tls.key
+keycloakSslCert=$HOME/eks-anywhere/oidc/tls.crt
+kubectl create namespace kubeapps
+
+kubectl create secret tls kubeapps.eksa.workload01.thecloudgarage.com-tls \
+-n kubeapps --key=$keycloakSslKey --cert=$keycloakSslCert
+
+export METALLB_IP_START="172.24.165.21"
+export METALLB_IP_END="172.24.165.25"
+METALLB_IP_RANGE="${METALLB_IP_START}-${METALLB_IP_END}"
+
+helm upgrade --install --wait --timeout 15m   --namespace metallb-system --create-namespace   --repo https://metallb.github.io/metallb metallb metallb   --values - <<EOF
+configInline:
+  address-pools:
+  - name: default
+    protocol: layer2
+    addresses:
+    - ${METALLB_IP_RANGE}
+EOF
+
+kubectl create -f https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/kubeapps/nginx-ingress.yaml
+
+
+
+
+helm install kubeapps bitnami/kubeapps --namespace kubeapps \
+  --set ingress.enabled=true \
+  --set ingress.tls=true \
+  --set ingress.extraHosts[0].name=kubeapps.eksa.workload01.thecloudgarage.com \
+  --set ingress.extraTls[0].secretName=kubeapps.eksa.workload01.thecloudgarage.com-tls \
+  --set ingress.extraTls[0].hosts[0]=kubeapps.eksa.workload01.thecloudgarage.com \
+  --set ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
+  --set authProxy.enabled=true \
+  --set authProxy.provider=oidc \
+  --set authProxy.clientID=kubeapps \
+  --set authProxy.clientSecret=XcmyPEEhkqnA1zB7C2MootlZYu3f490R \
+  --set authProxy.cookieSecret=$(echo "not-good-secret" | base64) \
+  --set authProxy.extraFlags="{--redirect-url=https://kubeapps.eksa.workload01.thecloudgarage.com/oauth2/callback,--ssl-insecure-skip-verify,--scope=openid email groups,--cookie-secure=false,--oidc-issuer-url=https://keycloak.oidc.thecloudgarage.com/auth/realms/master}"
