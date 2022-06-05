@@ -4,6 +4,13 @@ Ensure that the same ssl cert incluing entries for keycloak and kubeapps
 
 Verified OK!!!
 
+keycloakSslKey=$HOME/eks-anywhere/oidc/tls.key
+keycloakSslCert=$HOME/eks-anywhere/oidc/tls.crt
+kubectl create namespace kubeapps
+
+kubectl create secret tls kubeapps.eksa.workload01.thecloudgarage.com-tls \
+-n kubeapps --key=$keycloakSslKey --cert=$keycloakSslCert
+
 
 helm install kubeapps bitnami/kubeapps --namespace kubeapps \
   --set ingress.enabled=true \
