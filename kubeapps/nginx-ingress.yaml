@@ -300,6 +300,7 @@ data:
   allow-snippet-annotations: "true"
   proxy-buffer-size: 32k
   proxy-buffers: 4 32k
+  proxy-read-timeout: "600"
 kind: ConfigMap
 metadata:
   labels:
