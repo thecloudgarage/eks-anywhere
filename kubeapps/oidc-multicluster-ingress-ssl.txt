@@ -32,13 +32,20 @@ kubectl create -f https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/
 helm install kubeapps bitnami/kubeapps --namespace kubeapps \
   --set ingress.enabled=true \
   --set ingress.tls=true \
-  --set ingress.extraHosts[0].name=kubeapps.eksa.workload01.thecloudgarage.com \
-  --set ingress.extraTls[0].secretName=kubeapps.eksa.workload01.thecloudgarage.com-tls \
-  --set ingress.extraTls[0].hosts[0]=kubeapps.eksa.workload01.thecloudgarage.com \
+  --set ingress.extraHosts[0].name=kubeapps.testmgmt01.eksa.thecloudgarage.com \
+  --set ingress.extraTls[0].secretName=kubeapps.testmgmt01.eksa.thecloudgarage.com-tls \
+  --set ingress.extraTls[0].hosts[0]=kubeapps.testmgmt01.eksa.thecloudgarage.com \
   --set ingress.annotations."kubernetes\.io/ingress\.class"=nginx \
   --set authProxy.enabled=true \
   --set authProxy.provider=oidc \
   --set authProxy.clientID=kubeapps \
-  --set authProxy.clientSecret=XcmyPEEhkqnA1zB7C2MootlZYu3f490R \
-  --set authProxy.cookieSecret=$(echo "not-good-secret" | base64) \
-  --set authProxy.extraFlags="{--redirect-url=https://kubeapps.eksa.workload01.thecloudgarage.com/oauth2/callback,--ssl-insecure-skip-verify,--scope=openid email groups,--cookie-secure=false,--oidc-issuer-url=https://keycloak.oidc.thecloudgarage.com/auth/realms/master}"
+  --set authProxy.clientSecret=klq0kF0eZBZ9iTzwKX9WXV8Duf1DgOsB \
+  --set authProxy.cookieSecret=Y29va2llLXNlY3JldC0xNg== \
+  --set authProxy.emailDomain="*" \
+  --set authProxy.extraFlags="{--redirect-url=https://kubeapps.testmgmt01.eksa.thecloudgarage.com/oauth2/callback,--cookie-secure=true,--ssl-insecure-skip-verify,--scope=openid email groups,--oidc-issuer-url=https://keycloak.oidc.thecloudgarage.com/auth/realms/master}" \
+  --set clusters[0].name=default \
+  --set clusters[0].isKubeappsCluster=true \
+  --set clusters[1].name=testwk01 \
+  --set clusters[1].domain=cluster.local \
+  --set clusters[1].apiServiceURL=https://172.24.165.12:6443 \
+  --set clusters[1].insecure=true
