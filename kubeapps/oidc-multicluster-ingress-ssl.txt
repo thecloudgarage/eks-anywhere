@@ -1,3 +1,7 @@
+Create the Clusters
+Enable OIDC integration on clusters
+Enable RBAC on the clusters
+
 Install the NGINX ingress template
 Ensure that redirect uri in keycloak is set to https
 Ensure that the same ssl cert incluing entries for keycloak and kubeapps
