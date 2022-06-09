@@ -41,6 +41,7 @@ helm install kubeapps bitnami/kubeapps --namespace kubeapps \
   --set authProxy.clientID=kubeapps \
   --set authProxy.clientSecret=klq0kF0eZBZ9iTzwKX9WXV8Duf1DgOsB \
   --set authProxy.cookieSecret=Y29va2llLXNlY3JldC0xNg== \
+  --set authProxy.cookieRefresh=0 \
   --set authProxy.emailDomain="*" \
   --set authProxy.extraFlags="{--redirect-url=https://kubeapps.testmgmt01.eksa.thecloudgarage.com/oauth2/callback,--cookie-secure=true,--ssl-insecure-skip-verify,--scope=openid email groups,--oidc-issuer-url=https://keycloak.oidc.thecloudgarage.com/auth/realms/master}" \
   --set clusters[0].name=default \
@@ -48,4 +49,8 @@ helm install kubeapps bitnami/kubeapps --namespace kubeapps \
   --set clusters[1].name=testwk01 \
   --set clusters[1].domain=cluster.local \
   --set clusters[1].apiServiceURL=https://172.24.165.12:6443 \
-  --set clusters[1].insecure=true
+  --set clusters[1].insecure=true \
+  --set clusters[2].name=testwk02 \
+  --set clusters[2].domain=cluster.local \
+  --set clusters[2].apiServiceURL=https://172.24.165.13:6443 \
+  --set clusters[2].insecure=true
