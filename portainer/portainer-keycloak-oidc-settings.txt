@@ -1,5 +1,5 @@
 On the Portainer Console
-Settings > Authentication > Open ID
+Settings > Authentication > oAuth
 
 Create the teams that can be assigned to OIDC users
 Automatic creation of users needs to be turned on
