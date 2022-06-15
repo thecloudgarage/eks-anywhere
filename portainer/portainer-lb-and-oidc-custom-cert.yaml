@@ -1,4 +1,3 @@
-ubuntu@ubuntu2004dockerhomebrew:~/portainer$ more portainer.yaml
 ---
 # Source: portainer/templates/serviceaccount.yaml
 apiVersion: v1
