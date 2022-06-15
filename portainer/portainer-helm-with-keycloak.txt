@@ -27,3 +27,6 @@ Edit the volumes to look like this. Ensure that the YAML formatting and indentat
           defaultMode: 420
           name: castore
         name: crt
+
+Ideally the kubernetes control plane will restart the deployment. 
+However, just to ensure no further errors occur, delete the pod manually so that the fresh pods inherit the newer template values
