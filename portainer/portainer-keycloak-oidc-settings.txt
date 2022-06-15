@@ -1,6 +1,9 @@
 On the Portainer Console
 Settings > Authentication > Open ID
 
+Create the teams that can be assigned to OIDC users
+Automatic creation of users needs to be turned on
+
 You will need the Client ID and Secret from the KeyCloak server
 
 Authorization URL: https://keycloak.oidc.thecloudgarage.com/auth/realms/master/protocol/openid-connect/auth
@@ -12,3 +15,7 @@ Leave the Logout URL blank
 
 User identifier: email
 Scopes: email
+
+Once saved., the users will be able to login. However, upon first login the users will not be able to view any environments
+
+Login via the internal authentication as admin and edit the user's role to admin (unfortunately CE does not allow for RBAC)
