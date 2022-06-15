@@ -1,0 +1,14 @@
+On the Portainer Console
+Settings > Authentication > Open ID
+
+You will need the Client ID and Secret from the KeyCloak server
+
+Authorization URL: https://keycloak.oidc.thecloudgarage.com/auth/realms/master/protocol/openid-connect/auth
+Access token URL: https://keycloak.oidc.thecloudgarage.com/auth/realms/master/protocol/openid-connect/token
+Resource URL: https://keycloak.oidc.thecloudgarage.com/auth/realms/master/protocol/openid-connect/userinfo
+Redirect URL: https://portainer.eksa.thecloudgarage.com:9443
+
+Leave the Logout URL blank
+
+User identifier: email
+Scopes: email
