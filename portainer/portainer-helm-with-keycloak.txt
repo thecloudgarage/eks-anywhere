@@ -1,0 +1,29 @@
+helm install -n portainer portainer portainer/portainer \
+--set tls.force=true \
+--set service.type=LoadBalancer
+
+Once done and the portainer pod is up and running
+
+kubectl edit deployment portainer -n portainer
+
+Under the Containers section
+
+Edit the volumeMounts to look like this. Ensure that the YAML formatting and indentation exactly looks like the below, else it will error
+
+        volumeMounts:
+        - mountPath: /data
+          name: data
+        - mountPath: /etc/ssl/certs/tls.pem
+          name: crt
+          subPath: tls.pem
+
+Edit the volumes to look like this. Ensure that the YAML formatting and indentation exactly looks like the below, else it will error
+
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: portainer
+      - configMap:
+          defaultMode: 420
+          name: castore
+        name: crt
