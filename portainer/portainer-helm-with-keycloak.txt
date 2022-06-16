@@ -1,3 +1,12 @@
+Create a copy of the Keycloak certificate in PEM format
+
+cd $HOME/eks-anywhere/oidc
+cp tls.crt keycloak.pem
+
+Create a configmap using the above pem file
+
+kubectl create configmap keycloakssl --from-file=keycloak.pem -n portainer
+
 helm install -n portainer portainer portainer/portainer \
 --set tls.force=true \
 --set service.type=LoadBalancer
@@ -13,9 +22,9 @@ Edit the volumeMounts to look like this. Ensure that the YAML formatting and ind
         volumeMounts:
         - mountPath: /data
           name: data
-        - mountPath: /etc/ssl/certs/tls.pem
-          name: crt
-          subPath: tls.pem
+        - mountPath: /etc/ssl/certs/keycloak.pem
+          name: keycloaktrust
+          subPath: keycloak.pem
 
 Edit the volumes to look like this. Ensure that the YAML formatting and indentation exactly looks like the below, else it will error
 
@@ -25,8 +34,8 @@ Edit the volumes to look like this. Ensure that the YAML formatting and indentat
           claimName: portainer
       - configMap:
           defaultMode: 420
-          name: castore
-        name: crt
+          name: keycloakssl
+        name: keycloaktrust
 
 Ideally the kubernetes control plane will restart the deployment. 
 However, just to ensure no further errors occur, delete the pod manually so that the fresh pods inherit the newer template values
