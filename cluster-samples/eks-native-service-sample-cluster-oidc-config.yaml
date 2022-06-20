@@ -1,0 +1,16 @@
+# To apply eksctl associate identityprovider -f <name-of-this-yaml-file> 
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: ekstest
+  region: us-east-2
+
+identityProviders:
+  - name: oidc
+    type: oidc
+    issuerUrl: https://keycloak.thecloudgarage.com/auth/realms/master
+    clientId: kube
+    usernameClaim: email
+    groupsClaim: group
