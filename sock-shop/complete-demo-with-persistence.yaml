@@ -365,7 +365,7 @@ metadata:
   namespace: sock-shop
 spec:
   ports:
-  - port: 8079
+  - port: 80
     protocol: TCP
   selector:
     name: front-end
