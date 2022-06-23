@@ -20,7 +20,7 @@ sed -i "s/fqdnOfSockShopFrontEnd/$fqdnOfSockShopFrontEnd/g" ./sslcert.conf
 cp ./ingress-front-end.yaml.sample ./ingress-front-end.yaml
 sed -i "s/fqdnOfSockShopFrontEnd/$fqdnOfSockShopFrontEnd/g" ./ingress-front-end.yaml
 openssl req -x509 -nodes -days 730 -newkey rsa:2048 -keyout tls.key -out tls.crt -config sslcert.conf -extensions 'v3_req'
-kubectl create secret tls sockshop-frontend --key tls.key --cert tls.cert
+kubectl create secret tls sockshop-frontend --key tls.key --cert tls.crt
 sleep 3
 kubectl create -f namespace-sock-shop.yaml
 sleep 3
