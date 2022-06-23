@@ -6,4 +6,4 @@
 * Validate the outputs from kubectl
 * Create a DNS entry with the host value and the Ingress IP address
 * Validate the application workflow
->> NOTE
+> NOTE: All the databases are initialized included the user-db and catalogue-db so no need to reseed the databases
