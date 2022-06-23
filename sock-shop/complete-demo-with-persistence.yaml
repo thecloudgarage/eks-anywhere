@@ -366,6 +366,7 @@ metadata:
 spec:
   ports:
   - port: 80
+    targetPort: 8079
     protocol: TCP
   selector:
     name: front-end
