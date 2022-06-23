@@ -8,13 +8,8 @@ metadata:
   namespace: sock-shop
   annotations:
     kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
-  tls:
-  - hosts:
-      - fqdnOfSockShopFrontEnd
-    secretName: sockshop
   rules:
     - host: fqdnOfSockShopFrontEnd
       http:
@@ -26,3 +21,7 @@ spec:
                 name: front-end
                 port:
                   number: 80
+  tls:
+  - hosts:
+      - fqdnOfSockShopFrontEnd
+    secretName: sock-shop/sockshop
