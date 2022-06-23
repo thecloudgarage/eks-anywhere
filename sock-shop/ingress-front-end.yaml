@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+
+kind: Ingress
+
+metadata:
+
+  name: frontend-ingress
+  namespace: sock-shop
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: sockshop.thecloudgarage.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: front-end
+                port:
+                  number: 80
