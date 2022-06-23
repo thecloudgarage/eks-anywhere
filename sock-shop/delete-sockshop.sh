@@ -9,4 +9,5 @@ helm delete metallb -n metallb-system
 sleep 20
 kubectl delete ns metallb-system
 rm -rf ingress-sockshop.yaml
+rm -rf tls*
 rm -rf sslcert.conf
