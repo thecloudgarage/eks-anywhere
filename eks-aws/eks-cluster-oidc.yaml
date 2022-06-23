@@ -1,0 +1,19 @@
+# Please change the FQDN of the OIDC (KeyCloak) server
+# Also note that AWS EKS does not support self-signed certificates
+# The OIDC configurations do not allow passing any self-signed certificates to the kube-api server configuration
+# To apply eksctl associate identityprovider -f <name-of-this-yaml-file> 
+---
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: <name-of-the-cluster>
+  region: <name-of-the-region>
+
+identityProviders:
+  - name: oidc
+    type: oidc
+    issuerUrl: https://fqdnOfOidcServer/auth/realms/master
+    clientId: kube
+    usernameClaim: email
+    groupsClaim: groups
