@@ -6,6 +6,6 @@ mkdir $CLUSTER_NAME
 cd $CLUSTER_NAME
 cp $HOME/eks-anywhere/eksaws/eks.yaml $CLUSTER_NAME.yaml
 cp $HOME/eks-anywhere/eksaws/eks-oidc.yaml $CLUSTER_NAME-oidc.yaml
-eksctl create cluster -f $CLUSTER_NAME.yaml --kubeconfig=$HOME/$CLUSTER_NAME/$CLUSTER_NAME-kubeconfig
-eksctl associate identityprovider -f $CLUSTER_NAME-oidc.yaml.yaml
+eksctl create cluster -f $CLUSTER_NAME.yaml --kubeconfig=$HOME/$CLUSTER_NAME/$CLUSTER_NAME-eks-cluster.kubeconfig
+eksctl associate identityprovider -f $CLUSTER_NAME-oidc.yaml
 ```
