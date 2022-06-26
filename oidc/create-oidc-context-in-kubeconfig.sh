@@ -1,3 +1,11 @@
+#!/bin/bash
+read -p 'clusterName: ' clusterName
+echo "Provide the API server endpoint in the format https://172.24.165.11:6443"
+read -p 'apiServerEndpoint: ' apiServerEndpoint
+kubectl config --kubeconfig=$HOME/.kube/config set-cluster \
+$clusterName --server=$apiServerEndpoint --insecure-skip-tls-verify
+ubuntu@ubuntu2004dockerhomebrew:~$ ^C
+ubuntu@ubuntu2004dockerhomebrew:~$ more create-oidc-contexts.sh
 #!bin/bash
 echo "Input OIDC enabled cluster name for kubectl context"
 read -p 'oidClusterName: ' oidcClusterName
