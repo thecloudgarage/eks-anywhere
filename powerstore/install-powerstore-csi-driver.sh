@@ -31,6 +31,9 @@ sed -i "14s/unique/$globalIdOfPowerStoreArray/g" $HOME/$clusterName/csi-powersto
 sed -i "19s/\user\b/$userNameOfPowerStoreArray/g" $HOME/$clusterName/csi-powerstore/dell-csi-helm-installer/secret.yaml
 #Note we are using a sed expression to change a double quoted string, notice the use of single quotes
 sed -i "24s/\(.*\)password/\1$passwordOfPowerStoreArray/g" $HOME/$clusterName/csi-powerstore/dell-csi-helm-installer/secret.yaml
+sed -i "48s/auto/iSCSI/g" $HOME/$clusterName/csi-powerstore/dell-csi-helm-installer/secret.yaml
+#Note we are deleting unwanted stuff from the file
+sed -i -n -e :a -e '1,27!{P;N;D;};N;ba' $HOME/$clusterName/csi-powerstore/dell-csi-helm-installer/secret.yaml
 kubectl create secret generic powerstore-config -n csi-powerstore --from-file=config=secret.yaml
 cd $HOME/$clusterName/csi-powerstore/dell-csi-helm-installer
 cp $HOME/$clusterName/csi-powerstore/helm/csi-powerstore/values.yaml my-powerstore-settings.yaml
