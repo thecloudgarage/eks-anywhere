@@ -2,6 +2,8 @@ apiVersion: snapshot.storage.k8s.io/v1
 kind: VolumeSnapshot
 metadata:
   name: mysql-snapshot-powerstore-ext4-iscsi-datetime
+  labels:
+    name: mysql-snapshot-powerstore-ext4-iscsi-datetime
 spec:
   volumeSnapshotClassName: powerstore-ext4-iscsi-snapclass
   source:
