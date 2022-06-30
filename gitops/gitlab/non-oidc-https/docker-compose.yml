@@ -1,0 +1,21 @@
+version: '3.6'
+services:
+  web:
+    image: 'gitlab/gitlab-ce:latest'
+    restart: always
+    hostname: 'fqdnOfGitlabServer'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'https://fqdnOfGitlabServer:10443'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2224
+        letsencrypt['enable'] = false
+    ports:
+      - '10443:10443'
+      - '2224:22'
+    volumes:
+      - '$PWD/config:/etc/gitlab'
+      - '$PWD/logs:/var/log/gitlab'
+      - '$PWD/data:/var/opt/gitlab'
+      - '$PWD/fqdnOfGitlabServer.crt:/etc/gitlab/ssl/fqdnOfGitlabServer.crt'
+      - '$PWD/fqdnOfGitlabServer.key:/etc/gitlab/ssl/fqdnOfGitlabServer.key'
+    shm_size: '256m'
