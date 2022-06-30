@@ -1,0 +1,45 @@
+version: '3.6'
+services:
+  web:
+    image: 'gitlab/gitlab-ce:latest'
+    restart: always
+    hostname: 'gitlab.oidc.thecloudgarage.com'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'https://gitlab.oidc.thecloudgarage.com:10443'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2224
+        letsencrypt['enable'] = false
+        gitlab_rails['omniauth_enabled'] = true
+        gitlab_rails['omniauth_allow_single_sign_on'] = ['openid_connect']
+        gitlab_rails['omniauth_block_auto_created_users'] = false
+        gitlab_rails['omniauth_providers'] = [
+        {
+            name: "openid_connect",
+            label: "Keycloak", # optional label for login button, defaults to "Openid Connect"
+            args: {
+            name: "openid_connect",
+            scope: ["openid", "profile", "email"],
+            response_type: "code",
+            issuer:  "https://keycloak.oidc.thecloudgarage.com/auth/realms/master",
+            client_auth_method: "query",
+            discovery: true,
+            uid_field: "preferred_username",
+            client_options: {
+                identifier: "kube",
+                secret: "kube-client-secret",
+                redirect_uri: "https://gitlab.oidc.thecloudgarage.com:10443/users/auth/openid_connect/callback"
+            }
+            }
+        }
+        ]
+    ports:
+      - '10443:10443'
+      - '2224:22'
+    volumes:
+      - '$PWD/config:/etc/gitlab'
+      - '$PWD/logs:/var/log/gitlab'
+      - '$PWD/data:/var/opt/gitlab'
+      - '$PWD/gitlab.oidc.thecloudgarage.com.crt:/etc/gitlab/ssl/gitlab.oidc.thecloudgarage.com.crt'
+      - '$PWD/gitlab.oidc.thecloudgarage.com.key:/etc/gitlab/ssl/gitlab.oidc.thecloudgarage.com.key'
+      - '$PWD/keycloak.pem:/etc/gitlab/trusted-certs/keycloak.pem'
+    shm_size: '256m'
