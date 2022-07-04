@@ -22,16 +22,16 @@ cp $HOME/eks-anywhere/cluster-samples/workload-eks-a-cluster-sample.yaml \
 sed -i '/clusterNetwork:/i \
   gitOpsRef:\
     kind: FluxConfig\
-    name: mgmt' $HOME/$workloadClusterName-eks-a-cluster.yaml
+    name: workloadclustername' $HOME/$workloadClusterName-eks-a-cluster.yaml
 #NOTE HOW WE ARE USING SED TO INSERT THE ENTIRE FLUX CONFIG AT THE END OF THE YAML FILE
 sed -i '$a\
 apiVersion: anywhere.eks.amazonaws.com/v1alpha1\
 kind: FluxConfig\
 metadata:\
-  name: mgmt\
+  name: workloadclustername\
 spec:\
   branch: main\
-  clusterConfigPath: clusters/mgmt\
+  clusterConfigPath: clusters/workloadclustername\
   git:\
     repositoryUrl: ssh://git@gitlabFQDN:gitlabSshPort/gitlabUsername/gitlabFluxClusterRepo.git\
     sshKeyAlgorithm: ecdsa\
@@ -53,16 +53,16 @@ cp $HOME/eks-anywhere/cluster-samples/workload-eks-a-cluster-sample.yaml \
 sed -i '/clusterNetwork:/i \
   gitOpsRef:\
     kind: FluxConfig\
-    name: mgmt' $HOME/$workloadClusterName-eks-a-cluster.yaml
+    name: workloadclustername' $HOME/$workloadClusterName-eks-a-cluster.yaml
 #NOTE HOW WE ARE USING SED TO INSERT THE ENTIRE FLUX CONFIG AT THE END OF THE YAML FILE
 sed -i '$a\
 apiVersion: anywhere.eks.amazonaws.com/v1alpha1\
 kind: FluxConfig\
 metadata:\
-  name: mgmt\
+  name: workloadclustername\
 spec:\
   branch: main\
-  clusterConfigPath: clusters/mgmt\
+  clusterConfigPath: clusters/workloadclustername\
   git:\
     repositoryUrl: ssh://git@gitlabFQDN:gitlabSshPort/gitlabUsername/gitlabFluxClusterRepo.git\
     sshKeyAlgorithm: ecdsa\
