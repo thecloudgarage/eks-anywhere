@@ -62,7 +62,7 @@ metadata:\
   name: workloadclustername\
 spec:\
   branch: main\
-  clusterConfigPath: clusters/workloadclustername\
+  clusterConfigPath: clusters/mgmtClusterName\
   git:\
     repositoryUrl: ssh://git@gitlabFQDN:gitlabSshPort/gitlabUsername/gitlabFluxClusterRepo.git\
     sshKeyAlgorithm: ecdsa\
