@@ -25,14 +25,12 @@ apiVersion: anywhere.eks.amazonaws.com/v1alpha1\
 kind: FluxConfig\
 metadata:\
   name: mgmt\
-  namespace: default\
 spec:\
   branch: main\
   clusterConfigPath: clusters/mgmt\
   git:\
     repositoryUrl: ssh://git@gitlabFQDN:gitlabSshPort/gitlabUsername/gitlabFluxClusterRepo.git\
     sshKeyAlgorithm: ecdsa\
-  systemNamespace: flux-system\
 \
 ---' $HOME/$mgmtClusterName-eks-a-cluster.yaml
 sed -i "s/staticIp/$staticIp/g" $HOME/$mgmtClusterName-eks-a-cluster.yaml
