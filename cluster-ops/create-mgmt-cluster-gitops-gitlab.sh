@@ -35,11 +35,11 @@ spec:\
   systemNamespace: flux-system\
 \
 ---' $HOME/$mgmtClusterName-eks-a-cluster.yaml
-sed -i "s/staticIp/$staticIp/g" /home/ubuntu/$mgmtClusterName-eks-a-cluster.yaml
-sed -i "s/mgmt/$mgmtClusterName/g" /home/ubuntu/$mgmtClusterName-eks-a-cluster.yaml
-sed -i "s/gitlabFQDN/$gitlabFQDN/g" /home/ubuntu/$mgmtClusterName-eks-a-cluster.yaml
-sed -i "s/gitlabSshPort/$gitlabSshPort/g" /home/ubuntu/$mgmtClusterName-eks-a-cluster.yaml
-sed -i "s/gitlabUsername/$gitlabUsername/g" /home/ubuntu/$mgmtClusterName-eks-a-cluster.yaml
-sed -i "s/gitlabFluxClusterRepo/$gitlabFluxClusterRepo/g" /home/ubuntu/$mgmtClusterName-eks-a-cluster.yaml
-eksctl anywhere create cluster -f /home/ubuntu/$mgmtClusterName-eks-a-cluster.yaml
+sed -i "s/staticIp/$staticIp/g" $HOME/$mgmtClusterName-eks-a-cluster.yaml
+sed -i "s/mgmt/$mgmtClusterName/g" $HOME/$mgmtClusterName-eks-a-cluster.yaml
+sed -i "s/gitlabFQDN/$gitlabFQDN/g" $HOME/$mgmtClusterName-eks-a-cluster.yaml
+sed -i "s/gitlabSshPort/$gitlabSshPort/g" $HOME/$mgmtClusterName-eks-a-cluster.yaml
+sed -i "s/gitlabUsername/$gitlabUsername/g" $HOME/$mgmtClusterName-eks-a-cluster.yaml
+sed -i "s/gitlabFluxClusterRepo/$gitlabFluxClusterRepo/g" $HOME/$mgmtClusterName-eks-a-cluster.yaml
+eksctl anywhere create cluster -f $HOME/$mgmtClusterName-eks-a-cluster.yaml
 fi
