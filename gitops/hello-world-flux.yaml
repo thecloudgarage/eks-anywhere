@@ -1,0 +1,25 @@
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: GitRepository
+metadata:
+  name: hello-world
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: ssh://git@gitlab.oidc.thecloudgarage.com:2224/user-admin/test.git
+  secretRef:
+    name: flux-system
+  ref:
+    branch: main
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1beta2
+kind: Kustomization
+metadata:
+  name: hello-world
+  namespace: flux-system
+spec:
+  interval: 5m0s
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: hello-world
+  targetNamespace: default
