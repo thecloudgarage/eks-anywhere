@@ -69,6 +69,7 @@ spec:\
 \
 ---' $HOME/$workloadClusterName-eks-a-cluster.yaml
 sed -i "s/workloadclustername/$workloadClusterName/g" $HOME/$workloadClusterName-eks-a-cluster.yaml
+sed -i "s/mgmtclustername/$mgmtClusterName/g" $HOME/$workloadClusterName-eks-a-cluster.yaml
 sed -i "s/staticIp/$staticIp/g" $HOME/$workloadClusterName-eks-a-cluster.yaml
 sed -i "s/gitlabFQDN/$gitlabFQDN/g" $HOME/$workloadClusterName-eks-a-cluster.yaml
 sed -i "s/gitlabSshPort/$gitlabSshPort/g" $HOME/$workloadClusterName-eks-a-cluster.yaml
