@@ -62,14 +62,14 @@ metadata:\
   name: workloadclustername\
 spec:\
   branch: main\
-  clusterConfigPath: clusters/mgmtClusterName\
+  clusterConfigPath: clusters/mgmtclustername\
   git:\
     repositoryUrl: ssh://git@gitlabFQDN:gitlabSshPort/gitlabUsername/gitlabFluxClusterRepo.git\
     sshKeyAlgorithm: ecdsa\
 \
 ---' $HOME/$workloadClusterName-eks-a-cluster.yaml
 sed -i "s/workloadclustername/$workloadClusterName/g" $HOME/$workloadClusterName-eks-a-cluster.yaml
-sed -i "s/mgmtclusterName/$mgmtClusterName/g" $HOME/$workloadClusterName-eks-a-cluster.yaml
+sed -i "s/mgmtclustername/$mgmtClusterName/g" $HOME/$workloadClusterName-eks-a-cluster.yaml
 sed -i "s/staticIp/$staticIp/g" $HOME/$workloadClusterName-eks-a-cluster.yaml
 sed -i "s/gitlabFQDN/$gitlabFQDN/g" $HOME/$workloadClusterName-eks-a-cluster.yaml
 sed -i "s/gitlabSshPort/$gitlabSshPort/g" $HOME/$workloadClusterName-eks-a-cluster.yaml
