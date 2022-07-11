@@ -2,9 +2,11 @@
 
 * Ensure that the three directories are created (config, data, logs) ahead of deploying the docker-compose
 * Ensure the openssl cert generated tls.crt and tls.key are renamed as the FQDN.key and FQDN.pem as gitlab references them accordingly
-* Copy the ssl sample cert conf file into sslcert.conf
+* Edit the FQDN of the gitlab server and then copy the ssl sample cert conf file into sslcert.conf
 
 ```
+cd $HOME/eks-anywhere/gitops/gitlab/oidc-https
+cp sslcert.conf.sample sslcert.conf
 openssl req -x509 -nodes -days 730 -newkey rsa:2048 -keyout tls.key -out tls.crt -config sslcert.conf -extensions 'v3_req'
 ```
 * If you reuse the SSL cert conf file that is used for the keycloak config, then SSL KEY INCOMPATIBLE ISSUE will happen
