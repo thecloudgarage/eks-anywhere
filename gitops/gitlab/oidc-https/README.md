@@ -1,6 +1,13 @@
-![image](https://user-images.githubusercontent.com/39495790/176620649-31a6e806-7fd8-4781-aa65-7e6e9784dc62.png)
+* Create the keycloak server
+* Once created enable all the various flows
+* Create an entry of redirect url as https://gitlab.oidc.thecloudgarage.com:10443/*
+* Edit the client scopes for the client and add the various scopes
+![image](https://user-images.githubusercontent.com/39495790/178256695-844c2fa6-ed98-4aa4-9959-ea6355768d91.png)
 
 * Ensure that the three directories are created (config, data, logs) ahead of deploying the docker-compose
+![image](https://user-images.githubusercontent.com/39495790/176620649-31a6e806-7fd8-4781-aa65-7e6e9784dc62.png)
+
+
 * Ensure the openssl cert generated tls.crt and tls.key are renamed as the FQDN.key and FQDN.pem as gitlab references them accordingly
 * Edit the FQDN of the gitlab server and then copy the ssl sample cert conf file into sslcert.conf
 
