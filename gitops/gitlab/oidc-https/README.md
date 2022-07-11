@@ -8,6 +8,8 @@
 cd $HOME/eks-anywhere/gitops/gitlab/oidc-https
 cp sslcert.conf.sample sslcert.conf
 openssl req -x509 -nodes -days 730 -newkey rsa:2048 -keyout tls.key -out tls.crt -config sslcert.conf -extensions 'v3_req'
+cp tls.crt gitlab.oidc.thecloudgarage.com.crt
+cp tls.key gitlab.oidc.thecloudgarage.com.key
 ```
 * If you reuse the SSL cert conf file that is used for the keycloak config, then SSL KEY INCOMPATIBLE ISSUE will happen
 * Ensure that the format of the SSL cert conf file is followed as it is provided in this directory
