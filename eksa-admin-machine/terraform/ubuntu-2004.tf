@@ -5,7 +5,7 @@ provider "vsphere" {
   # If you use a domain set your login like this "MyDomain\\MyUser"
   user           = var.vsphere_user
   password       = var.vsphere_password
-  vsphere_server = var.vsphere_ip_or_fqdn
+  vsphere_server = var.vsphere_server
 
   # if you have a self-signed cert
   allow_unverified_ssl = true
@@ -19,25 +19,25 @@ data "vsphere_datacenter" "dc" {
 
 data "vsphere_resource_pool" "pool" {
   # If you haven't resource pool, put "Resources" after cluster name
-  name          = var.vsphere_resourcepool
+  name          = var.vsphere_resource_pool
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
 # Retrieve datastore information on vsphere
 data "vsphere_datastore" "datastore" {
-  name          = var.vsphere_data_store
+  name          = var.vsphere_datastore
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
 # Retrieve network information on vsphere
 data "vsphere_network" "network" {
-  name          = var.vsphere_network_name
+  name          = var.vsphere_network
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
 # NOTE: YOU WILL NEED AN EXISTING TEMPLATE IN THE TEMPLATES FOLDER. Retrieve template information on vsphere
 data "vsphere_virtual_machine" "template" {
-  name          = var.vsphere_virtual_machine_template_name
+  name          = var.existing_virtual_machine_template_name
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
@@ -47,10 +47,9 @@ data "vsphere_virtual_machine" "template" {
 resource "vsphere_virtual_machine" "vm-one" {
   name             = "ubuntu"
   folder           = var.virtual_machine_folder_name
-  num_cpus         = 4
-  memory           = 16384
+  num_cpus         = var.virtual_machine_vcpu_count
+  memory           = var.virtual_machine_memory
   datastore_id     = data.vsphere_datastore.datastore.id
-#  host_system_id   = data.vsphere_host.host.id
   resource_pool_id = data.vsphere_resource_pool.pool.id
   guest_id         = data.vsphere_virtual_machine.template.guest_id
   scsi_type        = data.vsphere_virtual_machine.template.scsi_type
@@ -77,12 +76,12 @@ resource "vsphere_virtual_machine" "vm-one" {
       }
 
       network_interface {
-        ipv4_address    = "172.24.165.50"
-        ipv4_netmask    = 22
-        dns_server_list = ["172.24.164.10"]
+        ipv4_address    = var.virtual_machine_static_ip_address
+        ipv4_netmask    = var.virtual_machine_subnet_mask
+        dns_server_list = var.dns_servers
       }
 
-      ipv4_gateway = "172.24.164.1"
+      ipv4_gateway = var.ip4_gateway
     }
   }
 
@@ -94,7 +93,7 @@ resource "vsphere_virtual_machine" "vm-one" {
       type     = "ssh"
       user     = "ubuntu"
       password = var.virtual_machine_root_password
-      host     = "172.24.165.50"
+      host     = var.virtual_machine_static_ip_address
     }
   }
 }
