@@ -13,7 +13,7 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 
 ![image](https://user-images.githubusercontent.com/39495790/178545230-edb25578-4099-4e76-bd1f-dc718fefa026.png)
 
-* Create a git repository to connect to
+* Create a git repository to connect to using https
 
 ![image](https://user-images.githubusercontent.com/39495790/178546138-5b075f35-1c6c-4e57-aa10-2be676de77a7.png)
 
