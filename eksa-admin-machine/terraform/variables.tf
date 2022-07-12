@@ -70,7 +70,7 @@ variable "virtual_machine_subnet_mask" {
     type        = number
     default     = 22
 }
-variable "var.dns_servers" {
+variable "dns_servers" {
   description = "List of comma separated DNS server values"
   type        = list
   default     = ["172.24.164.10"]
@@ -80,7 +80,7 @@ variable "virtual_machine_domain_name" {
     type        = string
     default     = "iac.ssc"
 }
-variable "var.ip4_gateway" {
+variable "ipv4_gateway" {
   description = "IPv4 gateway for the virtual machine"
   type        = string
   default     = "172.24.164.1"
