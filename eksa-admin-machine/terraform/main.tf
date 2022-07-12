@@ -81,7 +81,7 @@ resource "vsphere_virtual_machine" "vm-one" {
         dns_server_list = var.dns_servers
       }
 
-      ipv4_gateway = var.ip4_gateway
+      ipv4_gateway = var.ipv4_gateway
     }
   }
 
