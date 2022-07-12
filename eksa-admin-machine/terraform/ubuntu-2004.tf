@@ -3,9 +3,9 @@
 # Define authentification configuration
 provider "vsphere" {
   # If you use a domain set your login like this "MyDomain\\MyUser"
-  user           = "ambar@vsphere.local"
-  password       = "password"
-  vsphere_server = "vc.iac.ssc"
+  user           = var.vsphere_user
+  password       = var.vsphere_password
+  vsphere_server = var.vsphere_ip_or_fqdn
 
   # if you have a self-signed cert
   allow_unverified_ssl = true
@@ -14,30 +14,30 @@ provider "vsphere" {
 #### RETRIEVE DATA INFORMATION ON VCENTER ####
 
 data "vsphere_datacenter" "dc" {
-  name = "IAC-SSC"
+  name = var.vsphere_datacenter
 }
 
 data "vsphere_resource_pool" "pool" {
   # If you haven't resource pool, put "Resources" after cluster name
-  name          = "Test"
+  name          = var.vsphere_resourcepool
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
 # Retrieve datastore information on vsphere
 data "vsphere_datastore" "datastore" {
-  name          = "CommonDS"
+  name          = var.vsphere_data_store
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
 # Retrieve network information on vsphere
 data "vsphere_network" "network" {
-  name          = "iac_pg"
+  name          = var.vsphere_network_name
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
 # NOTE: YOU WILL NEED AN EXISTING TEMPLATE IN THE TEMPLATES FOLDER. Retrieve template information on vsphere
 data "vsphere_virtual_machine" "template" {
-  name          = "ubuntu-2004-desktop"
+  name          = var.vsphere_virtual_machine_template_name
   datacenter_id = data.vsphere_datacenter.dc.id
 }
 
@@ -46,7 +46,7 @@ data "vsphere_virtual_machine" "template" {
 # Set vm parameters
 resource "vsphere_virtual_machine" "vm-one" {
   name             = "ubuntu"
-  folder           = "test-eks-anywhere"
+  folder           = var.virtual_machine_folder_name
   num_cpus         = 4
   memory           = 16384
   datastore_id     = data.vsphere_datastore.datastore.id
@@ -73,7 +73,7 @@ resource "vsphere_virtual_machine" "vm-one" {
     customize {
       linux_options {
         host_name = "ubuntu"
-        domain    = "iac.ssc"
+        domain    = var.virtual_machine_domain_name
       }
 
       network_interface {
@@ -93,7 +93,7 @@ resource "vsphere_virtual_machine" "vm-one" {
     connection {
       type     = "ssh"
       user     = "ubuntu"
-      password = "password"
+      password = var.virtual_machine_root_password
       host     = "172.24.165.50"
     }
   }
