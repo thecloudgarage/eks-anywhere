@@ -1,4 +1,4 @@
-* Installs ArgoCD as a load balanced service without Ingress
+* Installs ArgoCD as a load balanced service without Ingress (best to keep ArgoCD without Ingress)
 * ArgoCD by default creates an internal SSL self-signed certificate
 * For the purpose of this example (i.e. managing EKS A clusters) create the git repository upfront
 * As seen in this example, we will create a directory inside of the repository named "eksa-clusters". This is also given as a path parameter in the ArgoCD application
