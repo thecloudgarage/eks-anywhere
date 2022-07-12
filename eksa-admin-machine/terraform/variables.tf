@@ -6,6 +6,7 @@ variable "vsphere_user" {
 variable "vsphere_password" {
   description = "vSphere password"
   type        = string
+  sensitive   = true
   default     = "password"
 }
 variable "vsphere_server" {
@@ -44,12 +45,12 @@ variable "virtual_machine_folder_name" {
     default     = "test-eks-anywhere"
 }
 variable "virtual_machine_vcpu_count" {
-  description = "vSphere username"
+  description = "vSphere vCPU count"
   type        = number
   default     = 4
 }
 variable "virtual_machine_memory" {
-  description = "vSphere username"
+  description = "vSphere Memory"
   type        = number
   default     = 16384
 }
@@ -60,7 +61,7 @@ variable "virtual_machine_root_password" {
   default     = "password"
 }
 variable "virtual_machine_static_ip_address" {
-    description = "vSphere username"
+    description = "Static IP address to be used for the virtual machine"
     type        = string
     default     = "172.24.165.50"
 }
@@ -74,8 +75,13 @@ variable "var.dns_servers" {
   type        = list
   default     = ["172.24.164.10"]
 }
+variable "virtual_machine_domain_name" {
+    description = "Domain name to be associated with the virtual machine"
+    type        = string
+    default     = "iac.ssc"
+}
 variable "var.ip4_gateway" {
-  description = "vSphere username"
+  description = "IPv4 gateway for the virtual machine"
   type        = string
   default     = "172.24.164.1"
 }
