@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 wget https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
 chmod +x install.sh
 ./install.sh
