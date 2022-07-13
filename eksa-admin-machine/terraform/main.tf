@@ -104,6 +104,7 @@ resource "null_resource" "eks_anywhere_provisioner" {
       "echo ${var.virtual_machine_root_password} | sudo -S apt-get install git -y",
       "cd $HOME && git clone https://github.com/thecloudgarage/eks-anywhere.git",
       "chmod +x $HOME/eks-anywhere/eksa-admin-machine/eksa-admin-machine-bootstrap-utils.sh",
+      "echo ${var.virtual_machine_root_password} | sudo -S $HOME/eks-anywhere/eksa-admin-machine/eksa-admin-machine-bootstrap-utils.sh",
     ]
   }
 }
