@@ -57,6 +57,7 @@ resource "vsphere_virtual_machine" "vm-one" {
   # Set network parameters
   network_interface {
     network_id = data.vsphere_network.network.id
+    adapter_type = data.vsphere_virtual_machine.template.network_interface_types[0]
   }
 
   # Use a predefined vmware template has main disk
@@ -65,10 +66,9 @@ resource "vsphere_virtual_machine" "vm-one" {
     size        = "100"
     thin_provisioned = "false"
   }
-
+  # Note DNS settings have to be specified as Global and not under the network interface as per vsphere provider documentation
   clone {
     template_uuid = data.vsphere_virtual_machine.template.id
-
     customize {
       linux_options {
         host_name = "ubuntu"
@@ -76,24 +76,34 @@ resource "vsphere_virtual_machine" "vm-one" {
       }
 
       network_interface {
-        ipv4_address    = var.virtual_machine_static_ip_address
-        ipv4_netmask    = var.virtual_machine_subnet_mask
-        dns_server_list = var.dns_servers
+        ipv4_address    = "172.24.165.50"
+        ipv4_netmask    = 22
       }
 
-      ipv4_gateway = var.ipv4_gateway
+      ipv4_gateway = "172.24.164.1"
+      dns_server_list = ["172.24.164.10"]
     }
   }
+}
 
-  # Execute script on remote vm after this creation
-  # Execute script on remote vm after this creation
-  provisioner "remote-exec" {
-    script = "scripts/example-script.sh"
-    connection {
+resource "time_sleep" "wait_for_vm" {
+  create_duration = "120s"
+  depends_on = [vsphere_virtual_machine.vm-one]
+}
+resource "null_resource" "eks_anywhere_provisioner" {
+  depends_on = [time_sleep.wait_for_vm]
+  connection {
       type     = "ssh"
       user     = "ubuntu"
       password = var.virtual_machine_root_password
       host     = var.virtual_machine_static_ip_address
-    }
+  }
+  // change permissions to executable and pipe its output into a new file
+  provisioner "remote-exec" {
+    inline = [
+      "echo ${var.virtual_machine_root_password} | sudo -S apt-get install git -y",
+      "cd $HOME && git clone https://github.com/thecloudgarage/eks-anywhere.git",
+      "chmod +x $HOME/eks-anywhere/eksa-admin-machine/eksa-admin-machine-bootstrap-utils.sh",
+    ]
   }
 }
