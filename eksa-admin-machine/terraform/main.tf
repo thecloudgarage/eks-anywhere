@@ -66,7 +66,7 @@ resource "vsphere_virtual_machine" "vm-one" {
     size        = "100"
     thin_provisioned = "false"
   }
-  # Note DNS settings have to be specified as Global and not under the network interface as per vsphere provider documentation
+  # Note as per vsphere provider documentation dns servers are provided in the global configuration and not under network interface
   clone {
     template_uuid = data.vsphere_virtual_machine.template.id
     customize {
@@ -76,18 +76,18 @@ resource "vsphere_virtual_machine" "vm-one" {
       }
 
       network_interface {
-        ipv4_address    = "172.24.165.50"
-        ipv4_netmask    = 22
+        ipv4_address    = var.virtual_machine_static_ip_address
+        ipv4_netmask    = var.virtual_machine_subnet_mask
       }
 
-      ipv4_gateway = "172.24.164.1"
-      dns_server_list = ["172.24.164.10"]
+      ipv4_gateway = var.ipv4_gateway
+      dns_server_list = var.dns_servers
     }
   }
 }
 
 resource "time_sleep" "wait_for_vm" {
-  create_duration = "120s"
+  create_duration = "60s"
   depends_on = [vsphere_virtual_machine.vm-one]
 }
 resource "null_resource" "eks_anywhere_provisioner" {
