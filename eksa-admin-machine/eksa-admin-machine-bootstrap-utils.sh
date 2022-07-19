@@ -18,7 +18,7 @@ sudo apt update -y
 #git config --global --unset https.proxy
 wget https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
 chmod +x install.sh
-./install.sh
+sudo echo -ne '\n' | ./install.sh
 echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /home/ubuntu/.profile
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 echo "done"
