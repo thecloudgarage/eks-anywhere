@@ -86,11 +86,14 @@ resource "vsphere_virtual_machine" "vm-one" {
   }
 }
 
+# First step is to bootstrap the virtual machine with docker, docker-compose, jq, homebrew
+# Note we are creating a sleep cycle via time_sleep resource, else terraform remote-exec might have issues before the VM is ready
+
 resource "time_sleep" "wait_for_vm" {
-  create_duration = "60s"
+  create_duration = "20s"
   depends_on = [vsphere_virtual_machine.vm-one]
 }
-resource "null_resource" "eks_anywhere_provisioner" {
+resource "null_resource" "virtual_machine_bootstrapper" {
   depends_on = [time_sleep.wait_for_vm]
   connection {
       type     = "ssh"
@@ -106,6 +109,38 @@ resource "null_resource" "eks_anywhere_provisioner" {
       "cd $HOME && git clone https://github.com/thecloudgarage/eks-anywhere.git",
       "chmod +x $HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/*.sh",
       "$HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/eksa-admin-machine-bootstrap-utils.sh",
+    ]
+  }
+}
+
+# Hereon, we will install important packages that are generally used for Kubernetes including eks-anywhere
+# We are also inducing a time sleep just in case. This time sleep will depend on the completion of previous null resource used for bootstrapping
+
+resource "time_sleep" "wait_for_vm_to_finish_bootstrap" {
+  create_duration = "20s"
+  depends_on = [null_resource.virtual_machine_bootstrapper]
+}
+resource "null_resource" "eks_anywhere_provisioner" {
+  depends_on = [time_sleep.wait_for_vm_to_finish_bootstrap]
+  connection {
+      type     = "ssh"
+      user     = "ubuntu"
+      password = var.virtual_machine_root_password
+      host     = var.virtual_machine_static_ip_address
+  }
+  // Without the first eval line, the brew installations will fail
+  provisioner "remote-exec" {
+    inline = [
+      "echo ${var.virtual_machine_root_password} | sudo -S apt-get update -y",
+      "eval \"$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\"",
+      "brew install aws/tap/eks-anywhere",
+      "brew tap hashicorp/tap",
+      "brew install hashicorp/tap/terraform",
+      "brew install argocd",
+      "brew install fluxcd/tap/flux",
+      "cd $HOME && sudo apt-get update -y",
+      "curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash",
+      "sudo apt -y install sshpass",
     ]
   }
 }
