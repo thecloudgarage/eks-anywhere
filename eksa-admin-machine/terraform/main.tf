@@ -144,3 +144,23 @@ resource "null_resource" "eks_anywhere_provisioner" {
     ]
   }
 }
+
+# Next we will set the vSphere credentials in ubuntu profile for creating EKS Anywhere clusters
+# Note the use of var for inline commands and also reflect on how we are escaping double quoted string with backslashes
+resource "null_resource" "set_vsphere_credentials_in_profile" {
+  depends_on = [null_resource.eks_anywhere_provisioner]
+  connection {
+      type     = "ssh"
+      user     = "ubuntu"
+      password = var.virtual_machine_root_password
+      host     = var.virtual_machine_static_ip_address
+  }
+  // The below will set the vsphere credentials in the ubuntu profile for EKSA cluster provisioning
+  provisioner "remote-exec" {
+    inline = [
+      "sed -i '/^EKSA_VSPHERE_/d' ~/.profile",
+      "echo \"EKSA_VSPHERE_USERNAME=${var.vsphere_user}; export EKSA_VSPHERE_USERNAME\" >> ~/.profile",
+      "echo \"EKSA_VSPHERE_PASSWORD=${var.vsphere_password}; export EKSA_VSPHERE_PASSWORD\" >> ~/.profile",
+    ]
+  }
+}
