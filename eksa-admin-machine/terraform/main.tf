@@ -45,7 +45,7 @@ data "vsphere_virtual_machine" "template" {
 
 # Set vm parameters
 resource "vsphere_virtual_machine" "vm-one" {
-  name             = "ubuntu"
+  name             = "eksa-admin"
   folder           = var.virtual_machine_folder_name
   num_cpus         = var.virtual_machine_vcpu_count
   memory           = var.virtual_machine_memory
@@ -107,6 +107,7 @@ resource "null_resource" "virtual_machine_bootstrapper" {
       "echo ${var.virtual_machine_root_password} | sudo -S apt-get update -y",
       "sudo apt-get install git -y",
       "cd $HOME && git clone https://github.com/thecloudgarage/eks-anywhere.git",
+      "find $HOME/eks-anywhere/ -name \"*.sh\" -type f -print0 | xargs -0 chmod +x",
       "chmod +x $HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/*.sh",
       "$HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/eksa-admin-machine-bootstrap-utils.sh",
     ]
