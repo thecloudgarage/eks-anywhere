@@ -1,9 +1,3 @@
-* gitlab temp values
-```
-2HXcZm7ctBiDgscnqw96
-https://gitlab.oidc.thecloudgarage.com:10443/user-admin/gitops.git
-```
-
 * Create the keycloak server
 * Once created enable all the various flows
 * Create an entry of redirect url as https://gitlab.oidc.thecloudgarage.com:10443/*
