@@ -72,16 +72,31 @@ resource "keycloak_openid_client" "kube" {
   enabled                      = true
   access_type                  = "CONFIDENTIAL"
   client_secret                = "kube-client-secret"
-  standard_flow_enabled        = false
-  implicit_flow_enabled        = false
-  direct_access_grants_enabled = true
+  standard_flow_enabled                     = true
+  implicit_flow_enabled                     = false
+  direct_access_grants_enabled              = true
+  service_accounts_enabled                  = true
+  valid_redirect_uris = [
+    "https://gitlab.oidc.thecloudgarage.com:10443/*",
+    "https://portainer.oidc.thecloudgarage.com:11443/*",
+    "https://kubeapps.oidc.thecloudgarage.com/*"
+  ]
 }
 # configure kube openid client default scopes
 resource "keycloak_openid_client_default_scopes" "kube" {
   realm_id  = local.realm_id
   client_id = keycloak_openid_client.kube.id
   default_scopes = [
+    "profile",
     "email",
+    "groups",
+    "roles",
+    "web-origins",
     keycloak_openid_client_scope.groups.name,
   ]
+}
+# output openid client secret
+output "client-secret" {
+  value     = keycloak_openid_client.kube.client_secret
+  sensitive = true
 }
