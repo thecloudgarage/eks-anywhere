@@ -20,7 +20,7 @@ services:
             name: "openid_connect",
             scope: ["openid", "profile", "email"],
             response_type: "code",
-            issuer:  "https://keycloak.oidc.thecloudgarage.com/auth/realms/master",
+            issuer:  "https://keycloak.thecloudgarage.com/auth/realms/master",
             client_auth_method: "query",
             discovery: true,
             uid_field: "preferred_username",
