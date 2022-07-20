@@ -11,6 +11,44 @@ kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}
 kubectl get svc -n argocd
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 ```
+* In case you want to deploy via a KeyCloak OIDC
+```
+helm upgrade --install --wait --atomic --namespace argocd --create-namespace  --repo https://argoproj.github.io/argo-helm argocd argo-cd --values - <<EOF
+redis:
+  enabled: true
+redis-ha:
+  enabled: false
+server:
+  config:
+    url: https://argocd.oidc.thecloudgarage.com
+    application.instanceLabelKey: argocd.argoproj.io/instance
+    admin.enabled: 'false'
+    resource.exclusions: |
+      - apiGroups:
+          - cilium.io
+        kinds:
+          - CiliumIdentity
+        clusters:
+          - '*'
+    oidc.config: |
+      name: Keycloak
+      issuer: http://keycloak.thecloudgarage.com/auth/realms/master
+      clientID: kube
+      clientSecret: kube-client-secret
+      requestedScopes: ['openid', 'profile', 'email', 'groups']
+    oidc.tls.insecure.skip.verify: "true"
+  rbacConfig:
+    policy.default: role:readonly
+    policy.csv: |
+      g, kube-admin, role:admin
+EOF
+```
+Note the above helm will start argo without admin enabled., but you can directly login via keycloak sso
+also add the fqdn before-hand
+```
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+```
+
 * Login to ArgoCD
 * Copy the contents of the Gitlab server. The TLS certificate content was created during the creation of the Gitlab server and will be located in $HOME/eks-anywhere/gitops/gitlab/oidc-https and saved as the gitlab hostname crt file
 
