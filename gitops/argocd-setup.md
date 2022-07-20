@@ -1,3 +1,9 @@
+* gitlab temp values
+```
+2HXcZm7ctBiDgscnqw96
+https://gitlab.oidc.thecloudgarage.com:10443/user-admin/gitops.git
+```
+
 * Installs ArgoCD as a load balanced service without Ingress (best to keep ArgoCD without Ingress)
 * ArgoCD by default creates an internal SSL self-signed certificate
 * For the purpose of this example (i.e. managing EKS A clusters) create the git repository upfront
