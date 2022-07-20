@@ -1,0 +1,20 @@
+version: '3'
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    command:
+    - --ssl
+    - --sslcert
+    - /certs/portainer.crt
+    - --sslkey
+    - /certs/portainer.key
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - ./portainer-data:/data
+    - '$PWD/keycloak.pem:/etc/ssl/certs/keycloak.pem'
+    - '$PWD/portainer.crt:/certs/portainer.crt'
+    - '$PWD/portainer.key:/certs/portainer.key'
+    ports:
+    - 11443:9443
+    restart: always
