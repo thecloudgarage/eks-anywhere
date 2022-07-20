@@ -2,9 +2,10 @@ version: '3.3'
 services:
   keycloak:
     image: quay.io/keycloak/keycloak:16.1.0
+    restart: always
     environment:
       KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_PASSWORD: admin@12345678
       PROXY_ADDRESS_FORWARDING: "true"
     ports:
       - "80:8080"
@@ -12,3 +13,4 @@ services:
     volumes:
     - "$PWD/tls.key:/etc/x509/https/tls.key"
     - "$PWD/tls.crt:/etc/x509/https/tls.crt"
+    - "$PWD/keycloak-data/:/opt/jboss/keycloak/standalone/data"
