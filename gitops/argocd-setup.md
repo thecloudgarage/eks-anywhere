@@ -17,7 +17,8 @@ kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}
 kubectl get svc -n argocd
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 ```
-* In case you want to deploy via a KeyCloak OIDC
+* In case you want to deploy via a KeyCloak OIDC (note this enables both web and cli access via OIDC)
+* Keycloak needs to be configured with two separate clients (one for gui with access type confidential and other for cli that uses grpc and needs to have access type public)
 ```
 helm upgrade --install --wait --atomic --namespace argocd --create-namespace  --repo https://argoproj.github.io/argo-helm argocd argo-cd --values - <<EOF
 redis:
@@ -40,6 +41,7 @@ server:
       name: Keycloak
       issuer: http://keycloak.thecloudgarage.com/auth/realms/master
       clientID: kube
+      cliClientID: argocdcligrpc
       clientSecret: kube-client-secret
       requestedScopes: ['openid', 'profile', 'email', 'groups']
     oidc.tls.insecure.skip.verify: "true"
