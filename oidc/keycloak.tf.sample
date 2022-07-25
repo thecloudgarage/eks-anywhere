@@ -79,7 +79,6 @@ resource "keycloak_openid_client" "kube" {
   valid_redirect_uris = [
     "https://gitlab.oidc.thecloudgarage.com:10443/*",
     "https://portainer.oidc.thecloudgarage.com:11443/*",
-    "https://kubeapps.oidc.thecloudgarage.com/*"
   ]
 }
 # configure kube openid client default scopes
