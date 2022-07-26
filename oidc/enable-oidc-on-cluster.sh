@@ -1,13 +1,16 @@
 #!bin/bash
 read -p 'clusterName: ' clusterName
+read -p 'fqdnOfKeycloakServer: ' fqdnOfKeycloakServer
 echo "Is your KeyCloak server provided with a valid public certificate. Type yes or no"
 read -p 'yes/no: ' yesno
+echo -n | openssl s_client -connect $fqdnOfKeycloakServer:443 -servername $fqdnOfKeycloakServer \
+    | openssl x509 > $HOME/eks-anywhere/oidc/$fqdnOfKeycloakServer.crt
 if [ "$yesno" = "no" ]
 then
 HOSTS=$(kubectl get nodes --selector='node-role.kubernetes.io/master' \
     -o template \
     --template='{{range.items}}{{range.status.addresses}}{{if eq .type "ExternalIP"}}{{.address}}{{end}}{{end}} {{end}}')
-keycloakCert=$(cat /home/ubuntu/eks-anywhere/oidc/tls.crt | base64 -w 0)
+keycloakCert=$(cat /home/ubuntu/eks-anywhere/oidc/$fqdnOfKeycloakServer.crt | base64 -w 0)
 oidcConfig=$(cat /home/ubuntu/eks-anywhere/oidc/oidc-config.yaml | base64 -w 0)
 for HOST in $HOSTS
 do
