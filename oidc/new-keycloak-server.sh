@@ -1,4 +1,5 @@
 #!bin/bash
+cd $HOME/eks-anywhere/oidc
 read -p 'fqdnOfKeycloakServer: ' fqdnOfKeycloakServer
 cp $HOME/eks-anywhere/oidc/sslcert.conf.sample $HOME/eks-anywhere/oidc/sslcert.conf
 cp $HOME/eks-anywhere/oidc/keycloak.tf.sample $HOME/eks-anywhere/oidc/keycloak.tf
