@@ -55,10 +55,10 @@ variable "virtual_machine_memory" {
   default     = 16384
 }
 variable "virtual_machine_root_password" {
-  description = "vSphere username"
+  description = "virtual machine password"
   type        = string
   sensitive   = true
-  default     = "password"
+  default     = "ubuntu"
 }
 variable "virtual_machine_static_ip_address" {
     description = "Static IP address to be used for the virtual machine"
