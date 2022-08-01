@@ -9,6 +9,7 @@ echo "Enter username of the PowerStore Array"
 read -p 'userNameOfPowerStoreArray: ' userNameOfPowerStoreArray
 echo "Enter password of the PowerStore Array"
 read -sp 'passwordOfPowerStoreArray: ' passwordOfPowerStoreArray
+echo -e "\n"
 mkdir -p $HOME/$clusterName
 cd $HOME/$clusterName
 git clone -b v2.2.0 https://github.com/dell/csi-powerstore.git
