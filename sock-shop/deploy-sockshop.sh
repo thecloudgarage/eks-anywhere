@@ -1,20 +1,5 @@
 #!bin/bash
 read -p 'fqdnOfSockShopFrontEnd: ' fqdnOfSockShopFrontEnd
-read -p 'METALLB_IP_START: ' METALLB_IP_START
-read -p 'METALLB_IP_END: ' METALLB_IP_END
-METALLB_IP_RANGE="$METALLB_IP_START-$METALLB_IP_END"
-helm upgrade --install --wait --timeout 15m \
-  --namespace metallb-system --create-namespace \
-  --repo https://metallb.github.io/metallb metallb metallb \
-  --values - <<EOF
-configInline:
-  address-pools:
-  - name: default
-    protocol: layer2
-    addresses:
-    - ${METALLB_IP_RANGE}
-EOF
-sleep 5
 cp ./sslcert.conf.sample ./sslcert.conf
 sed -i "s/fqdnOfSockShopFrontEnd/$fqdnOfSockShopFrontEnd/g" ./sslcert.conf
 cp ./ingress-sockshop.yaml.sample ./ingress-sockshop.yaml
