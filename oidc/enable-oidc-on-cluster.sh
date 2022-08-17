@@ -26,6 +26,7 @@ ssh \
     && sudo echo $oidcConfig > oidcConfigbase64.yaml && cat oidcConfigbase64.yaml | base64 --decode > oidcConfig.yaml \
     && sudo sed -i '/tls-private-key-file/r oidcConfig.yaml' \
     /etc/kubernetes/manifests/kube-apiserver.yaml"
+sleep 60
 done
 else
 sed -i "s/fqdnOfKeycloakServer/$fqdnOfKeycloakServer/g" $HOME/$clusterName/oidc-config.yaml
@@ -44,5 +45,6 @@ ssh \
     "sudo echo $oidcConfig > oidcConfigbase64.yaml && cat oidcConfigbase64.yaml | base64 --decode > oidcConfig.yaml \
     && sudo sed -i '/tls-private-key-file/r oidcConfig.yaml' \
     /etc/kubernetes/manifests/kube-apiserver.yaml"
+sleep 60
 done
 fi
