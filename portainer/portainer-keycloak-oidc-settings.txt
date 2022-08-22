@@ -9,7 +9,7 @@ You will need the Client ID and Secret from the KeyCloak server
 Authorization URL: https://keycloak.thecloudgarage.com/auth/realms/master/protocol/openid-connect/auth
 Access token URL: https://keycloak.thecloudgarage.com/auth/realms/master/protocol/openid-connect/token
 Resource URL: https://keycloak.thecloudgarage.com/auth/realms/master/protocol/openid-connect/userinfo
-Redirect URL: https://portainer.oidc.thecloudgarage.com:9443
+Redirect URL: https://portainer.oidc.thecloudgarage.com:11443
 
 Leave the Logout URL blank
 
