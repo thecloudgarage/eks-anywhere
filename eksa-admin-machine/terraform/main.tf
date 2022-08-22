@@ -139,7 +139,7 @@ resource "null_resource" "eks_anywhere_provisioner" {
       "brew install hashicorp/tap/terraform",
       "brew install argocd",
       "brew install fluxcd/tap/flux",
-      "cd $HOME && sudo apt-get update -y",
+      "cd $HOME",
       "curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash",
       "sudo apt -y install sshpass",
     ]
