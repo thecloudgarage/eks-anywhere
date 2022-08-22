@@ -65,6 +65,8 @@ resource "keycloak_openid_group_membership_protocol_mapper" "groups" {
   full_path       = false
 }
 # create kube openid client
+# Although separate clients can be created for each app., we are using the same client for all web apps
+# You may need to add an additional redirect url http://localhost:8000 if kubelogin is being used
 resource "keycloak_openid_client" "kube" {
   realm_id                     = local.realm_id
   client_id                    = "kube"
@@ -79,9 +81,7 @@ resource "keycloak_openid_client" "kube" {
   valid_redirect_uris = [
     "https://gitlab.oidc.thecloudgarage.com:10443/*",
     "https://portainer.oidc.thecloudgarage.com:11443/*",
-    "http://localhost:8085/*",
-    "http://localhost:8000/*",
-    "https://argocd.oidc.thecloudgarage.com:/*"
+    "https://argocd.oidc.thecloudgarage.com/*"
    ]
 }
 # configure kube openid client default scopes
