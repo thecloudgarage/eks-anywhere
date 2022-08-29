@@ -112,7 +112,7 @@ spec:
             topologyKey: "kubernetes.io/hostname"
       containers:
       - name: carts-db
-        image: mongo
+        image: mongo:4.2.16-rc0
         command:
         - "mongod"
         - "--bind_ip"
