@@ -4,7 +4,7 @@ cd $HOME
 CLUSTER_NAME=<name-of-the-intented-eks-cluster>
 mkdir $CLUSTER_NAME
 ssh-keygen
-cp $HOME/.ssh/id_rsa* $CLUSTER_NAME
+cp $HOME/.ssh/id_rsa* $HOME/$CLUSTER_NAME
 cd $CLUSTER_NAME
 mv id_rsa eks
 mv id_rsa.pub eks.pub
