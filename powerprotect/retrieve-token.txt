@@ -1,2 +1,2 @@
-SA_NAME="anh-admin"
+SA_NAME="powerprotect"
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep ${SA_NAME} | awk '{print $1}')
