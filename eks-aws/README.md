@@ -54,6 +54,7 @@ kubectl -n kube-system describe configmap aws-auth
 kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
 kubectl get pods -n kube-system
 ```
+### Before deleting the cluster, ensure that the CSI driver gets uninstalled & the associated IAM policy is deleted from the IAM role, else it might lead to cluster deletion errors
 
 # For OIDC
 
