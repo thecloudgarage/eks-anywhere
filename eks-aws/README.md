@@ -5,7 +5,7 @@ CLUSTER_NAME=<name-of-the-intented-eks-cluster>
 mkdir $CLUSTER_NAME
 ssh-keygen
 cp $HOME/.ssh/id_rsa* $HOME/$CLUSTER_NAME
-cd $CLUSTER_NAME
+cd $HOME/$CLUSTER_NAME
 mv id_rsa eks
 mv id_rsa.pub eks.pub
 cp $HOME/eks-anywhere/eksaws/eks.yaml $CLUSTER_NAME.yaml
