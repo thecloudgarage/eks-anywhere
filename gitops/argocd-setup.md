@@ -90,8 +90,10 @@ Once the application is created it will try to sync the resources
 
 To delete
 
+```
 helm delete argocd -n argocd
 kubectl delete crd applications.argoproj.io
 kubectl delete crd applicationsets.argoproj.io
 kubectl delete crd argocdextensions.argoproj.io
 kubectl delete crd appprojects.argoproj.io
+```
