@@ -43,7 +43,7 @@ metadata:
   name: workload-cluster-name-dcconfig
 spec:
   datacenter: "IAC-SSC"
-  insecure: false
+  insecure: true
   network: "iac_pg"
   server: "vc.iac.ssc"
   thumbprint: "F7:A3:92:55:2D:73:B1:BA:1C:77:A8:AC:A3:AD:F3:62:8A:E0:53:CE"
