@@ -3,7 +3,8 @@ One can observe that the main cluster CRD (kind: cluster) leverages other CRDs (
 
 ![clustersample](https://user-images.githubusercontent.com/39495790/190472432-0da9ec8e-0434-4280-8e27-3382ab8d0a22.png)
 
-# Create a base template based on the provided cluster-sample.yaml file (Do not change this file name)
+# Create a base template
+* Edit the template accessed via the path $HOME/eks-anywhere/cluster-samples/cluster-sample.yaml
 * Edit the values for the specific vSphere environment (datacenter name, network name, server name, thumbrrint) in **Data Center config block:** 
 * Next, we will need to change the target configuration for Control, worker and etcd nodes in the respective machine config blocks. 
     * Size of each node group (disk, memory, cpu)
