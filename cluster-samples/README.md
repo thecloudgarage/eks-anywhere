@@ -3,7 +3,7 @@ One can observe that the main cluster CRD (kind: cluster) leverages other CRDs (
 
 ![clustersample](https://user-images.githubusercontent.com/39495790/190472432-0da9ec8e-0434-4280-8e27-3382ab8d0a22.png)
 
-# What needs to be done 
+# Create a base template based on the provided cluster-sample.yaml file (Do not change this file name)
 * To start one needs to change the values for the specific vSphere environment needs to be set namely for the datacenter name, network name, server name, thumbrrint in Data Center config block
 * Next, we will need to change the target configuration for Control, worker and etcd nodes. This includes size and specifications along with vSphere environment specific values. Also note that the ubuntu template name needs to be altered per what was created during the image build process
 * Once this is done, one will have a base cluster template that can be reused for creating different types of clusters namely (standalone workload cluster, dedicated management cluster, workload clusters managed via a dedicated management cluster)
