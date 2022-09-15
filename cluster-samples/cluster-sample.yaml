@@ -60,6 +60,7 @@ spec:
   memoryMiB: 8192
   numCPUs: 2
   osFamily: ubuntu
+  template: "ubuntu-template-name"
   resourcePool: "Test"
   users:
   - name: capv
@@ -78,6 +79,7 @@ spec:
   memoryMiB: 8192
   numCPUs: 2
   osFamily: ubuntu
+  template: "ubuntu-template-name"
   resourcePool: "Test"
   users:
   - name: capv
@@ -96,6 +98,7 @@ spec:
   memoryMiB: 8192
   numCPUs: 2
   osFamily: ubuntu
+  template: "ubuntu-template-name"
   resourcePool: "Test"
   users:
   - name: capv
