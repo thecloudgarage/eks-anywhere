@@ -50,5 +50,7 @@ cp $HOME/eks-anywhere/cluster-samples/cluster-sample.yaml $CLUSTER_NAME-eks-a-cl
 sed -i "s/workload-cluster-name/$CLUSTER_NAME/g" $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
 sed -i "s/management-cluster-name/$MGMT_CLUSTER_NAME/g" $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
 sed -i "s/api-server-ip/$API_SERVER_IP/g" $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
-eksctl anywhere create cluster -f $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
+eksctl anywhere create cluster \
+  -f $HOME/$CLUSTER_NAME-eks-a-cluster.yaml  \
+  --kubeconfig $HOME/$MGMT_CLUSTER_NAME/$MGMT_CLUSTER_NAME-eks-a-cluster.kubeconfig
 ```
