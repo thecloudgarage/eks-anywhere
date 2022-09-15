@@ -1,15 +1,11 @@
 # Cluster template structure
+One can observe that the main cluster CRD (kind: cluster) leverages other CRDs (VSphereDatacenterConfig, VSphereMachineConfig). The co-relation is done via the name binding between the main block and the sub-blocks
 
-## KEY NOTES
-* One can observe that the main cluster CRD identified by the resource type cluster leverages other CRDs for various configuration references. 
-
-Other parameters for size and configuration can be accordingly tuned for various node groups
-
-![clustersample](https://user-images.githubusercontent.com/39495790/190064228-99a974d8-6313-427e-a048-a8be61a7d298.png)
+![clustersample](https://user-images.githubusercontent.com/39495790/190472432-0da9ec8e-0434-4280-8e27-3382ab8d0a22.png)
 
 # What needs to be done 
 * To start one needs to change the values for the specific vSphere environment needs to be set namely for the datacenter name, network name, server name, thumbrrint in Data Center config block
-* Next, we will need to change the target configuration for Control, worker and etcd nodes. This includes size and specifications along with vSphere environment specific values
+* Next, we will need to change the target configuration for Control, worker and etcd nodes. This includes size and specifications along with vSphere environment specific values. Also note that the ubuntu template name needs to be altered per what was created during the image build process
 * Once this is done, one will have a base cluster template that can be reused for creating different types of clusters namely (standalone workload cluster, dedicated management cluster, workload clusters managed via a dedicated management cluster)
 the below set of commands for each cluster type will reThe static terms will need to be changed along with other specific vSphere related parameters
 * In order to faciliate the same, the below set of commands can be used as long as one does not change the sample cluster template name. The commands can be used depending on the type of cluster being created
