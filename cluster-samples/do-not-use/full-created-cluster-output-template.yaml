@@ -1,0 +1,56 @@
+apiVersion: v1
+items:
+- apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+  kind: Cluster
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"anywhere.eks.amazonaws.com/v1alpha1","kind":"Cluster","metadata":{"annotations":{"anywhere.eks.amazonaws.com/paused":"true"},"name":"c4-eksa1","namespace":"default"},"spec":{"bundlesRef":{"apiVersion":"anywhere.eks.amazonaws.com/v1alpha1","name":"bundles-16","namespace":"eksa-system"},"clusterNetwork":{"cniConfig":{"cilium":{}},"pods":{"cidrBlocks":["192.168.0.0/16"]},"services":{"cidrBlocks":["10.96.0.0/12"]}},"controlPlaneConfiguration":{"count":2,"endpoint":{"host":"172.24.165.16"},"machineGroupRef":{"kind":"VSphereMachineConfig","name":"c4-eksa1-cp"}},"datacenterRef":{"kind":"VSphereDatacenterConfig","name":"c4-eksa1-dcconfig"},"externalEtcdConfiguration":{"count":3,"machineGroupRef":{"kind":"VSphereMachineConfig","name":"c4-eksa1-etcd"}},"kubernetesVersion":"1.21","managementCluster":{"name":"c4-eksa1"},"workerNodeGroupConfigurations":[{"count":2,"machineGroupRef":{"kind":"VSphereMachineConfig","name":"c4-eksa1-wk"},"name":"md-0"}]}}
+    creationTimestamp: "2022-09-14T06:26:31Z"
+    generation: 1
+    name: c4-eksa1
+    namespace: default
+    resourceVersion: "3637"
+    uid: 139abc41-c1f5-42c8-8d4a-32c8ad701d71
+  spec:
+    bundlesRef:
+      apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+      name: bundles-16
+      namespace: eksa-system
+    clusterNetwork:
+      cniConfig:
+        cilium: {}
+      dns: {}
+      pods:
+        cidrBlocks:
+        - 192.168.0.0/16
+      services:
+        cidrBlocks:
+        - 10.96.0.0/12
+    controlPlaneConfiguration:
+      count: 2
+      endpoint:
+        host: 172.24.165.16
+      machineGroupRef:
+        kind: VSphereMachineConfig
+        name: c4-eksa1-cp
+    datacenterRef:
+      kind: VSphereDatacenterConfig
+      name: c4-eksa1-dcconfig
+    externalEtcdConfiguration:
+      count: 3
+      machineGroupRef:
+        kind: VSphereMachineConfig
+        name: c4-eksa1-etcd
+    kubernetesVersion: "1.21"
+    managementCluster:
+      name: c4-eksa1
+    workerNodeGroupConfigurations:
+    - count: 2
+      machineGroupRef:
+        kind: VSphereMachineConfig
+        name: c4-eksa1-wk
+      name: md-0
+kind: List
+metadata:
+  resourceVersion: ""
