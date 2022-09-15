@@ -31,5 +31,5 @@ sed -i "s/workload-cluster-name/$CLUSTER_NAME/g" $HOME/$CLUSTER_NAME-eks-a-clust
 sed -i "s/management-cluster-name/$MGMT_CLUSTER_NAME/g" $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
 sed -i "s/api-server-ip/$API_SERVER_IP/g" $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
 ```
-
+# Cluster template structure
 ![clustersample](https://user-images.githubusercontent.com/39495790/190064228-99a974d8-6313-427e-a048-a8be61a7d298.png)
