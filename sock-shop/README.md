@@ -1,9 +1,6 @@
-* Edit the host value in the ingress-front-end.yaml
-* Ensure a MetalLB load balancer is configured before deploying the templates
-* Apply the Ingress controller YAML
-* Apply the namespace yaml
-* The Storage class used in complete demo YAML defaults to "powerstore-ext4". Change if required
-* Apply the complete demo YAML
-* Validate the outputs from kubectl
-* Create a DNS entry with the host value and the Ingress IP address
+### This version of sock-shop application is built to be used on EKS Anywhere clusters along with Dell's PowerStore CSI
+* MetalLB and PowerStore CSI should be deployed as a prior pre-requisite on the EKS Anywhere cluster
+* A deployment script and delete script is provided that will renderdestroy all the required resources
+* The application frontend is built to suit a FQDN with SSL style of deployment., so you will need access to creating DNS records
+* Once the deployment is complete., create a DNS entry with the host value and the Ingress IP address
 * Validate the application workflow
