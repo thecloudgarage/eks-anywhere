@@ -11,7 +11,7 @@ sleep 3
 kubectl create secret tls sockshop-tls -n sock-shop --key tls.key --cert tls.crt
 sleep 3
 kubectl create -f $HOME/eks-anywhere/sock-shop/ingress-controller-nginx.yaml
-sleep 10
+sleep 120
 kubectl create -f $HOME/eks-anywhere/sock-shop/complete-demo-with-persistence.yaml
 sleep 60
 kubectl create -f $HOME/eks-anywhere/sock-shop/ingress-sockshop.yaml
