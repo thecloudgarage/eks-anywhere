@@ -60,7 +60,7 @@ spec:
   memoryMiB: 8192
   numCPUs: 2
   osFamily: ubuntu
-  template: "ubuntu-2004-kubernetes-1-21-eks-17"
+  template: "ubuntu-2004-kube-v1.21.14"
   resourcePool: "Test"
   users:
   - name: capv
@@ -79,7 +79,7 @@ spec:
   memoryMiB: 8192
   numCPUs: 2
   osFamily: ubuntu
-  template: "ubuntu-2004-kubernetes-1-21-eks-17"
+  template: "ubuntu-2004-kube-v1.21.14"
   resourcePool: "Test"
   users:
   - name: capv
@@ -98,7 +98,7 @@ spec:
   memoryMiB: 8192
   numCPUs: 2
   osFamily: ubuntu
-  template: "ubuntu-2004-kubernetes-1-21-eks-17"
+  template: "ubuntu-2004-kube-v1.21.14"
   resourcePool: "Test"
   users:
   - name: capv
