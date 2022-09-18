@@ -1,7 +1,7 @@
 # Cluster template structure
 One can observe that the main cluster CRD (kind: cluster) leverages other CRDs (VSphereDatacenterConfig, VSphereMachineConfig). The co-relation is done via the name binding between the main block and the sub-blocks
 
-![clustersample](https://user-images.githubusercontent.com/39495790/190472432-0da9ec8e-0434-4280-8e27-3382ab8d0a22.png)
+![clustersample](https://user-images.githubusercontent.com/39495790/190913448-d22ad0a2-a1db-43a5-b5c0-3110c6a7e879.png)
 
 # Create a base template
 * Edit the template accessed via the path $HOME/eks-anywhere/cluster-samples/cluster-sample.yaml
