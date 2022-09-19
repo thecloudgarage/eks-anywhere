@@ -133,8 +133,6 @@ resource "null_resource" "eks_anywhere_provisioner" {
   provisioner "remote-exec" {
     inline = [
       "echo ${var.virtual_machine_root_password} | sudo -S apt-get update -y",
-      "echo ${var.virtual_machine_root_password} | sudo -S adduser --gecos '' --disabled-password image-builder",
-      "echo ${var.virtual_machine_root_password} | sudo -S chpasswd <<<'image-builder:ubuntu'",      
       "eval \"$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\"",
       "brew install aws/tap/eks-anywhere",
       "brew tap hashicorp/tap",
@@ -144,8 +142,8 @@ resource "null_resource" "eks_anywhere_provisioner" {
       "cd $HOME",
       "curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash",
       "sudo apt -y install sshpass",
-    ]
-  }
+      ]
+    }
 }
 
 # Next we will set the vSphere credentials in ubuntu profile for creating EKS Anywhere clusters
@@ -167,6 +165,24 @@ resource "null_resource" "set_vsphere_credentials_in_profile" {
     ]
   }
 }
+
+resource "null_resource" "add_image_builder" {
+  depends_on = [null_resource.eks_anywhere_provisioner]
+  connection {
+      type     = "ssh"
+      user     = "ubuntu"
+      password = var.virtual_machine_root_password
+      host     = var.virtual_machine_static_ip_address
+  }
+  // The below will set the vsphere credentials in the ubuntu profile for EKSA cluster provisioning
+  provisioner "remote-exec" {
+    inline = [
+      "echo ${var.virtual_machine_root_password} | sudo -S adduser --gecos '' --disabled-password image-builder",
+      "echo ${var.virtual_machine_root_password} | sudo -S chpasswd <<<'image-builder:ubuntu'",
+    ]
+  }
+}
+
 # Next we will install govc, image-builder and related utilities
 resource "null_resource" "install_image_builder_and_govc" {
   depends_on = [null_resource.eks_anywhere_provisioner]
