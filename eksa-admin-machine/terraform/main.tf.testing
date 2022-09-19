@@ -110,6 +110,7 @@ resource "null_resource" "virtual_machine_bootstrapper" {
       "cd $HOME && git clone https://github.com/thecloudgarage/eks-anywhere.git",
       "find $HOME/eks-anywhere/ -name \"*.sh\" -type f -print0 | xargs -0 chmod +x",
       "chmod +x $HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/*.sh",
+      "sed -i 's/virtual_machine_root_password/${var.virtual_machine_root_password}/g' $HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/eksa-admin-machine-bootstrap-utils.sh",
       "$HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/eksa-admin-machine-bootstrap-utils.sh",
       "sleep 10"
     ]
@@ -142,9 +143,6 @@ resource "null_resource" "eks_anywhere_provisioner" {
       "brew install hashicorp/tap/terraform",
       "brew install argocd",
       "brew install fluxcd/tap/flux",
-      "cd $HOME",
-      "curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash",
-      "sudo apt -y install sshpass",
       "sleep 10"
     ]
   }
@@ -166,23 +164,6 @@ resource "null_resource" "set_vsphere_credentials_in_profile" {
       "sed -i '/^EKSA_VSPHERE_/d' ~/.profile",
       "echo \"EKSA_VSPHERE_USERNAME=${var.vsphere_user}; export EKSA_VSPHERE_USERNAME\" >> ~/.profile",
       "echo \"EKSA_VSPHERE_PASSWORD=${var.vsphere_password}; export EKSA_VSPHERE_PASSWORD\" >> ~/.profile",
-    ]
-  }
-}
-
-resource "null_resource" "add_image_builder" {
-  depends_on = [null_resource.eks_anywhere_provisioner]
-  connection {
-      type     = "ssh"
-      user     = "ubuntu"
-      password = var.virtual_machine_root_password
-      host     = var.virtual_machine_static_ip_address
-  }
-  // The below will set the vsphere credentials in the ubuntu profile for EKSA cluster provisioning
-  provisioner "remote-exec" {
-    inline = [
-      "echo ${var.virtual_machine_root_password} | sudo -S adduser --gecos '' --disabled-password image-builder",
-      "echo ${var.virtual_machine_root_password} | sudo -S chpasswd <<<'image-builder:ubuntu'",
     ]
   }
 }
