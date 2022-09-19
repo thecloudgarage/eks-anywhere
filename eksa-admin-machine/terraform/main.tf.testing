@@ -142,8 +142,8 @@ resource "null_resource" "eks_anywhere_provisioner" {
       "cd $HOME",
       "curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash",
       "sudo apt -y install sshpass",
-      ]
-    }
+    ]
+  }
 }
 
 # Next we will set the vSphere credentials in ubuntu profile for creating EKS Anywhere clusters
