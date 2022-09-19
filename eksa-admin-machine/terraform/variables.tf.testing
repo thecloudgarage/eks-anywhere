@@ -57,7 +57,7 @@ variable "existing_virtual_machine_template_name" {
 variable "virtual_machine_folder_name" {
     description = "Existing Folder name where the virtual machine will be configured"
     type        = string
-    default     = "test-eks-anywhere"
+    default     = "eks-anywhere"
 }
 variable "virtual_machine_name" {
   description = "Name of the virtual machine"
