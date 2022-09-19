@@ -104,12 +104,14 @@ resource "null_resource" "virtual_machine_bootstrapper" {
   // change permissions to executable and pipe its output into a new file
   provisioner "remote-exec" {
     inline = [
+      "sleep 10",
       "echo ${var.virtual_machine_root_password} | sudo -S apt-get update -y",
       "sudo apt-get install git -y",
       "cd $HOME && git clone https://github.com/thecloudgarage/eks-anywhere.git",
       "find $HOME/eks-anywhere/ -name \"*.sh\" -type f -print0 | xargs -0 chmod +x",
       "chmod +x $HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/*.sh",
       "$HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/eksa-admin-machine-bootstrap-utils.sh",
+      "sleep 10"
     ]
   }
 }
@@ -132,6 +134,7 @@ resource "null_resource" "eks_anywhere_provisioner" {
   // Without the first eval line, the brew installations will fail
   provisioner "remote-exec" {
     inline = [
+      "sleep 10",
       "echo ${var.virtual_machine_root_password} | sudo -S touch temp.txt",
       "eval \"$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\"",
       "brew install aws/tap/eks-anywhere",
@@ -142,6 +145,7 @@ resource "null_resource" "eks_anywhere_provisioner" {
       "cd $HOME",
       "curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash",
       "sudo apt -y install sshpass",
+      "sleep 10"
     ]
   }
 }
