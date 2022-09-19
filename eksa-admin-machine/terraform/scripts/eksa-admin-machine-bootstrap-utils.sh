@@ -21,4 +21,4 @@ chmod +x install.sh
 sudo echo -ne '\n' | ./install.sh
 echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /home/ubuntu/.profile
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-echo "done"
+exit
