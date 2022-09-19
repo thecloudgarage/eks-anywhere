@@ -22,6 +22,4 @@ chmod +x install.sh
 sudo echo -ne '\n' | ./install.sh
 echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /home/ubuntu/.profile
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-sudo useradd -m -p ubuntu image-builder
-sudo usermod -aG sudo image-builder
 echo "done"
