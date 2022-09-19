@@ -132,7 +132,7 @@ resource "null_resource" "eks_anywhere_provisioner" {
   // Without the first eval line, the brew installations will fail
   provisioner "remote-exec" {
     inline = [
-      "echo ${var.virtual_machine_root_password} | sudo -S apt-get update -y",
+      "echo ${var.virtual_machine_root_password} | sudo -S touch temp.txt",
       "eval \"$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)\"",
       "brew install aws/tap/eks-anywhere",
       "brew tap hashicorp/tap",
