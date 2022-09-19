@@ -1,7 +1,7 @@
 variable "vsphere_user" {
   description = "vSphere username"
   type        = string
-  default     = "vspher_username"
+  default     = "vsphere_username"
 }
 variable "vsphere_password" {
   description = "vSphere password"
