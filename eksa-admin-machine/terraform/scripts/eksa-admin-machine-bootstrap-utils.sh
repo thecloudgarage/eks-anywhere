@@ -1,6 +1,7 @@
 #!/bin/bash
 sudo adduser --gecos "" --disabled-password image-builder
 sudo chpasswd <<<"image-builder:virtual_machine_root_password"
+sudo usermod -aG sudo image-builder
 touch useradded.txt
 sudo apt-get install build-essential procps curl file git zip unzip sshpass jq -y
 sudo curl -L https://github.com/docker/compose/releases/download/1.21.2/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
