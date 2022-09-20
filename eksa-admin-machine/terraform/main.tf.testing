@@ -109,7 +109,6 @@ resource "null_resource" "virtual_machine_bootstrapper" {
       "sudo apt-get install git -y",
       "cd $HOME && git clone https://github.com/thecloudgarage/eks-anywhere.git",
       "find $HOME/eks-anywhere/ -name \"*.sh\" -type f -print0 | xargs -0 chmod +x",
-      "chmod +x $HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/*.sh",
       "sed -i 's/virtual_machine_root_password/${var.virtual_machine_root_password}/g' $HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/eksa-admin-machine-bootstrap-utils.sh",
       "$HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/eksa-admin-machine-bootstrap-utils.sh",
       "sleep 10"
