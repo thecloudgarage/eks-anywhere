@@ -7,5 +7,4 @@ sudo wget https://anywhere-assets.eks.amazonaws.com/releases/bundles/15/artifact
 sudo tar -xzf image-builder*.tar.gz
 sudo cp image-builder /usr/local/bin
 sudo curl -L -o - https://github.com/vmware/govmomi/releases/latest/download/govc_$(uname -s)_$(uname -m).tar.gz | sudo tar -C /usr/local/bin -xvzf - govc
-sudo apt install python3-pip -y
 exit
