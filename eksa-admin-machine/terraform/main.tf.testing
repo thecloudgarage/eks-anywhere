@@ -204,7 +204,7 @@ resource "time_sleep" "wait_for_image_builder_govc" {
 
 # Next we will set the vsphere connection settings for image-builder process
 resource "null_resource" "set_image_builder_vsphere_connection" {
-  depends_on = [null_resource.wait_for_image_builder_govc]
+  depends_on = [time_sleep.wait_for_image_builder_govc]
   connection {
       type     = "ssh"
       user     = "image-builder"
