@@ -210,6 +210,7 @@ resource "null_resource" "set_image_builder_vsphere_connection" {
       user     = "image-builder"
       password = var.virtual_machine_root_password
       host     = var.virtual_machine_static_ip_address
+      script_path = "/home/image-builder"
   }
   // The below will set the vsphere configureation for image-builder profile
   provisioner "remote-exec" {
