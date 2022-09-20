@@ -206,7 +206,7 @@ resource "null_resource" "set_image_builder_vsphere_connection" {
   // The below will set the vsphere configureation for image-builder profile
   provisioner "remote-exec" {
     inline = [
-      "sed -i 's/vsphere_compute_cluster/${var.vsphere_server}/g' $HOME/vsphere-connection.json",
+      "sed -i 's/vsphere_compute_cluster/${var.vsphere_compute_cluster}/g' $HOME/vsphere-connection.json",
       "sed -i 's/vsphere_datacenter/${var.vsphere_datacenter}/g' $HOME/vsphere-connection.json",
       "sed -i 's/vsphere_datastore/${var.vsphere_datastore}/g' $HOME/vsphere-connection.json",
       "sed -i 's/vsphere_templates_folder/${var.vsphere_templates_folder}/g' $HOME/vsphere-connection.json",
