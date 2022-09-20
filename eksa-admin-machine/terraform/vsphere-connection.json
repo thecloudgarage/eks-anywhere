@@ -1,0 +1,16 @@
+{
+"cluster":"vsphere_compute_cluster",
+"convert_to_template":"true",
+"create_snapshot":"false",
+"datacenter":"vsphere_datacenter",
+"datastore":"vsphere_datastore",
+"folder":"vsphere_templates_folder",
+"insecure_connection":"true",
+"linked_clone":"false",
+"network":"vsphere_network",
+"password":"vsphere_password",
+"resource_pool":"vsphere_resource_pool",
+"username":"vsphere_user",
+"vcenter_server":"vsphere_server",
+"vsphere_library_name": "eks-anywhere-templates"
+}
