@@ -1,4 +1,5 @@
 #!/bin/bash
+sudo apt update -y
 sudo snap install yq
 sudo apt install python3-pip -y
 sudo apt install jq unzip make ansible -y
