@@ -2,7 +2,7 @@
 mkdir -p /home/image-builder/.ssh
 sudo apt update -y
 sudo snap install yq
-apt install python3-pip -y
+apt install python3 python3-setuptools python3-dev python3-pip -y
 cd /tmp
 sudo wget https://anywhere-assets.eks.amazonaws.com/releases/bundles/15/artifacts/image-builder/0.1.0/image-builder-linux-amd64.tar.gz
 sudo tar -xzf image-builder*.tar.gz
