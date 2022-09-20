@@ -88,7 +88,7 @@ resource "vsphere_virtual_machine" "vm-one" {
 
 # First step is to bootstrap the virtual machine with docker, docker-compose, jq, homebrew
 # Note we are creating a sleep cycle via time_sleep resource, else terraform remote-exec might have issues before the VM is ready
-
+# The bootstrap script will also add the image-builder sudo user
 resource "time_sleep" "wait_for_vm" {
   create_duration = "20s"
   depends_on = [vsphere_virtual_machine.vm-one]
@@ -109,7 +109,6 @@ resource "null_resource" "virtual_machine_bootstrapper" {
       "sudo apt-get install git -y",
       "cd $HOME && git clone https://github.com/thecloudgarage/eks-anywhere.git",
       "find $HOME/eks-anywhere/ -name \"*.sh\" -type f -print0 | xargs -0 chmod +x",
-      "chmod +x $HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/*.sh",
       "sed -i 's/virtual_machine_root_password/${var.virtual_machine_root_password}/g' $HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/eksa-admin-machine-bootstrap-utils.sh",
       "$HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/eksa-admin-machine-bootstrap-utils.sh",
       "sleep 10"
@@ -177,35 +176,47 @@ resource "null_resource" "install_image_builder_and_govc" {
       password = var.virtual_machine_root_password
       host     = var.virtual_machine_static_ip_address
   }
-  // The below will set the vsphere credentials in the ubuntu profile for EKSA cluster provisioning
+  // The below will perform the necessary actions to install govc and image-builder
   provisioner "remote-exec" {
     inline = [
-      "echo ${var.virtual_machine_root_password} | sudo -S apt-get update -y",
-      "sudo apt install jq unzip make ansible -y",
-      "sudo apt install python3-pip -y",
-      "sudo snap install yq",
-      "mkdir -p /home/image-builder/.ssh",
-      "cd /tmp",
-      "sudo wget https://anywhere-assets.eks.amazonaws.com/releases/bundles/15/artifacts/image-builder/0.1.0/image-builder-linux-amd64.tar.gz",
-      "sudo tar -xzf image-builder*.tar.gz",
-      "sudo cp image-builder /usr/local/bin",
-      "sudo curl -L -o - https://github.com/vmware/govmomi/releases/latest/download/govc_$(uname -s)_$(uname -m).tar.gz | sudo tar -C /usr/local/bin -xvzf - govc",
+      "sleep 10",
+      "echo ${var.virtual_machine_root_password} | sudo -S ls",
       "cd /home/image-builder",
       "echo \"GOVC_URL=${var.vsphere_server}; export GOVC_URL\" >> ~/.profile",
       "echo \"GOVC_USERNAME=${var.vsphere_user}; export GOVC_USERNAME\" >> ~/.profile",
       "echo \"GOVC_PASSWORD=${var.vsphere_password}; export GOVC_PASSWORD\" >> ~/.profile",
-      "echo \"GOVC_INSECURE=true; export INSECURE\" >> ~/.profile",
+      "echo \"GOVC_INSECURE=true; export GOVC_INSECURE\" >> ~/.profile",
       "echo \"GOVC_DATASTORE=${var.vsphere_datastore}; export GOVC_DATASTORE\" >> ~/.profile",
-      "wget https://gist.github.com/thecloudgarage/9fcdde591a2a74e79a2119f0ea54010c",
-      "sed -i \"s/vsphere_compute_cluster/${var.vsphere_server}/g\" $HOME/vsphere-connection.json",
-      "sed -i \"s/vsphere_datacenter/${var.vsphere_datacenter}/g\" $HOME/vsphere-connection.json",
-      "sed -i \"s/vsphere_datastore/${var.vsphere_datastore}/g\" $HOME/vsphere-connection.json",
-      "sed -i \"s/vsphere_templates_folder/${var.vsphere_templates_folder}/g\" $HOME/vsphere-connection.json",
-      "sed -i \"s/vsphere_network/${var.vsphere_network}/g\" $HOME/vsphere-connection.json",
-      "sed -i \"s/vsphere_password/${var.vsphere_password}/g\" $HOME/vsphere-connection.json",
-      "sed -i \"s/vsphere_resource_pool/${var.vsphere_resource_pool}/g\" $HOME/vsphere-connection.json",
-      "sed -i \"s/vsphere_user/${var.vsphere_user}/g\" $HOME/vsphere-connection.json",
-      "sed -i \"s/vsphere_server/${var.vsphere_server}/g\" $HOME/vsphere-connection.json",
+      "git clone https://github.com/thecloudgarage/eks-anywhere.git",
+      "find $HOME/eks-anywhere/ -name \"*.sh\" -type f -print0 | xargs -0 chmod +x",
+      "cp $HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/vsphere-connection.json $HOME/vsphere-connection.json",
+      "$HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/image_builder_govc.sh",
+      "sleep 10"
+    ]
+  }
+}
+
+# Next we will set the vsphere connection settings for image-builder process
+resource "null_resource" "set_image_builder_vsphere_connection" {
+  depends_on = [null_resource.install_image_builder_and_govc]
+  connection {
+      type     = "ssh"
+      user     = "image-builder"
+      password = var.virtual_machine_root_password
+      host     = var.virtual_machine_static_ip_address
+  }
+  // The below will set the vsphere configureation for image-builder profile
+  provisioner "remote-exec" {
+    inline = [
+      "sed -i 's/vsphere_compute_cluster/${var.vsphere_compute_cluster}/g' $HOME/vsphere-connection.json",
+      "sed -i 's/vsphere_datacenter/${var.vsphere_datacenter}/g' $HOME/vsphere-connection.json",
+      "sed -i 's/vsphere_datastore/${var.vsphere_datastore}/g' $HOME/vsphere-connection.json",
+      "sed -i 's/vsphere_templates_folder/${var.vsphere_templates_folder}/g' $HOME/vsphere-connection.json",
+      "sed -i 's/vsphere_network/${var.vsphere_network}/g' $HOME/vsphere-connection.json",
+      "sed -i 's/vsphere_password/${var.vsphere_password}/g' $HOME/vsphere-connection.json",
+      "sed -i 's/vsphere_resource_pool/${var.vsphere_resource_pool}/g' $HOME/vsphere-connection.json",
+      "sed -i 's/vsphere_user/${var.vsphere_user}/g' $HOME/vsphere-connection.json",
+      "sed -i 's/vsphere_server/${var.vsphere_server}/g' $HOME/vsphere-connection.json",
     ]
   }
 }
