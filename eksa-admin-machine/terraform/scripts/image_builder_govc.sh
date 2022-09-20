@@ -1,4 +1,5 @@
 #!/bin/bash
+mkdir -p /home/image-builder/.ssh
 sudo apt update -y
 sudo snap install yq
 sudo apt install python3-pip -y
