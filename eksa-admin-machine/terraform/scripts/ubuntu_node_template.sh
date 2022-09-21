@@ -17,10 +17,11 @@ govc library.import $vsphere_content_library $HOME/$ubuntu_template_name.ova
 govc library.deploy -pool $vsphere_resource_pool -folder $vsphere_templates_folder_full_path /$vsphere_content_library/$ubuntu_template_name $ubuntu_template_name
 govc snapshot.create -vm $ubuntu_template_name root
 govc vm.markastemplate $ubuntu_template_name
-govc tags.create -c os os:ubuntu
-govc tags.category.create -t VirtualMachine eksdRelease
-govc tags.create -c eksdRelease eksdRelease:$eksd_release_tag
+govc tags.create -c os os:ubuntu 2> /dev/null
+govc tags.category.create -t VirtualMachine eksdRelease 2> /dev/null
+govc tags.create -c eksdRelease eksdRelease:$eksd_release_tag 2> /dev/null
 govc tags.attach os:ubuntu $vsphere_templates_folder_full_path/$ubuntu_template_name
 govc tags.attach eksdRelease:$eksd_release_tag $vsphere_templates_folder_full_path/$ubuntu_template_name
 govc library.rm "$vsphere_content_library"
 sed -i "s/$vsphere_content_library/vsphere_content_library/g" $HOME/vsphere-connection.json
+echo "$ubuntu_template_name template is created successfully and is located in $vsphere_templates_folder"
