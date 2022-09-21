@@ -24,11 +24,6 @@ variable "vsphere_compute_cluster" {
   type        = string
   default     = "IAC"
 }
-variable "vsphere_content_library" {
-  description = "vSphere content library name"
-  type        = string
-  default     = "eks-anywhere-templates"
-}
 variable "vsphere_resource_pool" {
   description = "vSphere existing resource pool to be used for this virtual machine"
   type        = string
