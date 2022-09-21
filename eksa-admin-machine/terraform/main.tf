@@ -223,6 +223,8 @@ resource "null_resource" "set_image_builder_vsphere_connection" {
       "sed -i 's/vsphere_resource_pool/${var.vsphere_resource_pool}/g' $HOME/vsphere-connection.json",
       "sed -i 's/vsphere_user/${var.vsphere_user}/g' $HOME/vsphere-connection.json",
       "sed -i 's/vsphere_server/${var.vsphere_server}/g' $HOME/vsphere-connection.json",
+      "sed -i 's/vsphere_datacenter/${var.vsphere_datacenter}/g' $HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/ubuntu_node_template.sh",
+      "sed -i 's/vsphere_templates_folder/${var.vsphere_templates_folder}/g' $HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/ubuntu_node_template.sh",
     ]
   }
 }
