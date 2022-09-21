@@ -12,8 +12,8 @@ govc library.create "$vsphere_content_library"
 sed -i "s/vsphere_content_library/$vsphere_content_library/g" $HOME/vsphere-connection.json
 image-builder build --os ubuntu --hypervisor vsphere --release-channel 1-21 --vsphere-config $HOME/vsphere-connection.json
 export vsphere_templates_folder_full_path=/$vsphere_datacenter/vm/$vsphere_templates_folder
-cp ubuntu.ova $ubuntu_template_name.ova
-govc library.import $vsphere_content_library /home/image-builder/$ubuntu_template_name.ova
+mv $HOME/ubuntu.ova $HOME/$ubuntu_template_name.ova
+govc library.import $vsphere_content_library $HOME/$ubuntu_template_name.ova
 govc library.deploy -pool $vsphere_resource_pool -folder $vsphere_templates_folder_full_path /$vsphere_content_library/$ubuntu_template_name $ubuntu_template_name
 govc snapshot.create -vm $ubuntu_template_name root
 govc vm.markastemplate $ubuntu_template_name
