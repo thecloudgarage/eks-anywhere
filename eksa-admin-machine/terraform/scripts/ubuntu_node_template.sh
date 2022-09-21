@@ -1,7 +1,7 @@
 #!/bin/bash
 vsphere_content_library=eks-anywhere-template-$RANDOM
 govc library.create "$vsphere_content_library"
-sed -i "s/vsphere_library_name/$vsphere_content_library/g" $HOME/vsphere-connection.json
+sed -i "s/vsphere_content_library/$vsphere_content_library/g" $HOME/vsphere-connection.json
 image-builder build --os ubuntu --hypervisor vsphere --release-channel 1-21 --vsphere-config $HOME/vsphere-connection.json
 sudo -Hiu ubuntu eksctl anywhere download artifacts
 sudo -Hiu ubuntu tar -xzf eks-anywhere-downloads.tar.gz
