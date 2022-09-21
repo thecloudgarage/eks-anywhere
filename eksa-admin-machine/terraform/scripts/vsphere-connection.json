@@ -12,5 +12,5 @@
 "resource_pool":"vsphere_resource_pool",
 "username":"vsphere_user",
 "vcenter_server":"vsphere_server",
-"vsphere_library_name": "vsphere_library_name"
+"vsphere_library_name": "vsphere_content_library"
 }
