@@ -18,3 +18,4 @@ govc tags.category.create -t VirtualMachine eksdRelease
 govc tags.attach os:ubuntu /$vsphere_templates_folder_full_path/ubuntu-2004-kube-v1.21.14
 govc tags.attach eksdRelease:$eksd_release_tag /$vsphere_templates_folder_full_path/ubuntu-2004-kube-v1.21.14
 govc library.rm "$vsphere_content_library"
+sed -i "s/$vsphere_content_library/vsphere_content_library/g" $HOME/vsphere-connection.json
