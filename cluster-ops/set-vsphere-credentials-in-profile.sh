@@ -1,5 +1,6 @@
 #!/bin/bash
 read -sp 'vSphereUserName: ' vSphereUserName
+echo -e "\n"
 read -sp 'vSpherePassword: ' vSpherePassword
 echo -e "\n"
 sed -i '/^EKSA_VSPHERE_/d' /home/ubuntu/.profile
