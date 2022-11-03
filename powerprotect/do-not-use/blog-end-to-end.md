@@ -17,7 +17,7 @@ cd $HOME
 source $HOME/eks-anywhere/cluster-ops/switch-cluster.sh
 kubectl get nodes
 ```
-* INSTALL POWERSTORE CSI ON c4-eksa1
+* INSTALL POWERSTORE CSI 
 ```
 source eks-anywhere/powerstore/install-powerstore-csi-driver.sh
 clusterName: c4-eksa1              
@@ -79,6 +79,10 @@ kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | gre
 # SCENARIO-2
 * While being SSH'd into EKS Anywhere Administrative machine
 * DELETE c4-eksa1 cluster
+```
+cd $HOME
+source $HOME/eks-anywhere/cluster-ops/delete-workload-cluster.sh
+```
 * CREATE c4-eksa2 cluster
 ```
 CLUSTER_NAME=c4-eksa2
@@ -96,7 +100,7 @@ cd $HOME
 source $HOME/eks-anywhere/cluster-ops/switch-cluster.sh
 kubectl get nodes
 ```
-* INSTALL POWERSTORE CSI ON c4-eksa1
+* INSTALL POWERSTORE CSI
 ```
 source eks-anywhere/powerstore/install-powerstore-csi-driver.sh
 clusterName: c4-eksa2              
@@ -149,6 +153,206 @@ kubectl get services -n sock-shop
 kubectl get ingress -n sock-shop
 ```
 * Access the sock-shop application and validate if the demo user and order ID exists
+* Create one more order via the same user
+
+# SCENARIO-3
+* SSH into the EKS Anywhere Administrative machine
+* Delete the c4-eksa2 cluster
+```
+cd $HOME
+source $HOME/eks-anywhere/cluster-ops/delete-workload-cluster.sh
+```
+* Export AWS credentials on the EKS Anywhere Administrative machine for eksctl to create the cluster
+```
+export AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+export AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+export AWS_DEFAULT_REGION=us-east-2
+```
+* Create EKS cluster on AWS public cloud
+```
+cd $HOME
+CLUSTER_NAME=c4-eks-aws-1
+mkdir -p $CLUSTER_NAME
+ssh-keygen
+cd $HOME/$CLUSTER_NAME
+cp $HOME/.ssh/id_rsa ~/eks
+cp $HOME/.ssh/id_rsa.pub ~/eks.pub
+cp $HOME/eks-anywhere/eks-aws/eks.yaml $HOME/$CLUSTER_NAME/$CLUSTER_NAME.yaml
+sed -i "s/ekstest/$CLUSTER_NAME/g" $HOME/$CLUSTER_NAME/$CLUSTER_NAME.yaml
+eksctl create cluster -f $HOME/$CLUSTER_NAME/$CLUSTER_NAME.yaml --kubeconfig=$HOME/$CLUSTER_NAME/$CLUSTER_NAME-eks-cluster.kubeconfig
+KUBECONFIG=$HOME/$CLUSTER_NAME/$CLUSTER_NAME-eks-cluster.kubeconfig
+kubectl get nodes
+```
+* Create EBS storage class on EKS cluster
+* Login to AWS console
+* Create an IAM policy with the following permissions as shown below and name it as Amazon_EBS_CSI_Driver
+```
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ec2:AttachVolume",
+        "ec2:CreateSnapshot",
+        "ec2:CreateTags",
+        "ec2:CreateVolume",
+        "ec2:DeleteSnapshot",
+        "ec2:DeleteTags",
+        "ec2:DeleteVolume",
+        "ec2:DescribeInstances",
+        "ec2:DescribeSnapshots",
+        "ec2:DescribeTags",
+        "ec2:DescribeVolumes",
+        "ec2:DetachVolume"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+```
+* Get Worker node IAM Role ARN
+```
+kubectl -n kube-system describe configmap aws-auth
+```
+* example from output check rolearn: arn:aws:iam::180789647333:role/eksctl-eksdemo1-nodegroup-eksdemo-NodeInstanceRole-IJN07ZKXAWNN
+* Go to Services -> IAM -> Roles - Search for role with name eksctl-c4-eks-aws-1-nodegroup and open it - Click on Permissions tab - Click on Attach Policies - Search for Amazon_EBS_CSI_Driver and click on Attach Policy
+* Deploy EBS CSI Driver
+```
+kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
+```
+* Verify ebs-csi pods running
+```
+kubectl get pods -n kube-system
+```
+* Create the EBS storage class
+```
+cat <<EOF | kubectl apply -f -
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ebs-sc
+provisioner: ebs.csi.aws.com
+volumeBindingMode: WaitForFirstConsumer
+parameters:
+  csi.storage.k8s.io/fstype: xfs
+  type: io1
+  iopsPerGB: "50"
+  encrypted: "true"
+EOF
+```
+* Perform the below scripted additional steps
+```
+cat <<EOF > $HOME/ebs-extra-steps.sh
+kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/master/client/config/crd/snapshot.storage.k8s.io_volumesnapshotclasses.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/master/client/config/crd/snapshot.storage.k8s.io_volumesnapshotcontents.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/master/client/config/crd/snapshot.storage.k8s.io_volumesnapshots.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/aws-ebs-csi-driver/master/examples/kubernetes/snapshot/manifests/classes/snapshotclass.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/master/deploy/kubernetes/snapshot-controller/rbac-snapshot-controller.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/master/deploy/kubernetes/snapshot-controller/setup-snapshot-controller.yaml
+kubectl patch storageclass gp2 -p "{\"metadata\": {\"annotations\":{\"storageclass.kubernetes.io/is-default-class\":\"false\"}}}" 
+kubectl patch storageclass ebs-sc -p "{\"metadata\": {\"annotations\":{\"storageclass.kubernetes.io/is-default-class\":\"true\"}}}" 
+EOF
+```
+* Deploy NGINX Ingress controller with NLB annotations
+```
+kubectl apply -f $HOME/eks-anywhere/eks-aws/eks-nlb-nginx-ingress-controller.yaml
+```
+* Apply the PowerProtect RBAC on the EKS cluster and retrieve Service account token
+```
+cd $HOME
+kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect.yaml
+SA_NAME="powerprotect"
+kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep ${SA_NAME} | awk '{print $1}')
+```
+* Create an empty namespace for sockshop for recovery
+```
+kubectl create ns sock-shop
+```
+* Discover the c4-eks-aws-1 cluster in PowerProtect and recover the sock-shop application
+* Validate sock-shop pods, services and ingress
+```
+kubectl get pods -n sock-shop
+kubectl get services -n sock-shop
+kubectl get ingress -n sock-shop
+```
+* Edit the hosts file or DNS entry to route sockshop url to the NLB FQDN
+* Access the sock-shop application and validate if the demo user and 2 order IDs exists
+* Create one more order via the same user
+
+# SCENARIO-4
+* SSH into the EKS Anywhere Administrative machine
+* Delete the EKS cluster c4-eks-aws-1 on AWS public cloud
+* CREATE c4-eksa3 cluster
+```
+CLUSTER_NAME=c4-eksa3
+API_SERVER_IP=172.24.165.11
+cd $HOME
+cp $HOME/eks-anywhere/cluster-samples/cluster-sample.yaml $CLUSTER_NAME-eks-a-cluster.yaml
+sed -i "s/workload-cluster-name/$CLUSTER_NAME/g" $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
+sed -i "s/management-cluster-name/$CLUSTER_NAME/g" $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
+sed -i "s/api-server-ip/$API_SERVER_IP/g" $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
+eksctl anywhere create cluster -f $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
+```
+* Validate cluster is installed
+```
+cd $HOME
+source $HOME/eks-anywhere/cluster-ops/switch-cluster.sh
+kubectl get nodes
+```
+* INSTALL POWERSTORE CSI
+```
+source eks-anywhere/powerstore/install-powerstore-csi-driver.sh
+clusterName: c4-eksa3              
+Enter IP or FQDN of the PowerStore array
+ipOrFqdnOfPowerStoreArray: 172.24.185.106
+Enter Global Id of the PowerStore Array
+globalIdOfPowerStoreArray: PS4ebb8d4e8488 
+Enter username of the PowerStore Array
+userNameOfPowerStoreArray: iac
+Enter password of the PowerStore Array
+passwordOfPowerStoreArray:
+```
+* DEPLOY METALLB Load Balancer along with IP advertisement CRDs
+```
+helm upgrade --install --wait --timeout 15m   --namespace metallb-system --create-namespace   --repo https://metallb.github.io/metallb metallb metallb
+
+cat <<EOF | kubectl apply -f -
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: first-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 172.24.165.21-172.24.165.25
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: example
+  namespace: metallb-system
+EOF
+```
+* Apply the PowerProtect RBAC and retrieve Service account token
+```
+cd $HOME
+kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect.yaml
+SA_NAME="powerprotect"
+kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep ${SA_NAME} | awk '{print $1}')
+```
+* Create an empty namespace for sockshop for recovery
+```
+kubectl create ns sock-shop
+```
+* Discover the c4-eksa3 cluster in PowerProtect and recover the sock-shop application
+* Validate sock-shop pods, services and ingress
+```
+kubectl get pods -n sock-shop
+kubectl get services -n sock-shop
+kubectl get ingress -n sock-shop
+```
+* Access the sock-shop application and validate if the demo user and 3 order IDs exists
 * Create one more order via the same user
 
 
