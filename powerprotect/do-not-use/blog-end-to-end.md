@@ -168,19 +168,16 @@ export AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 export AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 export AWS_DEFAULT_REGION=us-east-2
 ```
-* Create EKS cluster on AWS public cloud
+* Create EKS cluster c4-eks-aws-1 on AWS public cloud in the above specified region
 ```
 cd $HOME
-CLUSTER_NAME=c4-eks-aws-1
-mkdir -p $CLUSTER_NAME
-ssh-keygen
-cd $HOME/$CLUSTER_NAME
-cp $HOME/.ssh/id_rsa ~/eks
-cp $HOME/.ssh/id_rsa.pub ~/eks.pub
-cp $HOME/eks-anywhere/eks-aws/eks.yaml $HOME/$CLUSTER_NAME/$CLUSTER_NAME.yaml
-sed -i "s/ekstest/$CLUSTER_NAME/g" $HOME/$CLUSTER_NAME/$CLUSTER_NAME.yaml
-eksctl create cluster -f $HOME/$CLUSTER_NAME/$CLUSTER_NAME.yaml --kubeconfig=$HOME/$CLUSTER_NAME/$CLUSTER_NAME-eks-cluster.kubeconfig
-KUBECONFIG=$HOME/$CLUSTER_NAME/$CLUSTER_NAME-eks-cluster.kubeconfig
+EKS_CLUSTER_NAME=ebstest
+mkdir -p $EKS_CLUSTER_NAME
+eksctl create cluster --name $EKS_CLUSTER_NAME --kubeconfig=$HOME/$EKS_CLUSTER_NAME/$EKS_CLUSTER_NAME-eks-cluster.kubeconfig
+```
+* The EKS cluster c4-eks-aws-1 will take almost 20 minutes to be fully created. Once done.
+```
+KUBECONFIG=$HOME/$EKS_CLUSTER_NAME/$EKS_CLUSTER_NAME-eks-cluster.kubeconfig
 kubectl get nodes
 ```
 * Create EBS storage class on EKS cluster
@@ -216,7 +213,7 @@ kubectl get nodes
 kubectl -n kube-system describe configmap aws-auth
 ```
 * example from output check rolearn: arn:aws:iam::180789647333:role/eksctl-eksdemo1-nodegroup-eksdemo-NodeInstanceRole-IJN07ZKXAWNN
-* Go to Services -> IAM -> Roles - Search for role with name eksctl-c4-eks-aws-1-nodegroup and open it - Click on Permissions tab - Click on Attach Policies - Search for Amazon_EBS_CSI_Driver and click on Attach Policy
+* Go to Services -> IAM -> Roles - Search for role with name c4-eks-aws-1. There should be a IAM role of that name with nodegroup association. Open it - Click on Permissions tab - Click on Attach Policies - Search for Amazon_EBS_CSI_Driver and click on Attach Policy
 * Deploy EBS CSI Driver
 ```
 kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
@@ -241,8 +238,9 @@ parameters:
   encrypted: "true"
 EOF
 ```
-* Perform the below scripted additional steps
+* Perform the below scripted additional steps to deploy external-snapshotter and other custom resources
 ```
+cd $HOME
 cat <<EOF > $HOME/ebs-extra-steps.sh
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/master/client/config/crd/snapshot.storage.k8s.io_volumesnapshotclasses.yaml
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/master/client/config/crd/snapshot.storage.k8s.io_volumesnapshotcontents.yaml
@@ -253,6 +251,8 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snaps
 kubectl patch storageclass gp2 -p "{\"metadata\": {\"annotations\":{\"storageclass.kubernetes.io/is-default-class\":\"false\"}}}" 
 kubectl patch storageclass ebs-sc -p "{\"metadata\": {\"annotations\":{\"storageclass.kubernetes.io/is-default-class\":\"true\"}}}" 
 EOF
+chmod +x $HOME/ebs-extra-steps.sh
+./ebs-extra-steps.sh
 ```
 * Deploy NGINX Ingress controller with NLB annotations
 ```
@@ -283,6 +283,12 @@ kubectl get ingress -n sock-shop
 # SCENARIO-4
 * SSH into the EKS Anywhere Administrative machine
 * Delete the EKS cluster c4-eks-aws-1 on AWS public cloud
+* Before deleting the cluster, ensure that the CSI driver gets uninstalled & the associated IAM policy is deleted from the IAM role, else it might lead to cluster deletion error
+** Go to Services -> IAM -> Roles - Search for role with name c4-eks-aws-1. There should be a IAM role of that name with nodegroup association. Open it - Click on Permissions tab - Click on Attach Policies - Search for Amazon_EBS_CSI_Driver and click on Attach Policy
+** Delete the EBS CSI driver
+```
+kubectl delete -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
+```
 * CREATE c4-eksa3 cluster
 ```
 CLUSTER_NAME=c4-eksa3
