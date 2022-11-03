@@ -284,6 +284,24 @@ kubectl get ingress -n sock-shop
 * SSH into the EKS Anywhere Administrative machine
 * Delete the EKS cluster c4-eks-aws-1 on AWS public cloud
 * Before deleting the cluster, ensure that the CSI driver gets uninstalled & the associated IAM policy is deleted from the IAM role, else it might lead to cluster deletion error
+```
+kubectl delete deployment carts -n sock-shop
+kubectl delete deployment carts-db -n sock-shop
+kubectl delete deployment catalogue -n sock-shop
+kubectl delete deployment catalogue-db -n sock-shop
+kubectl delete deployment front-end -n sock-shop
+kubectl delete deployment orders -n sock-shop
+kubectl delete deployment orders-db -n sock-shop
+kubectl delete deployment payment -n sock-shop
+kubectl delete deployment queue-master -n sock-shop
+kubectl delete deployment rabbitmq -n sock-shop
+kubectl delete deployment session-db -n sock-shop
+kubectl delete deployment shipping -n sock-shop
+kubectl delete deployment user -n sock-shop
+kubectl delete deployment user-db -n sock-shop
+kubectl delete ingress ingress-sockshop -n sock-shop
+kubectl delete ns sock-shop
+```
 ** Go to Services -> IAM -> Roles - Search for role with name c4-eks-aws-1. There should be a IAM role of that name with nodegroup association. Open it - Click on Permissions tab - Click on Attach Policies - Search for Amazon_EBS_CSI_Driver and click on Attach Policy
 ** Delete the EBS CSI driver
 ```
