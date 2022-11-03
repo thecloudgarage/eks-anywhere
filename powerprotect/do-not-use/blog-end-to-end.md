@@ -74,10 +74,52 @@ kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect.yaml
 SA_NAME="powerprotect"
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep ${SA_NAME} | awk '{print $1}')
 ```
-* Delete the namespace and recover the namespace
+* Delete the sockshop resources
+```
+kubectl delete deployment carts -n sock-shop
+kubectl delete deployment carts-db -n sock-shop
+kubectl delete deployment catalogue -n sock-shop
+kubectl delete deployment catalogue-db -n sock-shop
+kubectl delete deployment front-end -n sock-shop
+kubectl delete deployment orders -n sock-shop
+kubectl delete deployment orders-db -n sock-shop
+kubectl delete deployment payment -n sock-shop
+kubectl delete deployment queue-master -n sock-shop
+kubectl delete deployment rabbitmq -n sock-shop
+kubectl delete deployment session-db -n sock-shop
+kubectl delete deployment shipping -n sock-shop
+kubectl delete deployment user -n sock-shop
+kubectl delete deployment user-db -n sock-shop
+kubectl delete ingress ingress-sockshop -n sock-shop
+kubectl delete ns sock-shop
+```
+* Recreate an empty namespace
+```
+kubectl create ns sock-shop
+```
+* Recover sock-shop resources via PowerProtect restore and verify
 
 # SCENARIO-2
 * While being SSH'd into EKS Anywhere Administrative machine
+* Delete the sock-shop resources
+```
+kubectl delete deployment carts -n sock-shop
+kubectl delete deployment carts-db -n sock-shop
+kubectl delete deployment catalogue -n sock-shop
+kubectl delete deployment catalogue-db -n sock-shop
+kubectl delete deployment front-end -n sock-shop
+kubectl delete deployment orders -n sock-shop
+kubectl delete deployment orders-db -n sock-shop
+kubectl delete deployment payment -n sock-shop
+kubectl delete deployment queue-master -n sock-shop
+kubectl delete deployment rabbitmq -n sock-shop
+kubectl delete deployment session-db -n sock-shop
+kubectl delete deployment shipping -n sock-shop
+kubectl delete deployment user -n sock-shop
+kubectl delete deployment user-db -n sock-shop
+kubectl delete ingress ingress-sockshop -n sock-shop
+kubectl delete ns sock-shop
+```
 * DELETE c4-eksa1 cluster
 ```
 cd $HOME
@@ -157,6 +199,25 @@ kubectl get ingress -n sock-shop
 
 # SCENARIO-3
 * SSH into the EKS Anywhere Administrative machine
+* Delete the sock-shop resources
+```
+kubectl delete deployment carts -n sock-shop
+kubectl delete deployment carts-db -n sock-shop
+kubectl delete deployment catalogue -n sock-shop
+kubectl delete deployment catalogue-db -n sock-shop
+kubectl delete deployment front-end -n sock-shop
+kubectl delete deployment orders -n sock-shop
+kubectl delete deployment orders-db -n sock-shop
+kubectl delete deployment payment -n sock-shop
+kubectl delete deployment queue-master -n sock-shop
+kubectl delete deployment rabbitmq -n sock-shop
+kubectl delete deployment session-db -n sock-shop
+kubectl delete deployment shipping -n sock-shop
+kubectl delete deployment user -n sock-shop
+kubectl delete deployment user-db -n sock-shop
+kubectl delete ingress ingress-sockshop -n sock-shop
+kubectl delete ns sock-shop
+```
 * Delete the c4-eksa2 cluster
 ```
 cd $HOME
@@ -379,6 +440,3 @@ kubectl get ingress -n sock-shop
 ```
 * Access the sock-shop application and validate if the demo user and 3 order IDs exists
 * Create one more order via the same user
-
-
-
