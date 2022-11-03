@@ -301,6 +301,7 @@ kubectl delete deployment user -n sock-shop
 kubectl delete deployment user-db -n sock-shop
 kubectl delete ingress ingress-sockshop -n sock-shop
 kubectl delete ns sock-shop
+kubectl delete sc ebs-sc
 ```
 ** Go to Services -> IAM -> Roles - Search for role with name c4-eks-aws-1. There should be a IAM role of that name with nodegroup association. Open it - Click on Permissions tab - Click on Attach Policies - Search for Amazon_EBS_CSI_Driver and click on Attach Policy
 ** Delete the EBS CSI driver
