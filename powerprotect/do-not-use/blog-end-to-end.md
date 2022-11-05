@@ -100,7 +100,9 @@ sockshop.thecloudgarage.com 172.24.165.21
 * Apply the PowerProtect RBAC and retrieve Service account token
 ```
 cd $HOME
-kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect.yaml
+kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-sa.yaml
+kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-rbac.yaml
+kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-volumesnapshotclass.yaml
 SA_NAME="powerprotect"
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep ${SA_NAME} | awk '{print $1}')
 ```
@@ -209,7 +211,9 @@ EOF
 * Apply the PowerProtect RBAC and retrieve Service account token
 ```
 cd $HOME
-kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect.yaml
+kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-sa.yaml
+kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-rbac.yaml
+kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-volumesnapshotclass.yaml
 SA_NAME="powerprotect"
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep ${SA_NAME} | awk '{print $1}')
 ```
@@ -463,7 +467,9 @@ EOF
 * Apply the PowerProtect RBAC and retrieve Service account token
 ```
 cd $HOME
-kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect.yaml
+kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-sa.yaml
+kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-rbac.yaml
+kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-volumesnapshotclass.yaml
 SA_NAME="powerprotect"
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep ${SA_NAME} | awk '{print $1}')
 ```
