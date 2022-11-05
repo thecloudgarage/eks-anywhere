@@ -1,10 +1,21 @@
 # Kubernetes Data Protection using Dell's PowerProtect Data Manager
 ## Some important notes to begin with:
-### I do not have a PowerStore
+### Question: I do not have a PowerStore Array that is used in this Example
 * No problem, although these scenarios deploy persistent workloads of sock-shop application, the same can be easily swapped with the default storage class on VSAN/VMFS or any other storage CSI. 
 * You will need to edit the storage class in the sockshop deployment YAML and in the volumesnapshotclass YAML
 * Sockshop deployment YAML is located under the sockshop sub-directory
 * volumesnapshotclass YAML is located under the powerprotect sub-directory
+
+### Question: Can I use this procedure with any other Kubernetes distribution
+* Absolutely, except the cluster creation steps noted in the below procedures, one can easily reuse the workflows documented here to protect any Kubernetes cluster
+
+### One of the scenarios restores the sockshop application from an EKS Anywhere cluster to EKS in AWS public cloud. Can I restore to any other cloud provider
+* Absolutely, one can easily reuse the workflow along with slight modifications specific to the cloud provider, e.g. GCP or Azure or Oracle, etc.
+
+### The example uses PowerProtect as a virtual appliance deployed on premises. 
+* PowerProtect Data manager itself can be deployed in vSphere as an OVA or as machine images in AWS, GCP, Azure.
+* As long as the PowerProtect Data Manager bears IP connectivity to the target Kubernetes cluster/s, the workflows documented herein are absolutely valid
+
 
 ## Scenario-1 EKS Anywhere and in-cluster namespace protection
 * SSH into EKS Anywhere Administrative machine
