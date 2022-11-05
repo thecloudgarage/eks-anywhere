@@ -326,6 +326,15 @@ kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect.yaml
 SA_NAME="powerprotect"
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep ${SA_NAME} | awk '{print $1}')
 ```
+* Retrieve the SSL certificate of the EKS cluster API end point from AWS console
+* Decode the Base64 certificate value https://www.base64decode.org/
+* SSH into PowerProtect virtual machine as a OS admin user 
+* Create a file named c4-eks-aws-1.pem
+* Paste the contents of the decoded certificate
+* Use the below command to import the eks certificate into powerprotect
+```
+ppdmtool -i -a c4-eks-aws-1 -f $HOME/c4-eks-aws-1.pem -t PEM
+```
 * Create an empty namespace for sockshop for recovery
 ```
 kubectl create ns sock-shop
