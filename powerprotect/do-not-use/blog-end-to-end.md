@@ -1,4 +1,12 @@
-# SCENARIO-1
+# Kubernetes Data Protection using Dell's PowerProtect Data Manager
+## Some important notes to begin with:
+### I do not have a PowerStore
+* No problem, although these scenarios deploy persistent workloads of sock-shop application, the same can be easily swapped with the default storage class on VSAN/VMFS or any other storage CSI. 
+* You will need to edit the storage class in the sockshop deployment YAML and in the volumesnapshotclass YAML
+* Sockshop deployment YAML is located under the sockshop sub-directory
+* volumesnapshotclass YAML is located under the powerprotect sub-directory
+
+## Scenario-1 EKS Anywhere and in-cluster namespace protection
 * SSH into EKS Anywhere Administrative machine
 * CREATE c4-eksa1 cluster
 ```
