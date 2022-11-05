@@ -322,7 +322,8 @@ kubectl apply -f $HOME/eks-anywhere/eks-aws/eks-nlb-nginx-ingress-controller.yam
 * Apply the PowerProtect RBAC on the EKS cluster and retrieve Service account token
 ```
 cd $HOME
-kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect.yaml
+kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-sa.yaml
+kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-rbac.yaml
 SA_NAME="powerprotect"
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep ${SA_NAME} | awk '{print $1}')
 ```
