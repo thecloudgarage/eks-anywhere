@@ -7,7 +7,7 @@
 * volumesnapshotclass YAML is located under the powerprotect sub-directory
 
 ### QUESTION: Can I use this procedure with any other Kubernetes distribution
-* Absolutely, except the cluster creation steps noted in the below procedures, one can easily reuse the workflows documented here to protect any Kubernetes cluster
+* Absolutely, once you get a comprehension of the PowerProtect Data manager workflows documented here, these can be reused in any Kubernetes distribution of choice (OpenShift, Rancher, AKS, GKE, etc.)
 
 ### QUESTION: Can I use a different application example
 * Absolutely, as long as one understands the PowerProtect workflows exhibited via sockshop application backup and restore, any cluster scoped or namespaced scoped resources pertaining to any application can be handled
