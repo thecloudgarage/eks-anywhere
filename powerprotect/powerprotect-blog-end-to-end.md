@@ -160,7 +160,7 @@ source $HOME/eks-anywhere/cluster-ops/delete-workload-cluster.sh
 * CREATE c4-eksa2 cluster
 ```
 CLUSTER_NAME=c4-eksa2
-API_SERVER_IP=172.24.165.11
+API_SERVER_IP=172.24.165.12
 cd $HOME
 cp $HOME/eks-anywhere/cluster-samples/cluster-sample.yaml $CLUSTER_NAME-eks-a-cluster.yaml
 sed -i "s/workload-cluster-name/$CLUSTER_NAME/g" $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
@@ -416,7 +416,7 @@ kubectl delete -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernet
 * CREATE c4-eksa3 cluster
 ```
 CLUSTER_NAME=c4-eksa3
-API_SERVER_IP=172.24.165.11
+API_SERVER_IP=172.24.165.13
 cd $HOME
 cp $HOME/eks-anywhere/cluster-samples/cluster-sample.yaml $CLUSTER_NAME-eks-a-cluster.yaml
 sed -i "s/workload-cluster-name/$CLUSTER_NAME/g" $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
