@@ -6,29 +6,29 @@
 * Sockshop deployment YAML is located under the sockshop sub-directory
 * volumesnapshotclass YAML is located under the powerprotect sub-directory
 
-### QUESTION: Can I use this procedure with any other Kubernetes distribution
+### :question: Can I use this procedure with any other Kubernetes distribution
 * Absolutely, once you get a comprehension of the PowerProtect Data manager workflows documented here, these can be reused in any Kubernetes distribution of choice (OpenShift, Rancher, AKS, GKE, etc.)
 
-### QUESTION: Can I use a different application example
+### :question: Can I use a different application example
 * Absolutely, as long as one understands the PowerProtect workflows exhibited via sockshop application backup and restore, any cluster scoped or namespaced scoped resources pertaining to any application can be handled
 
-### QUESTION: One of the scenarios restores the sockshop application from an EKS Anywhere cluster to EKS in AWS public cloud. Can I restore to any other cloud provider
+### :question: One of the scenarios restores the sockshop application from an EKS Anywhere cluster to EKS in AWS public cloud. Can I restore to any other cloud provider
 * Absolutely, one can easily reuse the workflow along with slight modifications specific to the cloud provider, e.g. GCP or Azure or Oracle, etc.
 
-### QUESTION: The procedure documented for EBS CSI driver seems to have many steps. Is there any easier way of doing it
+### :question: The procedure documented for EBS CSI driver seems to have many steps. Is there any easier way of doing it
 * The EBS CSI driver implementation is a provider specific methodology and I have just followed the steps mentioned along with other requisites required for snapshotting capabilities.
 * If those procedures change, I will be updating the same in this document
 
-### QUESTION: The example uses PowerProtect as a virtual appliance deployed on premises. Can I deploy PowerProtect in the public cloud
+### :question: The example uses PowerProtect as a virtual appliance deployed on premises. Can I deploy PowerProtect in the public cloud
 * PowerProtect Data manager itself can be deployed in vSphere as an OVA or as machine images in AWS, GCP, Azure.
 * As long as the PowerProtect Data Manager bears IP connectivity to the target Kubernetes cluster/s, the workflows documented herein are absolutely valid
 
-### QUESTION: Is there a possibility to backup the Kubernetes data to public cloud or a compatible object storage
+### :question: Is there a possibility to backup the Kubernetes data to public cloud or a compatible object storage
 * Absolutely, PowerProtect Data Manager supports cloud tiering and one can further explore those use-cases once primary understanding of the workflows is established
 
-# LET'S BEGIN
+# :running: LET'S BEGIN
 
-## Scenario-1 EKS Anywhere and in-cluster namespace protection
+### :cloud: Scenario-1 Restore a complete namespace within the same EKS Anywhere cluster
 * SSH into EKS Anywhere Administrative machine
 * CREATE c4-eksa1 cluster
 ```
@@ -129,7 +129,7 @@ kubectl create ns sock-shop
 ```
 * Recover sock-shop resources via PowerProtect restore and verify
 
-# SCENARIO-2
+### :cloud: SCENARIO-2 Restore from one EKS Anywhere cluster to another EKS Anywhere cluster
 * While being SSH'd into EKS Anywhere Administrative machine
 * Delete the sock-shop resources
 ```
@@ -227,7 +227,7 @@ kubectl get ingress -n sock-shop
 * Access the sock-shop application and validate if the demo user and order ID exists
 * Create one more order via the same user
 
-# SCENARIO-3
+### :cloud: SCENARIO-3 Restore from EKS Anywhere to EKS in AWS public cloud
 * SSH into the EKS Anywhere Administrative machine
 * Delete the sock-shop resources
 ```
@@ -381,7 +381,7 @@ kubectl get ingress -n sock-shop
 * Access the sock-shop application and validate if the demo user and 2 order IDs exists
 * Create one more order via the same user
 
-# SCENARIO-4
+### :cloud: SCENARIO-4 Restore back from EKS in AWS public cloud to EKS Anywhere
 * SSH into the EKS Anywhere Administrative machine
 * Delete the EKS cluster c4-eks-aws-1 on AWS public cloud
 * Before deleting the cluster, ensure that the CSI driver gets uninstalled & the associated IAM policy is deleted from the IAM role, else it might lead to cluster deletion error
