@@ -208,6 +208,11 @@ metadata:
   namespace: metallb-system
 EOF
 ```
+* Install the NGINX Ingress controller
+```
+cd $HOME
+ kubectl apply -f eks-anywhere/sock-shop/ingress-controller-nginx.yaml
+```
 * Apply the PowerProtect RBAC and retrieve Service account token
 ```
 cd $HOME
@@ -463,6 +468,11 @@ metadata:
   name: example
   namespace: metallb-system
 EOF
+```
+* Install the NGINX Ingress controller
+```
+cd $HOME
+ kubectl apply -f eks-anywhere/sock-shop/ingress-controller-nginx.yaml
 ```
 * Apply the PowerProtect RBAC and retrieve Service account token
 ```
