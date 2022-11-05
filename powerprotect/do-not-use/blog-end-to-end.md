@@ -1,6 +1,6 @@
 # Kubernetes Data Protection using Dell's PowerProtect Data Manager
 ## TO BEGIN, let's clear the air by answering some questions that may be lingering in the top-chamber
-### Question: I do not have a PowerStore Array that is used in this Example for sockshop data services persistence layer
+### :question: I do not have a PowerStore Array that is used in this Example for sockshop data services persistence layer
 * No problem, although these scenarios deploy persistent workloads of sock-shop application, the same can be easily swapped with the default storage class on VSAN/VMFS or any other storage CSI. 
 * You will need to edit the storage class in the sockshop deployment YAML and in the volumesnapshotclass YAML
 * Sockshop deployment YAML is located under the sockshop sub-directory
