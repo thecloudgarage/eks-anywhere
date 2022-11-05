@@ -6,13 +6,13 @@
 * Sockshop deployment YAML is located under the sockshop sub-directory
 * volumesnapshotclass YAML is located under the powerprotect sub-directory
 
-### Question: Can I use this procedure with any other Kubernetes distribution
+### QUESTION: Can I use this procedure with any other Kubernetes distribution
 * Absolutely, except the cluster creation steps noted in the below procedures, one can easily reuse the workflows documented here to protect any Kubernetes cluster
 
-### One of the scenarios restores the sockshop application from an EKS Anywhere cluster to EKS in AWS public cloud. Can I restore to any other cloud provider
+### QUESTION: One of the scenarios restores the sockshop application from an EKS Anywhere cluster to EKS in AWS public cloud. Can I restore to any other cloud provider
 * Absolutely, one can easily reuse the workflow along with slight modifications specific to the cloud provider, e.g. GCP or Azure or Oracle, etc.
 
-### The example uses PowerProtect as a virtual appliance deployed on premises. 
+### QUESTION: The example uses PowerProtect as a virtual appliance deployed on premises. Can I deploy PowerProtect in the public cloud
 * PowerProtect Data manager itself can be deployed in vSphere as an OVA or as machine images in AWS, GCP, Azure.
 * As long as the PowerProtect Data Manager bears IP connectivity to the target Kubernetes cluster/s, the workflows documented herein are absolutely valid
 
