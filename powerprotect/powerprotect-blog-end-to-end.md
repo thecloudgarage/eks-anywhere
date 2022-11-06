@@ -268,7 +268,7 @@ export AWS_ACCESS_KEY_ID=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 export AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 export AWS_DEFAULT_REGION=us-east-2
 ```
-* Create EKS cluster c4-eks-aws-1 on AWS public cloud in the above specified region
+* Create EKS cluster c4-eks-aws1 on AWS public cloud in the above specified region
 ```
 cd $HOME
 EKS_CLUSTER_NAME=c4-eks-aws1
