@@ -275,7 +275,7 @@ EKS_CLUSTER_NAME=c4-eks-aws1
 mkdir -p $EKS_CLUSTER_NAME
 eksctl create cluster --name $EKS_CLUSTER_NAME --kubeconfig=$HOME/$EKS_CLUSTER_NAME/$EKS_CLUSTER_NAME-eks-cluster.kubeconfig
 ```
-* The EKS cluster c4-eks-aws-1 will take almost 20 minutes to be fully created. Once done.
+* The EKS cluster c4-eks-aws1 will take almost 20 minutes to be fully created. Once done.
 ```
 KUBECONFIG=$HOME/$EKS_CLUSTER_NAME/$EKS_CLUSTER_NAME-eks-cluster.kubeconfig
 kubectl get nodes
@@ -313,7 +313,7 @@ kubectl get nodes
 kubectl -n kube-system describe configmap aws-auth
 ```
 * example from output check rolearn: arn:aws:iam::180789647333:role/eksctl-eksdemo1-nodegroup-eksdemo-NodeInstanceRole-IJN07ZKXAWNN
-* Go to Services -> IAM -> Roles - Search for role with name c4-eks-aws-1. There should be a IAM role of that name with nodegroup association. Open it - Click on Permissions tab - Click on Attach Policies - Search for Amazon_EBS_CSI_Driver and click on Attach Policy
+* Go to Services -> IAM -> Roles - Search for role with name c4-eks-aws1. There should be a IAM role of that name with nodegroup association. Open it - Click on Permissions tab - Click on Attach Policies - Search for Amazon_EBS_CSI_Driver and click on Attach Policy
 * Deploy EBS CSI Driver
 ```
 kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
@@ -369,11 +369,11 @@ kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | gre
 * Retrieve the SSL certificate of the EKS cluster API end point from AWS console
 * Decode the Base64 certificate value https://www.base64decode.org/
 * SSH into PowerProtect virtual machine as a OS admin user 
-* Create a file named c4-eks-aws-1.pem
+* Create a file named c4-eks-aws1.pem
 * Paste the contents of the decoded certificate
 * Use the below command to import the eks certificate into powerprotect
 ```
-ppdmtool -i -a c4-eks-aws-1 -f $HOME/c4-eks-aws-1.pem -t PEM
+ppdmtool -i -a c4-eks-aws1 -f $HOME/c4-eks-aws1.pem -t PEM
 ```
 * Create an empty namespace for sockshop for recovery
 ```
@@ -417,6 +417,10 @@ kubectl delete sc ebs-sc
 ** Delete the EBS CSI driver
 ```
 kubectl delete -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
+```
+* Delete the EKS AWS cluster
+```
+eksctl delete cluster c4-eks-aws1
 ```
 * CREATE c4-eksa3 cluster
 ```
