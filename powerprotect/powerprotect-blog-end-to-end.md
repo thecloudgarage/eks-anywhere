@@ -271,7 +271,7 @@ export AWS_DEFAULT_REGION=us-east-2
 * Create EKS cluster c4-eks-aws-1 on AWS public cloud in the above specified region
 ```
 cd $HOME
-EKS_CLUSTER_NAME=ebstest
+EKS_CLUSTER_NAME=c4-eks-aws1
 mkdir -p $EKS_CLUSTER_NAME
 eksctl create cluster --name $EKS_CLUSTER_NAME --kubeconfig=$HOME/$EKS_CLUSTER_NAME/$EKS_CLUSTER_NAME-eks-cluster.kubeconfig
 ```
