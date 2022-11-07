@@ -107,6 +107,8 @@ kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-volumesnapshotclas
 SA_NAME="powerprotect"
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep ${SA_NAME} | awk '{print $1}')
 ```
+* Add the c4-eksa1 as an Asset in PPDM-Kubernetes
+* Once the discovery if fully complete, create the protection policy for sock-shop namespace and backup
 * Delete the sockshop resources
 ```
 kubectl delete deployment carts -n sock-shop
@@ -126,11 +128,8 @@ kubectl delete deployment user-db -n sock-shop
 kubectl delete ingress ingress-sockshop -n sock-shop
 kubectl delete ns sock-shop
 ```
-* Recreate an empty namespace
-```
-kubectl create ns sock-shop
-```
-* Recover sock-shop resources via PowerProtect restore and verify
+* If scenario pertains to namespace deletion, recover sock-shop resources via PowerProtect restore and verify
+* While restoring select restore to new namespace and provide the same namespace name sock-shop so that powerprotect will create the namespace automatically
 
 ### :cloud: SCENARIO-2 Restore from one EKS Anywhere cluster to another EKS Anywhere cluster
 * While being SSH'd into EKS Anywhere Administrative machine
@@ -158,10 +157,10 @@ kubectl delete ns sock-shop
 cd $HOME
 source $HOME/eks-anywhere/cluster-ops/delete-workload-cluster.sh
 ```
-* CREATE c4-eksa2 cluster
+* RECREATE c4-eksa1 cluster
 ```
-CLUSTER_NAME=c4-eksa2
-API_SERVER_IP=172.24.165.12
+CLUSTER_NAME=c4-eksa1
+API_SERVER_IP=172.24.165.11
 cd $HOME
 cp $HOME/eks-anywhere/cluster-samples/cluster-sample.yaml $CLUSTER_NAME-eks-a-cluster.yaml
 sed -i "s/workload-cluster-name/$CLUSTER_NAME/g" $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
@@ -169,10 +168,13 @@ sed -i "s/management-cluster-name/$CLUSTER_NAME/g" $HOME/$CLUSTER_NAME-eks-a-clu
 sed -i "s/api-server-ip/$API_SERVER_IP/g" $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
 eksctl anywhere create cluster -f $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
 ```
-* Validate cluster is installed
+* Switch kubectl context
 ```
 cd $HOME
 source $HOME/eks-anywhere/cluster-ops/switch-cluster.sh
+```
+* Valiate kubectl access
+```
 kubectl get nodes
 ```
 * INSTALL POWERSTORE CSI
@@ -214,20 +216,22 @@ EOF
 cd $HOME
  kubectl apply -f eks-anywhere/sock-shop/ingress-controller-nginx.yaml
 ```
-* Apply the PowerProtect RBAC and retrieve Service account token
+* Apply the PowerProtect related RBAC and create snapshot class
 ```
 cd $HOME
 kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-sa.yaml
 kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-rbac.yaml
 kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-volumesnapshotclass.yaml
+```
+* Retrive secret token
+```
 SA_NAME="powerprotect"
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep ${SA_NAME} | awk '{print $1}')
 ```
-* Create an empty namespace for sockshop for recovery
-```
-kubectl create ns sock-shop
-```
-* Discover the c4-eksa2 cluster in PowerProtect and recover the sock-shop application
+* Edit the credentials defined for c4-eksa1 asset in PPDM
+* Edit the c4-eksa1 asset and reverify the certificate
+* A discovery will be automatically initiated
+* Once the discovery is complete recover the sock-shop application with attributes of original cluster, new namespace (sock-shop)
 * Validate sock-shop pods, services and ingress
 ```
 kubectl get pods -n sock-shop
