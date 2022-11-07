@@ -43,7 +43,7 @@ source $HOME/eks-anywhere/cluster-ops/switch-cluster.sh
 ```
 kubectl get nodes
 ```
-* INSTALL POWERSTORE CSI 
+* :hash: INSTALL POWERSTORE CSI 
 ```
 source eks-anywhere/powerstore/install-powerstore-csi-driver.sh
 clusterName: c4-eksa1              
