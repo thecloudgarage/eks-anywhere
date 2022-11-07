@@ -17,7 +17,7 @@
 * As long as the PowerProtect Data Manager bears IP connectivity to the target Kubernetes cluster/s, the workflows documented herein are absolutely valid
 
 ### :question: Is there a possibility to backup the Kubernetes data to public cloud or a compatible object storage
-* Absolutely, PowerProtect Data Manager supports cloud tiering and one can further explore those use-cases once primary understanding of the workflows is established
+* Absolutely, PowerProtect Data Manager supports cloud disaster recovery and also cloud tiering. One can further explore those use-cases once primary understanding of the workflows is established
 
 # :running: LET'S BEGIN
 
