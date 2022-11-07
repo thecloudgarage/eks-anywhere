@@ -22,8 +22,8 @@
 # :running: LET'S BEGIN
 
 ### :cloud: Scenario-1 Restore a complete namespace within the same EKS Anywhere cluster
-* SSH into EKS Anywhere Administrative machine
-* CREATE c4-eksa1 cluster
+:page_with_curl: SSH into EKS Anywhere Administrative machine
+:page_with_curl: CREATE c4-eksa1 cluster
 ```
 CLUSTER_NAME=c4-eksa1
 API_SERVER_IP=172.24.165.11
