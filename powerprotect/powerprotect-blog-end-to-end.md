@@ -22,8 +22,8 @@
 # :running: LET'S BEGIN
 
 ### :cloud: Scenario-1 Restore a complete namespace within the same EKS Anywhere cluster
-:page_with_curl: SSH into EKS Anywhere Administrative machine
-:page_with_curl: CREATE c4-eksa1 cluster
+* SSH into EKS Anywhere Administrative machine
+* CREATE c4-eksa1 cluster
 ```
 CLUSTER_NAME=c4-eksa1
 API_SERVER_IP=172.24.165.11
@@ -43,7 +43,7 @@ source $HOME/eks-anywhere/cluster-ops/switch-cluster.sh
 ```
 kubectl get nodes
 ```
-* :hash: INSTALL POWERSTORE CSI 
+* INSTALL POWERSTORE CSI 
 ```
 source eks-anywhere/powerstore/install-powerstore-csi-driver.sh
 clusterName: c4-eksa1              
@@ -130,6 +130,7 @@ kubectl delete ns sock-shop
 ```
 * If scenario pertains to namespace deletion, recover sock-shop resources via PowerProtect restore and verify
 * While restoring select restore to new namespace and provide the same namespace name sock-shop so that powerprotect will create the namespace automatically
+* Create an additional order in sock-shop application and create an incremental backup
 
 ### :cloud: SCENARIO-2 Restore from one EKS Anywhere cluster to another EKS Anywhere cluster
 * While being SSH'd into EKS Anywhere Administrative machine
@@ -238,5 +239,5 @@ kubectl get pods -n sock-shop
 kubectl get services -n sock-shop
 kubectl get ingress -n sock-shop
 ```
-* Access the sock-shop application and validate if the demo user and order ID exists
-* Create one more order via the same user
+* Access the sock-shop application and validate if the demo user and order ID/s exists
+
