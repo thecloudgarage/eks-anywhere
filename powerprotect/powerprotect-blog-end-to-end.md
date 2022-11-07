@@ -46,7 +46,7 @@ kubectl get nodes
 * INSTALL POWERSTORE CSI 
 ```
 source eks-anywhere/powerstore/install-powerstore-csi-driver.sh
-clusterName: c4-eksa1              
+clusterName: ambar01              
 Enter IP or FQDN of the PowerStore array
 ipOrFqdnOfPowerStoreArray: 172.24.185.106
 Enter Global Id of the PowerStore Array
@@ -153,7 +153,7 @@ kubectl delete deployment user-db -n sock-shop
 kubectl delete ingress ingress-sockshop -n sock-shop
 kubectl delete ns sock-shop
 ```
-* DELETE c4-eksa1 cluster
+* DELETE the EKS Anywhere cluster
 ```
 cd $HOME
 source $HOME/eks-anywhere/cluster-ops/delete-workload-cluster.sh
