@@ -23,9 +23,9 @@
 
 ### :cloud: Scenario-1 Restore a complete namespace within the same EKS Anywhere cluster
 * SSH into EKS Anywhere Administrative machine
-* CREATE c4-eksa1 cluster
+* CREATE EKS Anywhere cluster
 ```
-CLUSTER_NAME=c4-eksa1
+CLUSTER_NAME=ambar01
 API_SERVER_IP=172.24.165.11
 cd $HOME
 cp $HOME/eks-anywhere/cluster-samples/cluster-sample.yaml $CLUSTER_NAME-eks-a-cluster.yaml
@@ -107,7 +107,7 @@ kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-volumesnapshotclas
 SA_NAME="powerprotect"
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep ${SA_NAME} | awk '{print $1}')
 ```
-* Add the c4-eksa1 as an Asset in PPDM-Kubernetes
+* Add the EKS Anywhere cluster as an Asset in PPDM-Kubernetes
 * Once the discovery if fully complete, create the protection policy for sock-shop namespace and backup
 * Delete the sockshop resources
 ```
@@ -158,9 +158,9 @@ kubectl delete ns sock-shop
 cd $HOME
 source $HOME/eks-anywhere/cluster-ops/delete-workload-cluster.sh
 ```
-* RECREATE c4-eksa1 cluster
+* RECREATE the EKS Anywhere cluster
 ```
-CLUSTER_NAME=c4-eksa1
+CLUSTER_NAME=ambar01
 API_SERVER_IP=172.24.165.11
 cd $HOME
 cp $HOME/eks-anywhere/cluster-samples/cluster-sample.yaml $CLUSTER_NAME-eks-a-cluster.yaml
@@ -181,7 +181,7 @@ kubectl get nodes
 * INSTALL POWERSTORE CSI
 ```
 source eks-anywhere/powerstore/install-powerstore-csi-driver.sh
-clusterName: c4-eksa2              
+clusterName: ambar01              
 Enter IP or FQDN of the PowerStore array
 ipOrFqdnOfPowerStoreArray: 172.24.185.106
 Enter Global Id of the PowerStore Array
@@ -229,8 +229,8 @@ kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-volumesnapshotclas
 SA_NAME="powerprotect"
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep ${SA_NAME} | awk '{print $1}')
 ```
-* Edit the credentials defined for c4-eksa1 asset in PPDM
-* Edit the c4-eksa1 asset and reverify the certificate
+* Edit the credentials defined for the EKS Anywhere cluster in PPDM
+* Edit the asset source pertaining to the EKS Anywhere cluster and reverify the certificate
 * A discovery will be automatically initiated
 * Once the discovery is complete recover the sock-shop application with attributes of original cluster, new namespace (sock-shop)
 * Validate sock-shop pods, services and ingress
