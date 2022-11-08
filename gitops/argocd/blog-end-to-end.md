@@ -68,36 +68,6 @@ server:
       g, kube-admin, role:admin
 EOF
 ```
-Note your GitLab Hostname
-```
-gitlab.oidc.thecloudgarage.com
-```
-Copy your Gitlab SSL certificate
-```
------BEGIN CERTIFICATE-----
-MIIDxzCCAq+gAwIBAgIUaLVADwFp9QxHmGy3mYnVQa8rtBIwDQYJKoZIhvcNAQEL
-BQAwdTELMAkGA1UEBhMCSU4xCzAJBgNVBAgMAk1IMQ8wDQYDVQQHDAZNdW1iYWkx
-DjAMBgNVBAoMBXN0YWNrMQ8wDQYDVQQLDAZkZXZvcHMxJzAlBgNVBAMMHmdpdGxh
-Yi5vaWRjLnRoZWNsb3VkZ2FyYWdlLmNvbTAeFw0yMjA5MjMxMTUxMTNaFw0yNDA5
-MjIxMTUxMTNaMHUxCzAJBgNVBAYTAklOMQswCQYDVQQIDAJNSDEPMA0GA1UEBwwG
-TXVtYmFpMQ4wDAYDVQQKDAVzdGFjazEPMA0GA1UECwwGZGV2b3BzMScwJQYDVQQD
-DB5naXRsYWIub2lkYy50aGVjbG91ZGdhcmFnZS5jb20wggEiMA0GCSqGSIb3DQEB
-AQUAA4IBDwAwggEKAoIBAQDF4sZVtM10OpA/uCxcM0kRsP8iCIGcasWzqOyryT2c
-1HpwdjoPEOqfi1dDsLE/z1PTKUI+JKRuquqdmSSjyFQJ7c82gQPNb8qLVmdLHJOm
-nWzgvG5KuNT8UReHzDxy53D/MBV1fSBo4PT94OvuYVfP2iDiMX6uUtIosdmWfmXe
-8XKUJFQmFOIL7olvz035m1PU5OKKAwrUjbwoxjt6Ll0EJAOj+okKvxc6MLmOOCKJ
-G/tuOU/t0b2JhHQ2uaP2dF/Y857QCaKK5B1MD4+DjO5zPROB+W6J2Mw6MxFIdNu+
-moZ8lSpN139zXE1KsruLhUPlo3Ix42ZTLRf0mEb5ARgtAgMBAAGjTzBNMAsGA1Ud
-DwQEAwIFoDATBgNVHSUEDDAKBggrBgEFBQcDATApBgNVHREEIjAggh5naXRsYWIu
-b2lkYy50aGVjbG91ZGdhcmFnZS5jb20wDQYJKoZIhvcNAQELBQADggEBAAAVMX2g
-Wyl94nnBKDyc5B4OGDLbe3Vdcz2TsP4krV4lQBMNvHZIxk34S+ZUHxn2sSL4ngWA
-oD/5WNA7kbvvrPY4Vzwy5KbNWeoCfZKN/kF4EmwSIHj7zkNeZD7aTuq0zr0DRcE4
-3J982k/NVDygZtJcT+5ZNyyubDUi628DC5aAUkmrAOUDty7UNPJnhfYyPo2flcxQ
-0t/Gb2P9sVUvoTgTG+1OEKVN4AWVvxQxNrb/pwY8dHI4w9zvdnjeOo7msxwX6er8
-/Ja1Gfl4sL94+5IgNH8iLfPTYtlPKXy4mWF+F9ACdH6qw86BjzrN8yd1o9h8K8mJ
-cutlsswicv0xPuk=
------END CERTIFICATE-----
-```
 Create an empty project in Gitlab and setup a project access token. Note the values once the project is created
 ```
 gitlab project name: https://gitlab.oidc.thecloudgarage.com:10443/ambarhassani/odyssey.git
@@ -174,7 +144,7 @@ oD/5WNA7kbvvrPY4Vzwy5KbNWeoCfZKN/kF4EmwSIHj7zkNeZD7aTuq0zr0DRcE4
 cutlsswicv0xPuk=
 -----END CERTIFICATE-----
 ```
-* Note the Gitlab project name
+* Note the Gitlab project URL
 ```
 https://gitlab.oidc.thecloudgarage.com:10443/ambarhassani/odyssey.git
 ```
