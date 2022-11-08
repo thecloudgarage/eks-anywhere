@@ -60,7 +60,7 @@ spec:
   memoryMiB: 8192
   numCPUs: 2
   osFamily: ubuntu
-  template: "ubuntu-2004-kube-v1.21.14"
+  template: "ubuntu-2004-kube-vKubernetesVersion"
   resourcePool: "Test"
   users:
   - name: capv
