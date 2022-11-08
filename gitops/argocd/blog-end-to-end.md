@@ -126,6 +126,7 @@ cp $HOME/$CLUSTER_NAME/$CLUSTER_NAME-eks-a-cluster.yaml \
 $HOME/$GITLAB_PROJECT_NAME/clusters/$EKSA_MGMT_CLUSTER_NAME/$EKSA_WORKLOAD_CLUSTER_NAME/eksa-system
 ```
 AppOPS: Copy the Sockshop application manifests into the cloned gitlab repo
+```
 cd $HOME
 cp $HOME/eks-anywhere/sock-shop/gitops/sockshop* $HOME/$GITLAB_PROJECT_NAME/applications/sockshop/
 ```
@@ -141,7 +142,47 @@ git add --all
 git commit -m "Adding EKSA cluster and Sockshop application manifests for GitOps"
 GIT_SSL_NO_VERIFY=true git push -uf origin main
 ```
-* We can observe that ArgoCD has invoked the baseline commit and created the sock-shop application
+### Configure ArgoCD and create two separate applications
+To begin note down your Gitlab details to create the ArgoCD configuration
+* Note your GitLab Hostname
+```
+gitlab.oidc.thecloudgarage.com
+```
+Copy your Gitlab SSL certificate
+```
+-----BEGIN CERTIFICATE-----
+MIIDxzCCAq+gAwIBAgIUaLVADwFp9QxHmGy3mYnVQa8rtBIwDQYJKoZIhvcNAQEL
+BQAwdTELMAkGA1UEBhMCSU4xCzAJBgNVBAgMAk1IMQ8wDQYDVQQHDAZNdW1iYWkx
+DjAMBgNVBAoMBXN0YWNrMQ8wDQYDVQQLDAZkZXZvcHMxJzAlBgNVBAMMHmdpdGxh
+Yi5vaWRjLnRoZWNsb3VkZ2FyYWdlLmNvbTAeFw0yMjA5MjMxMTUxMTNaFw0yNDA5
+MjIxMTUxMTNaMHUxCzAJBgNVBAYTAklOMQswCQYDVQQIDAJNSDEPMA0GA1UEBwwG
+TXVtYmFpMQ4wDAYDVQQKDAVzdGFjazEPMA0GA1UECwwGZGV2b3BzMScwJQYDVQQD
+DB5naXRsYWIub2lkYy50aGVjbG91ZGdhcmFnZS5jb20wggEiMA0GCSqGSIb3DQEB
+AQUAA4IBDwAwggEKAoIBAQDF4sZVtM10OpA/uCxcM0kRsP8iCIGcasWzqOyryT2c
+1HpwdjoPEOqfi1dDsLE/z1PTKUI+JKRuquqdmSSjyFQJ7c82gQPNb8qLVmdLHJOm
+nWzgvG5KuNT8UReHzDxy53D/MBV1fSBo4PT94OvuYVfP2iDiMX6uUtIosdmWfmXe
+8XKUJFQmFOIL7olvz035m1PU5OKKAwrUjbwoxjt6Ll0EJAOj+okKvxc6MLmOOCKJ
+G/tuOU/t0b2JhHQ2uaP2dF/Y857QCaKK5B1MD4+DjO5zPROB+W6J2Mw6MxFIdNu+
+moZ8lSpN139zXE1KsruLhUPlo3Ix42ZTLRf0mEb5ARgtAgMBAAGjTzBNMAsGA1Ud
+DwQEAwIFoDATBgNVHSUEDDAKBggrBgEFBQcDATApBgNVHREEIjAggh5naXRsYWIu
+b2lkYy50aGVjbG91ZGdhcmFnZS5jb20wDQYJKoZIhvcNAQELBQADggEBAAAVMX2g
+Wyl94nnBKDyc5B4OGDLbe3Vdcz2TsP4krV4lQBMNvHZIxk34S+ZUHxn2sSL4ngWA
+oD/5WNA7kbvvrPY4Vzwy5KbNWeoCfZKN/kF4EmwSIHj7zkNeZD7aTuq0zr0DRcE4
+3J982k/NVDygZtJcT+5ZNyyubDUi628DC5aAUkmrAOUDty7UNPJnhfYyPo2flcxQ
+0t/Gb2P9sVUvoTgTG+1OEKVN4AWVvxQxNrb/pwY8dHI4w9zvdnjeOo7msxwX6er8
+/Ja1Gfl4sL94+5IgNH8iLfPTYtlPKXy4mWF+F9ACdH6qw86BjzrN8yd1o9h8K8mJ
+cutlsswicv0xPuk=
+-----END CERTIFICATE-----
+```
+* Note the Gitlab project name
+```
+https://gitlab.oidc.thecloudgarage.com:10443/ambarhassani/odyssey.git
+```
+* Create the TLS certicate in ArgoCD to trust the gitlab repo
+* Create the Gitlab repo reference in ArgoCD
+* Create argocd application for the defined Gitlab repo and name it as sockshop
+* As soon as the application is created, argocd will initate the sync
+* As a result, we can observe that ArgoCD has invoked the baseline commit and created the sock-shop application
 * This can be viewed from the pods, persistent volumes, ingress and tls secret created in the sock-shop namespace
 * In addition, we can observe that the persistent volumes have been created on the PowerStore array via csi
 ```
@@ -151,6 +192,11 @@ kubectl get pvc -n sock-shop
 kubectl get ingress -n sock-shop
 kubectl get secret -n sock-shop
 ```
+* Create argocd application for the Gitlab repo and name it as the cluster name, e.g. odyssey
+* As soon as the application is created, argocd will initate the sync based on the committed cluster's YAML in gitlab
+* As a result, we can observe that ArgoCD has invoked the baseline sync
+* No changes will be executed as the cluster's YAML file in gitlab and the current state are in full sync
+
 ### SCENARIO-1 Sockshop scaling using ArgoCD
 * Let's invoke ArgoCD based change management for the sockshop application
 * We will first change the manifest file to increase the front-end replicas from existing 1 to 5
