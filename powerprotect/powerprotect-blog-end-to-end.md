@@ -87,6 +87,7 @@ source deploy-sockshop.sh
 * Validate sock-shop pods, services and ingress
 ```
 kubectl get pods -n sock-shop
+kubectl get pvc -n sock-shop
 kubectl get services -n sock-shop
 kubectl get ingress -n sock-shop
 ```
@@ -194,7 +195,9 @@ passwordOfPowerStoreArray:
 * DEPLOY METALLB Load Balancer along with IP advertisement CRDs
 ```
 helm upgrade --install --wait --timeout 15m   --namespace metallb-system --create-namespace   --repo https://metallb.github.io/metallb metallb metallb
-
+```
+* Configure MetalLB pool and advertisements
+```
 cat <<EOF | kubectl apply -f -
 apiVersion: metallb.io/v1beta1
 kind: IPAddressPool
@@ -236,6 +239,7 @@ kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | gre
 * Validate sock-shop pods, services and ingress
 ```
 kubectl get pods -n sock-shop
+kubectl get pvc -n sock-shop
 kubectl get services -n sock-shop
 kubectl get ingress -n sock-shop
 ```
