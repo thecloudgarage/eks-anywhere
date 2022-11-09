@@ -304,7 +304,7 @@ git add --all
 git commit -m "Horizontal and vertical downscaling for EKS Anywhere worker nodes"
 GIT_SSL_NO_VERIFY=true git push -uf origin main
 ```
-# SCENARIO-3 Data Protection using Dell's PPDM
+### SCENARIO-3 Data Protection using Dell's PPDM and intersection with ArgoCD GitOps
 * We will protect the sockshop application running on the EKS Anywhere cluster
 * Setup Service Account, RBAC and volume snapshot class on the EKS Anywhere cluster
 ```
