@@ -57,11 +57,6 @@ metadata:
   namespace: metallb-system
 EOF
 ```
-Install NGINX Ingress Controller
-```
-cd $HOME
-kubectl apply -f eks-anywhere/sock-shop/ingress-controller-nginx.yaml
-```
 Install ArgoCD with OIDC (KeyCloak)
 ```
 helm repo add argo https://argoproj.github.io/argo-helm
@@ -99,10 +94,15 @@ server:
       g, kube-admin, role:admin
 EOF
 ```
+Install NGINX Ingress Controller
+```
+cd $HOME
+kubectl apply -f eks-anywhere/sock-shop/ingress-controller-nginx.yaml
+```
 Create an empty project in Gitlab and setup a project access token. Note the values once the project is created
 ```
 gitlab project name: https://gitlab.oidc.thecloudgarage.com:10443/ambarhassani/odyssey.git
-gitlab project token: glpat-Ux54LhTLBnR8t6Yqsw47
+gitlab project token: ????
 ```
 Export the variables for Gitlab commits
 ```
@@ -145,46 +145,38 @@ git commit -m "Adding EKSA cluster and Sockshop application manifests for GitOps
 GIT_SSL_NO_VERIFY=true git push -uf origin main
 ```
 ### Configure ArgoCD and create two separate applications
-To begin note down your Gitlab details to create the ArgoCD configuration
-* Note your GitLab Hostname
+* Open windows cmd and change path to the directory where argocd cli is installed
+* Export the required variables
 ```
-gitlab.oidc.thecloudgarage.com
+set GITLAB_HOST="gitlab.oidc.thecloudgarage.com"
+set GITLAB_PROJECT="https://gitlab.oidc.thecloudgarage.com:10443/ambarhassani/odyssey.git"
+set GITLAB_PROJECT_TOKEN=????
+set ARGOCD_HOST="argocdtest.thecloudgarage.com"
 ```
-Copy your Gitlab SSL certificate
+* Login to argocd via cli with OIDC or non-OIDC
+* Example for OIDC
 ```
------BEGIN CERTIFICATE-----
-MIIDxzCCAq+gAwIBAgIUaLVADwFp9QxHmGy3mYnVQa8rtBIwDQYJKoZIhvcNAQEL
-BQAwdTELMAkGA1UEBhMCSU4xCzAJBgNVBAgMAk1IMQ8wDQYDVQQHDAZNdW1iYWkx
-DjAMBgNVBAoMBXN0YWNrMQ8wDQYDVQQLDAZkZXZvcHMxJzAlBgNVBAMMHmdpdGxh
-Yi5vaWRjLnRoZWNsb3VkZ2FyYWdlLmNvbTAeFw0yMjA5MjMxMTUxMTNaFw0yNDA5
-MjIxMTUxMTNaMHUxCzAJBgNVBAYTAklOMQswCQYDVQQIDAJNSDEPMA0GA1UEBwwG
-TXVtYmFpMQ4wDAYDVQQKDAVzdGFjazEPMA0GA1UECwwGZGV2b3BzMScwJQYDVQQD
-DB5naXRsYWIub2lkYy50aGVjbG91ZGdhcmFnZS5jb20wggEiMA0GCSqGSIb3DQEB
-AQUAA4IBDwAwggEKAoIBAQDF4sZVtM10OpA/uCxcM0kRsP8iCIGcasWzqOyryT2c
-1HpwdjoPEOqfi1dDsLE/z1PTKUI+JKRuquqdmSSjyFQJ7c82gQPNb8qLVmdLHJOm
-nWzgvG5KuNT8UReHzDxy53D/MBV1fSBo4PT94OvuYVfP2iDiMX6uUtIosdmWfmXe
-8XKUJFQmFOIL7olvz035m1PU5OKKAwrUjbwoxjt6Ll0EJAOj+okKvxc6MLmOOCKJ
-G/tuOU/t0b2JhHQ2uaP2dF/Y857QCaKK5B1MD4+DjO5zPROB+W6J2Mw6MxFIdNu+
-moZ8lSpN139zXE1KsruLhUPlo3Ix42ZTLRf0mEb5ARgtAgMBAAGjTzBNMAsGA1Ud
-DwQEAwIFoDATBgNVHSUEDDAKBggrBgEFBQcDATApBgNVHREEIjAggh5naXRsYWIu
-b2lkYy50aGVjbG91ZGdhcmFnZS5jb20wDQYJKoZIhvcNAQELBQADggEBAAAVMX2g
-Wyl94nnBKDyc5B4OGDLbe3Vdcz2TsP4krV4lQBMNvHZIxk34S+ZUHxn2sSL4ngWA
-oD/5WNA7kbvvrPY4Vzwy5KbNWeoCfZKN/kF4EmwSIHj7zkNeZD7aTuq0zr0DRcE4
-3J982k/NVDygZtJcT+5ZNyyubDUi628DC5aAUkmrAOUDty7UNPJnhfYyPo2flcxQ
-0t/Gb2P9sVUvoTgTG+1OEKVN4AWVvxQxNrb/pwY8dHI4w9zvdnjeOo7msxwX6er8
-/Ja1Gfl4sL94+5IgNH8iLfPTYtlPKXy4mWF+F9ACdH6qw86BjzrN8yd1o9h8K8mJ
-cutlsswicv0xPuk=
------END CERTIFICATE-----
+argocd login %ARGOCD_HOST% --sso
 ```
-* Note the Gitlab project URL
+Add the TLS certificate for the Gitlab repository. Open the Gitlab repo in a browser. As it is a self-signed certificate, click on Not Secure > certificate > detail and Export. This will export the self signed certificate in a .crt format. Save the file in the same directory as argocd cli is installed and change the name to a simple one, e.g. gitlab-host
 ```
-https://gitlab.oidc.thecloudgarage.com:10443/ambarhassani/odyssey.git
+argocd cert add-tls --from gitlab-host.crt %GITLAB_HOST%
 ```
-* Create the TLS certicate in ArgoCD to trust the gitlab repo
-* Create the Gitlab repo reference in ArgoCD
-* Create argocd application for the defined Gitlab repo and name it as sockshop
-* In the application settings, keep the sync policy as Manual and path as applications/sockshop with directory recurse
-* As soon as the application is created, argocd will initate the sync if policy is automatic. In this case we will manually sync
+Add the Gitlab Repository
+```
+argocd repo add %GITLAB_PROJECT% --username git --password %GITLAB_PROJECT_TOKEN% --insecure-skip-server-verification
+```
+Add the Application Sockshop
+```
+argocd app create sockshop --repo %GITLAB_PROJECT% --path applications/sockshop --dest-server https://kubernetes.default.svc --directory-recurse --sync-policy none
+```
+Add the Application for EKS Anywhere cluster management
+```
+argocd app create eksa-cluster-testcluster --repo %GITLAB_PROJECT% --path clusters/odyssey --dest-server https://kubernetes.default.svc --directory-recurse --sync-policy none
+```
+### Validate Sockshop deployment via GitOps ArgoCD
+* As soon as the application is created, argocd will initate the sync if policy is automatic. 
+* In this case we will manually sync the sockshop application
 * As a result, we can observe that ArgoCD has invoked the baseline commit and created the sock-shop application
 * This can be viewed from the pods, persistent volumes, ingress and tls secret created in the sock-shop namespace
 * In addition, we can observe that the persistent volumes have been created on the PowerStore array via csi
@@ -195,16 +187,21 @@ kubectl get pvc -n sock-shop
 kubectl get ingress -n sock-shop
 kubectl get secret -n sock-shop
 ```
-* Create argocd application for the Gitlab repo and name it as the cluster name, e.g. odyssey
+* Next, let's login to the sockshop application via https://sockshop.thecloudgarage.com
+* Create a demo user
+* Initiate the ordering workflow and place an order
+
+### Validate EKS Anywhere cluster baseline sync
 * As soon as the application is created, argocd will initate the sync based on the committed cluster's YAML in gitlab
 * As a result, we can observe that ArgoCD has invoked the baseline sync
 * No changes will be executed as the cluster's YAML file in gitlab and the current state are in full sync
 
 ### SCENARIO-1 Sockshop scaling using ArgoCD
 * Let's invoke ArgoCD based change management for the sockshop application
-* We will first change the manifest file to increase the front-end replicas from existing 1 to 5
+* SSH into EKS Anywhere administrative machine
+* We will first change the manifest file to increase the front-end replicas from existing 1 to 3
 ```
-sed -i "355s/1/5/g" $HOME/$GITLAB_PROJECT_NAME/applications/sockshop/sockshop-complete-application.yaml
+sed -i "355s/1/3/g" $HOME/$GITLAB_PROJECT_NAME/applications/sockshop/sockshop-complete-application.yaml
 ```
 * Next, we will increase the size of the persistent volumes from 8Gi to 10Gi
 ```
@@ -218,11 +215,12 @@ git add --all
 git commit -m "Scale UP sockshop frontend replicas and increase size of persistent volumes"
 GIT_SSL_NO_VERIFY=true git push -uf origin main
 ```
-* Head over to ArgoCD and observe the execution of these changes
+* Head over to ArgoCD and initiate the sync
 * Note the change in the state of sockshop applications (frontend replicas and persistent volume sizes)
-* Next we will observe the scale down effect in front-end replicas from 5 to 2
+* Login to https://sockshop.thecloudgarage.com and validate if application state and workflows are intact
+* Next we will observe the scale down effect in front-end replicas from 3 to 2
 ```
-sed -i "355s/5/2/g" $HOME/$GITLAB_PROJECT_NAME/applications/sockshop/sockshop-complete-application.yaml
+sed -i "355s/3/2/g" $HOME/$GITLAB_PROJECT_NAME/applications/sockshop/sockshop-complete-application.yaml
 ```
 ### Scenario-2 Cluster scaling using ArgoCD (Horizontal and vertical scaling/downscaling)
 * Edit the EKS Anywhere cluster configuration in the local repo directory
@@ -239,7 +237,7 @@ git add --all
 git commit -m "Horizontal scaling for EKS Anywhere worker nodes"
 GIT_SSL_NO_VERIFY=true git push -uf origin main
 ```
-* Observe the ArgoCD execution and the state of the cluster via kubectl and vsphere
+* Initiate the manual sync and observe the ArgoCD execution alongwith the state of cluster via kubectl and vsphere
 * Also validate the sockshop application functionality
 * Next, let's increase the vCPU and memory size for each of the worker nodes
 * This will create new nodes
@@ -251,7 +249,7 @@ GIT_SSL_NO_VERIFY=true git push -uf origin main
 apiVersion: anywhere.eks.amazonaws.com/v1alpha1
 kind: VSphereMachineConfig
 metadata:
-  name: ambar01-wk
+  name: odyssey-wk
   namespace: default
 spec:
   datastore: /IAC-SSC/datastore/CommonDS
@@ -261,7 +259,7 @@ spec:
   numCPUs: 2 <<<< CHANGE THIS TO 4
   osFamily: ubuntu
   resourcePool: /IAC-SSC/host/IAC/Resources/Test
-  template: /IAC-SSC/vm/Templates/ubuntu-2004-kube-v1.21.14
+  template: /IAC-SSC/vm/Templates/ubuntu-2004-kube-v1.22
 ```
 * Commit the changes to gitlab repo
 ```
@@ -271,7 +269,7 @@ git add --all
 git commit -m "Vertical scaling for EKS Anywhere worker nodes"
 GIT_SSL_NO_VERIFY=true git push -uf origin main
 ```
-* Observe the ArgoCD execution and the state of the cluster via kubectl and vsphere
+* Initiate the manual sync and obbserve the ArgoCD execution and the state of the cluster via kubectl and vsphere
 * Also validate the sockshop application functionality
 * Next we will downscale the EKS Anywhere cluster to perform Horizontal and Vertical changes in a single take
 * Edit the EKS Anywhere cluster configuration in the local repo directory
@@ -306,7 +304,7 @@ git commit -m "Horizontal and vertical downscaling for EKS Anywhere worker nodes
 GIT_SSL_NO_VERIFY=true git push -uf origin main
 ```
 # SCENARIO-3 Data Protection using Dell's PPDM
-* We will protect the EKS Anywhere cluster and the assets namely the namespaces "argocd" and "sock-shop"
+* We will protect the sockshop application running on the EKS Anywhere cluster
 * Setup Service Account, RBAC and volume snapshot class on the EKS Anywhere cluster
 ```
 cd $HOME
@@ -320,11 +318,13 @@ SA_NAME="powerprotect"
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep ${SA_NAME} | awk '{print $1}')
 ```
 * Discover the EKS Anywhere cluster as an asset along with all the resources
-* Create the protection policies for argocd and sock-shop
-* Create the backup for these assets
-* Delete the namespace of argocd and sock-shop
-* Recover the namespace of argocd only
+* Create the protection policies for the namespace sock-shop
+* Initiate backup
+* Delete the namespace of sock-shop
+* Ideally, if automated sync was enabled ArgoCD will ensure that the resources are brought back up
+* In this case, we will initiate a manual sync via ArgoCD
+* Note that the sync will only restore the resources and not the data within the application
 * Validate if argocd reinstates the resource state for sock-shop application via GitOps
-* Although, ArgoCD has recreated sock-shop resources, there will be no data in the application
+* Although, ArgoCD has recreated sock-shop resources, however we cannot login via the demo user created earlier
 * Recover the sock-shop application state via PowerProtect restore
-* Validate the sock-shop application
+* Validate the sock-shop application via the demo user login and validate the order id is persisted via the restore operation
