@@ -10,6 +10,30 @@ sed -i "s/api-server-ip/$API_SERVER_IP/g" $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
 sed -i "s/test-eks-anywhere/eks-anywhere/g" $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
 eksctl anywhere create cluster -f $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
 ```
+Switch kubectl context
+```
+cd $HOME
+source $HOME/eks-anywhere/cluster-ops/switch-cluster.sh
+```
+Validate kubectl access
+```
+kubectl get nodes
+```
+Install PowerStore CSI
+```
+cd $HOME
+source eks-anywhere/powerstore/install-powerstore-csi-driver.sh
+
+clusterName: ambar01              
+Enter IP or FQDN of the PowerStore array
+ipOrFqdnOfPowerStoreArray: 172.24.185.106
+Enter Global Id of the PowerStore Array
+globalIdOfPowerStoreArray: PS4ebb8d4e8488 
+Enter username of the PowerStore Array
+userNameOfPowerStoreArray: iac
+Enter password of the PowerStore Array
+passwordOfPowerStoreArray:
+```
 Install MetalLB load balancer
 ```
 helm upgrade --install --wait --timeout 15m   --namespace metallb-system --create-namespace   --repo https://metallb.github.io/metallb metallb metallb
@@ -98,6 +122,7 @@ $HOME/$GITLAB_PROJECT_NAME/clusters/$EKSA_MGMT_CLUSTER_NAME/$EKSA_WORKLOAD_CLUST
 AppOPS: Copy the Sockshop application manifests into the cloned gitlab repo
 ```
 cd $HOME
+mkdir -p $HOME/$GITLAB_PROJECT_NAME/applications/sockshop/ 
 cp $HOME/eks-anywhere/sock-shop/gitops/sockshop* $HOME/$GITLAB_PROJECT_NAME/applications/sockshop/
 ```
 Verify the structure of the local repo
