@@ -64,7 +64,9 @@ kubectl apply -f eks-anywhere/sock-shop/ingress-controller-nginx.yaml
 ```
 Install ArgoCD with OIDC (KeyCloak)
 ```
-helm upgrade --install --wait --atomic --namespace argocd --create-namespace  --repo https://argoproj.github.io/argo-helm argocd argo-cd --values - <<EOF
+helm repo add argo https://argoproj.github.io/argo-helm
+helm repo update
+helm install argocd argo/argo-cd --namespace argocd --create-namespace --values - <<EOF
 redis:
   enabled: true
 redis-ha:
