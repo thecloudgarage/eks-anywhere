@@ -1,4 +1,14 @@
-Option-1 Without REDIS PVC
+### All the options are with LoadBalancer. Please install MetalLB beforhand
+
+### Option-1 YAML install without OIDC
+```
+kubectl create -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/v2.0.4/manifests/install.yaml
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+kubectl get svc -n argocd
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+```
+
+### Option-2 HELM based installation with OIDC
 ```
 helm repo add argo https://argoproj.github.io/argo-helm
 helm repo update
@@ -35,7 +45,7 @@ server:
       g, kube-admin, role:admin
 EOF
 ```
-Option-2 With Redis PVC
+### Option-3 HELM based installation with OIDC and Redis PVC
 ```
 helm repo add argo https://argoproj.github.io/argo-helm
 helm repo update
