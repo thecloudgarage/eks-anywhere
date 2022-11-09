@@ -49,6 +49,9 @@ EOF
 ```
 helm repo add argo https://argoproj.github.io/argo-helm
 helm repo update
+
+CREATE PERSISTENT VOLUME CLAIM DEPENDING ON THE AVAILABLE STORAGE CLASS
+
 kubectl create ns argocd
 cat <<EOF | kubectl apply -f -
 kind: PersistentVolumeClaim
@@ -65,6 +68,9 @@ spec:
     requests:
       storage: 8Gi
 EOF
+
+CONTINUE TO INSTALL ARGOCD
+
 helm install argocd argo/argo-cd --namespace argocd --create-namespace --values - <<EOF
 redis:
   enabled: true
