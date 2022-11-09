@@ -278,12 +278,13 @@ GIT_SSL_NO_VERIFY=true git push -uf origin main
   workerNodeGroupConfigurations:
   - count: 3 <<<<< change this value to 2
 ```
+* Also change the vCPU and the memory size for the worker node machines
 ```
 ---
 apiVersion: anywhere.eks.amazonaws.com/v1alpha1
 kind: VSphereMachineConfig
 metadata:
-  name: ambar01-wk
+  name: odyssey-wk
   namespace: default
 spec:
   datastore: /IAC-SSC/datastore/CommonDS
