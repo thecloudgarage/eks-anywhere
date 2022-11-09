@@ -1,8 +1,15 @@
-Export the required variables
+* Open windows cmd and change path to the directory where argocd is installed
+* Export the required variables
 ```
-GITLAB_HOST="gitlab.oidc.thecloudgarage.com"
-GITLAB_PROJECT="https://gitlab.oidc.thecloudgarage.com:10443/ambarhassani/gitops-argocd-eksa.git"
-GITLAB_PROJECT_TOKEN=glpat-59Un7Nf1Us2pskZ_jxsu
+set GITLAB_HOST="gitlab.oidc.thecloudgarage.com"
+set GITLAB_PROJECT="https://gitlab.oidc.thecloudgarage.com:10443/ambarhassani/gitops-argocd-eksa.git"
+set GITLAB_PROJECT_TOKEN=glpat-59Un7Nf1Us2pskZ_jxsu
+set ARGOCD_HOST="argocdtest.thecloudgarage.com"
+```
+* Login to argocd via cli with OIDC or non-OIDC
+* Example for OIDC
+```
+argocd login %ARGOCD_HOST% --sso
 ```
 Add the TLS certificate for the Gitlab repository. Open the Gitlab repo in a browser. As it is a self-signed certificate, click on Not Secure > certificate > detail and Export. This will export the self signed certificate in a .crt format. Save the file in the same directory as argocd cli is installed and change the name to a simple one, e.g. gitlab-host
 ```
