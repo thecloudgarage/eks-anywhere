@@ -7,6 +7,7 @@ kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}
 kubectl get svc -n argocd
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 ```
+NOTE: For the below OIDC based installations, switch the True/False flag for the admin user as per requirement
 
 ### Option-2 HELM based installation with OIDC
 ```
@@ -23,7 +24,7 @@ server:
   config:
     url: https://argocd.oidc.thecloudgarage.com
     application.instanceLabelKey: argocd.argoproj.io/instance
-    admin.enabled: 'false'
+    admin.enabled: 'true'
     resource.exclusions: |
       - apiGroups:
           - cilium.io
@@ -89,7 +90,7 @@ server:
   config:
     url: https://argocdtest.oidc.thecloudgarage.com
     application.instanceLabelKey: argocd.argoproj.io/instance
-    admin.enabled: 'false'
+    admin.enabled: 'true'
     resource.exclusions: |
       - apiGroups:
           - cilium.io
