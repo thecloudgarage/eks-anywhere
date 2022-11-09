@@ -57,6 +57,11 @@ metadata:
   namespace: metallb-system
 EOF
 ```
+Install NGINX Ingress Controller
+```
+cd $HOME
+kubectl apply -f eks-anywhere/sock-shop/ingress-controller-nginx.yaml
+```
 Install ArgoCD with OIDC (KeyCloak)
 ```
 helm upgrade --install --wait --atomic --namespace argocd --create-namespace  --repo https://argoproj.github.io/argo-helm argocd argo-cd --values - <<EOF
@@ -176,7 +181,8 @@ https://gitlab.oidc.thecloudgarage.com:10443/ambarhassani/odyssey.git
 * Create the TLS certicate in ArgoCD to trust the gitlab repo
 * Create the Gitlab repo reference in ArgoCD
 * Create argocd application for the defined Gitlab repo and name it as sockshop
-* As soon as the application is created, argocd will initate the sync
+* In the application settings, keep the sync policy as Manual and path as applications/sockshop with directory recurse
+* As soon as the application is created, argocd will initate the sync if policy is automatic. In this case we will manually sync
 * As a result, we can observe that ArgoCD has invoked the baseline commit and created the sock-shop application
 * This can be viewed from the pods, persistent volumes, ingress and tls secret created in the sock-shop namespace
 * In addition, we can observe that the persistent volumes have been created on the PowerStore array via csi
