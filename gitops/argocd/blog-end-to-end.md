@@ -1,3 +1,4 @@
+:raising_hand: Please ensure that Kubernetes v1.22 or above is used for the OS and cluster template
 * Create an EKS Anywhere cluster
 ```
 CLUSTER_NAME=odyssey
