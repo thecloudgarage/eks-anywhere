@@ -1,4 +1,4 @@
-### All the options are with LoadBalancer. Please install MetalLB beforhand
+## All the options are with LoadBalancer. Please install MetalLB beforhand
 
 ### Option-1 YAML install without OIDC
 ```
