@@ -109,7 +109,7 @@ Export the variables for Gitlab commits
 ```
 EKSA_WORKLOAD_CLUSTER_NAME=odyssey
 EKSA_MGMT_CLUSTER_NAME=odyssey
-GITLAB_PROJECT_NAME=odyssey
+GITLAB_PROJECT_NAME=my-gitops-repo
 ```
 Configure git client on the EKS Anywhere Administrative machine
 ```
@@ -150,7 +150,7 @@ GIT_SSL_NO_VERIFY=true git push -uf origin main
 * Export the required variables
 ```
 set GITLAB_HOST="gitlab.oidc.thecloudgarage.com"
-set GITLAB_PROJECT="https://gitlab.oidc.thecloudgarage.com:10443/ambarhassani/odyssey.git"
+set GITLAB_PROJECT="https://gitlab.oidc.thecloudgarage.com:10443/ambarhassani/my-gitops-repo.git"
 set GITLAB_PROJECT_TOKEN=glpat-a6aWM8WNVYYbKgzpgquq
 set ARGOCD_HOST="argocdtest.thecloudgarage.com"
 ```
