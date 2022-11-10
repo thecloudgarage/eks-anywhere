@@ -103,7 +103,7 @@ kubectl apply -f eks-anywhere/sock-shop/ingress-controller-nginx.yaml
 Create an empty project in Gitlab and setup a project access token. Note the values once the project is created
 ```
 gitlab project name: https://gitlab.oidc.thecloudgarage.com:10443/ambarhassani/odyssey.git
-gitlab project token: ????
+gitlab project token: glpat-a6aWM8WNVYYbKgzpgquq
 ```
 Export the variables for Gitlab commits
 ```
@@ -151,7 +151,7 @@ GIT_SSL_NO_VERIFY=true git push -uf origin main
 ```
 set GITLAB_HOST="gitlab.oidc.thecloudgarage.com"
 set GITLAB_PROJECT="https://gitlab.oidc.thecloudgarage.com:10443/ambarhassani/odyssey.git"
-set GITLAB_PROJECT_TOKEN=????
+set GITLAB_PROJECT_TOKEN=glpat-a6aWM8WNVYYbKgzpgquq
 set ARGOCD_HOST="argocdtest.thecloudgarage.com"
 ```
 * Login to argocd via cli with OIDC or non-OIDC
