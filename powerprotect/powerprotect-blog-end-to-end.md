@@ -20,6 +20,7 @@
 * Absolutely, PowerProtect Data Manager supports cloud disaster recovery and also cloud tiering. One can further explore those use-cases once primary understanding of the workflows is established
 
 # :running: LET'S BEGIN
+Before begining ensure that the cluster-sample.yaml has the right Kubernetes version and the OS template name defined
 
 ### :cloud: Scenario-1 Restore a complete namespace within the same EKS Anywhere cluster
 * SSH into EKS Anywhere Administrative machine
@@ -27,13 +28,11 @@
 ```
 CLUSTER_NAME=ambar01
 API_SERVER_IP=172.24.165.11
-KUBERNETES_VERSION=v1.21
 cd $HOME
 cp $HOME/eks-anywhere/cluster-samples/cluster-sample.yaml $CLUSTER_NAME-eks-a-cluster.yaml
 sed -i "s/workload-cluster-name/$CLUSTER_NAME/g" $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
 sed -i "s/management-cluster-name/$CLUSTER_NAME/g" $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
 sed -i "s/api-server-ip/$API_SERVER_IP/g" $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
-sed -i "s/KubernetesVersion/$KUBERNETES_VERSION/g" $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
 eksctl anywhere create cluster -f $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
 ```
 * Switch kubectl context
@@ -165,13 +164,11 @@ source $HOME/eks-anywhere/cluster-ops/delete-workload-cluster.sh
 ```
 CLUSTER_NAME=ambar01
 API_SERVER_IP=172.24.165.11
-KUBERNETES_VERSION=1.21
 cd $HOME
 cp $HOME/eks-anywhere/cluster-samples/cluster-sample.yaml $CLUSTER_NAME-eks-a-cluster.yaml
 sed -i "s/workload-cluster-name/$CLUSTER_NAME/g" $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
 sed -i "s/management-cluster-name/$CLUSTER_NAME/g" $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
 sed -i "s/api-server-ip/$API_SERVER_IP/g" $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
-sed -i "s/KubernetesVersion/$KUBERNETES_VERSION/g" $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
 eksctl anywhere create cluster -f $HOME/$CLUSTER_NAME-eks-a-cluster.yaml
 ```
 * Switch kubectl context
