@@ -46,7 +46,9 @@ kubectl get nodes
 ```
 * INSTALL POWERSTORE CSI 
 ```
+cd $HOME
 source eks-anywhere/powerstore/install-powerstore-csi-driver.sh
+
 clusterName: ambar01              
 Enter IP or FQDN of the PowerStore array
 ipOrFqdnOfPowerStoreArray: 172.24.185.106
