@@ -1,7 +1,8 @@
 #!bin/bash
-echo "Keep workload and management cluster name exactly the same for deleting a standalone workload OR a management cluster"
-echo "In case you are deleting a workload cluster which is managed via an existing management cluster"
-echo "then provide the correct name of the existing workload and its respective management cluster"
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+echo -e "${RED}1. In case of deleting standalone workload or management clusters, keep workload and management cluster EXACTLY THE SAME${NC}"
+echo -e "${RED}2. In case of deleting workload clusters managed via a separate management cluster, provide respective cluster names appropriately${NC}"
 read -p 'Workload cluster name: ' workloadClusterName
 read -p 'Management cluster name: ' mgmtClusterName
 if [ "$mgmtClusterName" == "$workloadClusterName" ]
