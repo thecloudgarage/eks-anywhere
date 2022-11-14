@@ -1,8 +1,8 @@
 #!bin/bash
 RED='\033[0;31m'
 NC='\033[0m' # No Color
-echo -e "${RED}1. Keep workload and management cluster EXACTLY THE SAME for  standalone workload  or management clusters ${NC}"
-echo -e "${RED}2. Provide respective cluster names if this is a workload cluster managed via a management cluster${NC}"
+echo -e "${RED}1. In case of creating standalone workload or management clusters, keep workload and management cluster EXACTLY THE SAME${NC}"
+echo -e "${RED}2. In case of creating workload clusters managed via a separate management cluster, provide respective cluster names appropriately${NC}"
 read -p 'Workload cluster name: ' workloadClusterName
 read -p 'Management cluster name: ' mgmtClusterName
 read -p 'staticIp for API server High Availability: ' apiServerIpAddress
