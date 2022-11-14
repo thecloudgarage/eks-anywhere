@@ -1,7 +1,8 @@
 #!bin/bash
-echo "Keep workload and management cluster name exactly the same for creating a standalone workload OR a management cluster"
-echo "In case you are creating a workload cluster which is managed via an existing management cluster"
-echo "then provide the correct name of the existing management cluster"
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+echo -e "${RED}1. Keep workload and management cluster EXACTLY THE SAME for  standalone workload  or management clusters ${NC}"
+echo -e "${RED}2. Provide respective cluster names if this is a workload cluster managed via a management cluster${NC}"
 read -p 'Workload cluster name: ' workloadClusterName
 read -p 'Management cluster name: ' mgmtClusterName
 read -p 'staticIp for API server High Availability: ' apiServerIpAddress
