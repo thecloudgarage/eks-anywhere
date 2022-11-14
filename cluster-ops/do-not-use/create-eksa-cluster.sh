@@ -14,17 +14,17 @@ then
 cd $HOME
 cp $HOME/eks-anywhere/cluster-samples/cluster-sample.yaml \
         $HOME/$workloadClusterName-eks-a-cluster.yaml
-sed -i "s/workload-cluster-name/$workloadClusterName/g" $workloadClusterName-eks-a-cluster.yaml
-sed -i "s/management-cluster-name/$mgmtClusterName/g" $workloadClusterName-eks-a-cluster.yaml
-sed -i "s/api-server-ip/$apiServerIpAddress/g" $workloadClusterName-eks-a-cluster.yaml
-eksctl anywhere create cluster -f /home/ubuntu/$workloadClusterName-eks-a-cluster.yaml
+sed -i "s/workload-cluster-name/$workloadClusterName/g" $HOME/$workloadClusterName-eks-a-cluster.yaml
+sed -i "s/management-cluster-name/$mgmtClusterName/g" $HOME/$workloadClusterName-eks-a-cluster.yaml
+sed -i "s/api-server-ip/$apiServerIpAddress/g" $HOME/$workloadClusterName-eks-a-cluster.yaml
+eksctl anywhere create cluster -f $HOME/$workloadClusterName-eks-a-cluster.yaml
 else
 cd $HOME
 cp $HOME/eks-anywhere/cluster-samples/cluster-sample.yaml \
         $HOME/$workloadClusterName-eks-a-cluster.yaml
-sed -i "s/workload-cluster-name/$workloadClusterName/g" $workloadClusterName-eks-a-cluster.yaml
-sed -i "s/management-cluster-name/$mgmtClusterName/g" $workloadClusterName-eks-a-cluster.yaml
-sed -i "s/api-server-ip/$apiServerIpAddress/g" $workloadClusterName-eks-a-cluster.yaml
+sed -i "s/workload-cluster-name/$workloadClusterName/g" $HOME/$workloadClusterName-eks-a-cluster.yaml
+sed -i "s/management-cluster-name/$mgmtClusterName/g" $HOME/$workloadClusterName-eks-a-cluster.yaml
+sed -i "s/api-server-ip/$apiServerIpAddress/g" $HOME/$workloadClusterName-eks-a-cluster.yaml
 eksctl anywhere create cluster \
   -f $HOME/$workloadClusterName-eks-a-cluster.yaml  \
   --kubeconfig $HOME/$mgmtClusterName/$mgmtClusterName-eks-a-cluster.kubeconfig
