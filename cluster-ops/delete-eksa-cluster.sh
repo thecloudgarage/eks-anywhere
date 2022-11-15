@@ -3,7 +3,7 @@ RED='\033[0;31m'
 NC='\033[0m' # No Color
 echo -e "${RED}#######################IMPORTANT NOTE#################################${NC}"
 echo -e "${RED}keep the name of workload and management cluster EXACTLY THE SAME${NC}"
-echo -e "${RED}in case of creating standlone workload clusters or management clusters${NC}"
+echo -e "${RED}in case of deleting standlone workload clusters or management clusters${NC}"
 echo -e "${RED}######################################################################${NC}"
 read -p 'Workload cluster name: ' workloadClusterName
 read -p 'Management cluster name: ' mgmtClusterName
