@@ -1,8 +1,10 @@
 #!bin/bash
 RED='\033[0;31m'
 NC='\033[0m' # No Color
-echo -e "${RED}1. In case of deleting standalone workload or management clusters, keep workload and management cluster EXACTLY THE SAME${NC}"
-echo -e "${RED}2. In case of deleting workload clusters managed via a separate management cluster, provide respective cluster names appropriately${NC}"
+echo -e "${RED}#######################IMPORTANT NOTE#################################${NC}"
+echo -e "${RED}keep the name of workload and management cluster EXACTLY THE SAME${NC}"
+echo -e "${RED}in case of creating standlone workload clusters or management clusters${NC}"
+echo -e "${RED}######################################################################${NC}"
 read -p 'Workload cluster name: ' workloadClusterName
 read -p 'Management cluster name: ' mgmtClusterName
 if [ "$mgmtClusterName" == "$workloadClusterName" ]
