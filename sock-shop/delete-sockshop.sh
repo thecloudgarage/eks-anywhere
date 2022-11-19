@@ -1,11 +1,12 @@
 #!/bin/bash
-kubectl delete -f complete-demo-with-persistence.yaml
-kubectl delete -f ingress-sockshop.yaml
+kubectl delete -f $HOME/eks-anywhere/sock-shop/complete-demo-with-persistence.yaml
+kubectl delete -f $HOME/eks-anywhere/sock-shop/ingress-sockshop.yaml
 kubectl delete secret sockshop -n sock-shop
 sleep 60
 kubectl delete ns sock-shop
-kubectl delete -f ingress-controller-nginx.yaml
+kubectl delete -f $HOME/eks-anywhere/nginx-ingress-class.yaml
+kubectl delete -f $HOME/eks-anywhere/nginx-ingress-controller.yaml
 sleep 20
-rm -rf ingress-sockshop.yaml
+rm -rf $HOME/eks-anywhere/sock-shop/ingress-sockshop.yaml
 rm -rf tls*
 rm -rf sslcert.conf
