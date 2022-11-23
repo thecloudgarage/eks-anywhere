@@ -22,7 +22,7 @@ sed -i "s/workload-cluster-name/$workloadClusterName/g" $HOME/$workloadClusterNa
 sed -i "s/management-cluster-name/$mgmtClusterName/g" $HOME/$workloadClusterName-eks-a-cluster.yaml
 sed -i "s/api-server-ip/$apiServerIpAddress/g" $HOME/$workloadClusterName-eks-a-cluster.yaml
 sed -i "s/1.21/$kubernetesVersion/g" $HOME/$workloadClusterName-eks-a-cluster.yaml
-eksctl anywhere create cluster -f $HOME/$workloadClusterName-eks-a-cluster.yaml
+eksctl anywhere create cluster -f $HOME/$workloadClusterName-eks-a-cluster.yaml 2> >(grep -v "missing")
 else
 cd $HOME
 cp $HOME/eks-anywhere/cluster-samples/cluster-sample.yaml \
@@ -33,6 +33,6 @@ sed -i "s/api-server-ip/$apiServerIpAddress/g" $HOME/$workloadClusterName-eks-a-
 sed -i "s/1.21/$kubernetesVersion/g" $HOME/$workloadClusterName-eks-a-cluster.yaml
 eksctl anywhere create cluster \
   -f $HOME/$workloadClusterName-eks-a-cluster.yaml  \
-  --kubeconfig $HOME/$mgmtClusterName/$mgmtClusterName-eks-a-cluster.kubeconfig
+  --kubeconfig $HOME/$mgmtClusterName/$mgmtClusterName-eks-a-cluster.kubeconfig 2> >(grep -v "missing")
 fi
 fi
