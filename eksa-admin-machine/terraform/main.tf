@@ -191,6 +191,7 @@ resource "null_resource" "install_image_builder_and_govc" {
       "git clone https://github.com/thecloudgarage/eks-anywhere.git",
       "find $HOME/eks-anywhere/ -name \"*.sh\" -type f -print0 | xargs -0 chmod +x",
       "cp $HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/vsphere-connection.json $HOME/vsphere-connection.json",
+      "echo ${var.virtual_machine_root_password} | sudo -S apt-get update -y",
       "$HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/image_builder_govc.sh",
       "sleep 10"
     ]
