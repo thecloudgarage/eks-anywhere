@@ -25,11 +25,11 @@ nodeGroups:
   - name: ng-1-workers
     minSize: 2
     maxSize: 2
-      maxPrice: 0.017
-      instanceTypes: ["t3.medium"]   # (insert comma separated values for more instance types) 
-      onDemandBaseCapacity: 0
-      onDemandPercentageAboveBaseCapacity: 100
-      spotInstancePools: 1
+    maxPrice: 0.017
+    instanceTypes: ["t3.medium"]   # (insert comma separated values for more instance types) 
+    onDemandBaseCapacity: 0
+    onDemandPercentageAboveBaseCapacity: 100
+    spotInstancePools: 1
     volumeSize: 16
     ssh:
       publicKeyPath: ~/eks.pub
