@@ -22,14 +22,15 @@ vpc:
         id: "subnet-28549a65"
         cidr: "172.31.32.0/20"   # (optional, must match CIDR used by the given subnet)
 nodeGroups:
-  - name: ng-1-workers
+  - name: ng-1
     minSize: 2
-    maxSize: 2
-    maxPrice: 0.017
-    instanceTypes: ["t3.medium"]   # (insert comma separated values for more instance types) 
-    onDemandBaseCapacity: 0
-    onDemandPercentageAboveBaseCapacity: 100
-    spotInstancePools: 1
+    maxSize: 5
+    instancesDistribution:
+      maxPrice: 0.017
+      instanceTypes: ["t3.medium"] # At least one instance type should be specified
+      onDemandBaseCapacity: 0
+      onDemandPercentageAboveBaseCapacity: 50
+      spotInstancePools: 1
     volumeSize: 16
     ssh:
       publicKeyPath: ~/eks.pub
