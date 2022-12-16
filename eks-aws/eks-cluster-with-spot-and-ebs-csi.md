@@ -90,7 +90,7 @@ kubectl delete -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernet
 ```
 cd $HOME/$CLUSTER_NAME
 eksctl delete cluster -f $CLUSTER_NAME.yaml
-
+```
 ### Special note for OIDC enablement
 ```
 cp $HOME/eks-anywhere/eks-aws/eks-oidc.yaml $HOME/$CLUSTER_NAME/$CLUSTER_NAME-oidc.yaml
