@@ -4,8 +4,3 @@ metadata:
   name: ebs-sc
 provisioner: ebs.csi.aws.com
 volumeBindingMode: WaitForFirstConsumer
-parameters:
-  csi.storage.k8s.io/fstype: xfs
-  type: io1
-  iopsPerGB: "50"
-  encrypted: "true"
