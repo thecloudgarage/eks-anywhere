@@ -1,4 +1,6 @@
 cd $HOME
+export AWS_ACCESS_KEY_ID=
+export AWS_SECRET_ACCESS_KEY=
 CLUSTER_NAME=c4-eks-aws-1
 mkdir -p $CLUSTER_NAME
 ssh-keygen
