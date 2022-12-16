@@ -1,0 +1,12 @@
+cd $HOME
+CLUSTER_NAME=c4-eks-aws-1
+mkdir -p $CLUSTER_NAME
+ssh-keygen
+cd $HOME/$CLUSTER_NAME
+cp $HOME/.ssh/id_rsa ~/eks
+cp $HOME/.ssh/id_rsa.pub ~/eks.pub
+cp $HOME/eks-anywhere/eks-aws/eks.yaml $HOME/$CLUSTER_NAME/$CLUSTER_NAME.yaml
+sed -i "s/ekstest/$CLUSTER_NAME/g" $HOME/$CLUSTER_NAME/$CLUSTER_NAME.yaml
+eksctl create cluster -f $HOME/$CLUSTER_NAME/$CLUSTER_NAME.yaml --kubeconfig=$HOME/$CLUSTER_NAME/$CLUSTER_NAME-eks-cluster.kubeconfig
+KUBECONFIG=$HOME/$CLUSTER_NAME/$CLUSTER_NAME-eks-cluster.kubeconfig
+kubectl get nodes
