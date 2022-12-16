@@ -3,12 +3,12 @@
 * Please replace the AWS access key id and value along with the intended cluster name
 * Change the Region, VPC-ID and Subnet IDs in the eks-spot.yaml located under $HOME/eks-anywhere/eks-aws directory before executing the below commands
 ```
+ssh-keygen
 cd $HOME
 export AWS_ACCESS_KEY_ID=<insert-key-id>
 export AWS_SECRET_ACCESS_KEY=<insert-key-value>
 CLUSTER_NAME=c4-eks-aws-1
 mkdir -p $HOME/$CLUSTER_NAME
-ssh-keygen
 cd $HOME/$CLUSTER_NAME
 cp $HOME/.ssh/id_rsa ~/eks
 cp $HOME/.ssh/id_rsa.pub ~/eks.pub
