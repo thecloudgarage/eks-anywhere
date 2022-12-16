@@ -1,0 +1,16 @@
+cd $HOME
+git clone https://github.com/kubernetes-csi/external-snapshotter/
+git checkout release-5.0
+kubectl kustomize client/config/crd | kubectl create -f -
+kubectl -n kube-system kustomize deploy/kubernetes/snapshot-controller | kubectl create -f -
+cd $HOME
+cd csi-powerscale/
+git clone -b v2.2.0 https://github.com/dell/csi-powerscale.git
+cd csi-powerscale
+cp samples/secret/secret.yaml isilon-creds.yaml
+nano isilon-creds.yaml
+kubectl create secret generic isilon-creds -n isilon --from-file=config=isilon-creds.yaml -o yaml --dry-run=client | kubectl apply -f -
+kubectl create -f samples/secret/empty-secret.yaml
+cp helm/csi-isilon/values.yaml isilon-values.yaml
+nano isilon-values.yaml
+./dell-csi-helm-installer/csi-install.sh --namespace isilon --values isilon-values.yaml
