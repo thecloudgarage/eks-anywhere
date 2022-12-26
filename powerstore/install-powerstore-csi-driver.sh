@@ -16,6 +16,10 @@ mkdir -p $HOME/$clusterName
 cd $HOME/$clusterName
 git clone -b v2.2.0 https://github.com/dell/csi-powerstore.git
 cd $HOME/$clusterName/csi-powerstore
+#Added to accomodate higher releases of csi driver installations
+eksdistroversion=$(kubectl get nodes -o=jsonpath='{.items[0].status.nodeInfo.kubeletVersion}')
+sed -i "s/>= 1.21.0 < 1.26.0/$eksdistroversion/g" helm/csi-powerstore/Chart.yaml
+cd $HOME/$clusterName/csi-powerstore
 git clone https://github.com/kubernetes-csi/external-snapshotter/
 cd ./external-snapshotter
 git checkout release-5.0
