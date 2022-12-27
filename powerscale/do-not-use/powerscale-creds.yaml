@@ -1,6 +1,6 @@
 isilonClusters:
     # logical name of PowerScale Cluster
-  - clusterName: "powerstore01"
+  - clusterName: "powerscale01"
 
     # username for connecting to PowerScale OneFS API server
     # if authorization is enabled, username will be ignored
