@@ -54,5 +54,5 @@ cd $HOME/$clusterName/csi-powerscale/dell-csi-helm-installer
 ./csi-install.sh --namespace csi-powerscale --values ./my-powerscale-settings.yaml --skip-verify --skip-verify-node
 #CREATE STORAGE CLASS FOR POWERSCALE CSI
 cd $HOME/$clusterName/csi-powerscale/dell-csi-helm-installer
-cp $HOME/$clusterName/csi-powerscale/samples/storageclass/isilon.yaml ./powerscale-sc.yaml
-kubectl create -f $HOME/$clusterName/csi-powerscale/dell-csi-helm-installer/powerscale-sc.yaml
+cp $HOME/$clusterName/csi-powerscale/samples/storageclass/isilon.yaml ./powerscale-storageclass.yaml
+kubectl create -f $HOME/$clusterName/csi-powerscale/dell-csi-helm-installer/powerscale-storageclass.yaml
