@@ -22,7 +22,7 @@ git clone -b v$csiReleaseNumber https://github.com/dell/csi-powerscale.git
 cd $HOME/$clusterName/csi-powerscale
 #EXPORT EKS DISTRO VERSION FOR CSI VERIFICATION
 eksdistroversion=$(kubectl get nodes -o=jsonpath='{.items[0].status.nodeInfo.kubeletVersion}')
-sed -i "s/>= 1.21.0 < 1.26.0/$eksdistroversion/g" helm/csi-powerscale/Chart.yaml
+sed -i "s/>= 1.21.0 < 1.26.0/$eksdistroversion/g" helm/csi-isilon/Chart.yaml
 cd $HOME/$clusterName/csi-powerscale
 #INSTALL EXTERNAL SNAPSHOTTER
 git clone https://github.com/kubernetes-csi/external-snapshotter/
@@ -33,8 +33,8 @@ kubectl -n kube-system kustomize deploy/kubernetes/snapshot-controller | kubectl
 #PREPARE FOR POWERSCALE CSI INSTALLATION
 kubectl create namespace csi-powerscale
 cd $HOME/$clusterName/csi-powerscale/dell-csi-helm-installer
-cp $HOME/eks-anywhere/csi-powerscale/powerscale-creds.yaml powerscale-creds.yaml
-cp $HOME/eks-anywhere/csi-powerscale/emptysecret.yaml emptysecret.yaml
+cp $HOME/eks-anywhere/powerscale/powerscale-creds.yaml powerscale-creds.yaml
+cp $HOME/eks-anywhere/powerscale/emptysecret.yaml emptysecret.yaml
 #BUILD CREDS FILE FOR POWERSCALE CSI
 sed -i "s/powerscale_cluster_name/$powerScaleClusterName/g" $HOME/$clusterName/csi-powerscale/dell-csi-helm-installer/powerscale-creds.yaml
 sed -i "s/powerscale_username/$userNameOfPowerScaleCluster/g" $HOME/$clusterName/csi-powerscale/dell-csi-helm-installer/powerscale-creds.yaml
@@ -42,7 +42,7 @@ sed -i "s/powerscale_password/$passwordOfPowerScaleCluster/g" $HOME/$clusterName
 sed -i "s/powerscale_endpoint/$ipOrFqdnOfPowerScaleCluster/g" $HOME/$clusterName/csi-powerscale/dell-csi-helm-installer/powerscale-creds.yaml
 #CREATE SECRETS FOR POWERSCALE CSI
 kubectl create secret generic isilon-creds -n isilon --from-file=config=powerscale-creds.yaml -o yaml --dry-run=client | kubectl apply -f -
-kubectl create -f $HOME/$clusterName/csi-powerscale/samples/secret/emptysecret.yaml
+kubectl create -f emptysecret.yaml
 #BUILD SETTINGS FILE FOR POWERSCALE CSI
 cd $HOME/$clusterName/csi-powerscale/dell-csi-helm-installer/
 cp $HOME/$clusterName/csi-powerscale/dell-csi-helm-installer/values.yaml my-powerscale-settings.yaml
@@ -54,5 +54,5 @@ cd $HOME/$clusterName/csi-powerscale/dell-csi-helm-installer
 ./csi-install.sh --namespace csi-powerscale --values ./my-powerscale-settings.yaml --skip-verify --skip-verify-node
 #CREATE STORAGE CLASS FOR POWERSCALE CSI
 cd $HOME/$clusterName/csi-powerscale/dell-csi-helm-installer
-cp $HOME/$clusterName/csi-powerscale/samples/storageclass/isilon.yaml ./powerscale-storageclass.yaml
+cp $HOME/eks-anywhere/powerscale/powerscale-storageclass.yaml ./powerscale-storageclass.yaml
 kubectl create -f $HOME/$clusterName/csi-powerscale/dell-csi-helm-installer/powerscale-storageclass.yaml
