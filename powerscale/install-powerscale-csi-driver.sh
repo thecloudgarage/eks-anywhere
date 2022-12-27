@@ -47,7 +47,7 @@ kubectl create -f emptysecret.yaml
 cd $HOME/$clusterName/csi-powerscale/dell-csi-helm-installer/
 cp $HOME/$clusterName/csi-powerscale/helm/csi-isilon/values.yaml my-powerscale-settings.yaml
 sed -i "s/volumeNamePrefix: k8s/volumeNamePrefix: $clusterName-vol/g" my-powerscale-settings.yaml
-sed -i "s/snapNamePrefix: snapshot/$clusterName-snap/g" my-powerscale-settings.yaml
+sed -i "s/snapNamePrefix: snapshot/snapNamePrefix: $clusterName-snap/g" my-powerscale-settings.yaml
 sed -i 's/isiAuthType: 0/isiAuthType: 1/g' my-powerscale-settings.yaml
 #INSTALL POWERSCALE CSI
 cd $HOME/$clusterName/csi-powerscale/dell-csi-helm-installer
