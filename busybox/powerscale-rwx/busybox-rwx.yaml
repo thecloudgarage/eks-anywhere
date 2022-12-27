@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: busybox-rwx
+  namespace: default
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 2
+  selector:
+    matchLabels:
+      run: busybox
+  template:
+    metadata:
+      labels:
+        run: busybox
+    spec:
+      containers:
+      - args:
+        - sh
+        image: busybox
+        imagePullPolicy: Always
+        name: busybox
+        stdin: true
+        tty: true
+        volumeMounts:
+        - name: busybox-rwx-pvc
+          mountPath: "/mnt1"
+      restartPolicy: Always
+      volumes:
+      - name: busybox-rwx-pvc
+        persistentVolumeClaim:
+          claimName: busybox-rwx-pvc-powerscale
