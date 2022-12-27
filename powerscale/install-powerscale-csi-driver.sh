@@ -41,11 +41,11 @@ sed -i "s/powerscale_username/$userNameOfPowerScaleCluster/g" $HOME/$clusterName
 sed -i "s/powerscale_password/$passwordOfPowerScaleCluster/g" $HOME/$clusterName/csi-powerscale/dell-csi-helm-installer/powerscale-creds.yaml
 sed -i "s/powerscale_endpoint/$ipOrFqdnOfPowerScaleCluster/g" $HOME/$clusterName/csi-powerscale/dell-csi-helm-installer/powerscale-creds.yaml
 #CREATE SECRETS FOR POWERSCALE CSI
-kubectl create secret generic isilon-creds -n isilon --from-file=config=powerscale-creds.yaml -o yaml --dry-run=client | kubectl apply -f -
+kubectl create secret generic isilon-creds -n csi-powerscale --from-file=config=powerscale-creds.yaml -o yaml --dry-run=client | kubectl apply -f -
 kubectl create -f emptysecret.yaml
 #BUILD SETTINGS FILE FOR POWERSCALE CSI
 cd $HOME/$clusterName/csi-powerscale/dell-csi-helm-installer/
-cp $HOME/$clusterName/csi-powerscale/dell-csi-helm-installer/values.yaml my-powerscale-settings.yaml
+cp $HOME/$clusterName/csi-powerscale/helm/csi-isilon/values.yaml my-powerscale-settings.yaml
 sed -i "s/volumeNamePrefix: k8s/volumeNamePrefix: $clusterName-vol/g" my-powerscale-settings.yaml
 sed -i "s/snapNamePrefix: snapshot/$clusterName-snap/g" my-powerscale-settings.yaml
 sed -i 's/isiAuthType: 0/isiAuthType: 1/g' my-powerscale-settings.yaml
