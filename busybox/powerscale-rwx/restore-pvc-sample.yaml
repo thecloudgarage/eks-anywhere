@@ -1,0 +1,19 @@
+# DO NOT CHANGE DATASOURCE NAME, AS IT IS SET AUTOMATICALLY VIA THE SCRIPT
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: busybox-rwx-restored-pvc-powerscale
+  labels:
+    name: busybox-rwx-restored-pvc-powerscale
+    csi: powerscale
+spec:
+  storageClassName: powerscale
+  dataSource:
+    name: volumeSnapshotName
+    kind: VolumeSnapshot
+    apiGroup: snapshot.storage.k8s.io
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
