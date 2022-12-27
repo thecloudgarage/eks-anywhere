@@ -1,0 +1,10 @@
+apiVersion: snapshot.storage.k8s.io/v1
+kind: VolumeSnapshot
+metadata:
+  name: busybox-rwx-snapshot-powerscale-datetime
+  labels:
+    name: busybox-rwx-snapshot-powerscale-datetime
+spec:
+  volumeSnapshotClassName: powerscale-snapclass
+  source:
+    persistentVolumeClaimName: busybox-rwx-pvc-powerscale
