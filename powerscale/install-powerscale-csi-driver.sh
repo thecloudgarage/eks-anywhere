@@ -7,10 +7,10 @@ echo "Enter PowerScale Cluster Name"
 read -p 'powerScaleClusterName: ' powerScaleClusterName
 echo "Enter IP or FQDN of the PowerStore array"
 read -p 'ipOrFqdnOfPowerStoreArray: ' ipOrFqdnOfPowerScaleCluster
-echo "Enter Global Id of the PowerStore Array"
-read -p 'userNameOfPowerStoreArray: ' userNameOfPowerScaleCluster
-echo "Enter password of the PowerStore Array"
-read -sp 'passwordOfPowerStoreArray: ' passwordOfPowerScaleCluster
+echo "Enter username of PowerScale Cluster"
+read -p 'userNameOfPowerScaleCluster: ' userNameOfPowerScaleCluster
+echo "Enter password of the PowerScale Cluster"
+read -sp 'passwordOfPowerScaleCluster: ' passwordOfPowerScaleCluster
 echo -e "\n"
 #SET KUBECTL CONTEXT
 printf "$clusterName\n" | source $HOME/eks-anywhere/cluster-ops/switch-cluster.sh
