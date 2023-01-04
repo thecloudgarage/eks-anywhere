@@ -56,7 +56,7 @@ kubectl get nodes
 kubectl -n kube-system describe configmap aws-auth
 ```
 * Go to Services -> IAM -> Roles - Search for role with name from the above output and open it - Click on Permissions tab - Click on Attach Policies - Search for Amazon_EBS_CSI_Driver and click on Attach Policy
-### Deploy EBS CSI driven storage class, external snapshotter and swap default storage class
+### Deploy EBS CSI driven storage class, external snapshotter, swap default storage class and powerprotect sa/rbac
 ```
 kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
 kubectl apply -f $HOME/eks-anywhere/eks-aws/ebs-sc.yaml
@@ -68,8 +68,14 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snaps
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/master/deploy/kubernetes/snapshot-controller/setup-snapshot-controller.yaml
 kubectl patch storageclass gp2 -p "{\"metadata\": {\"annotations\":{\"storageclass.kubernetes.io/is-default-class\":\"false\"}}}" 
 kubectl patch storageclass ebs-sc -p "{\"metadata\": {\"annotations\":{\"storageclass.kubernetes.io/is-default-class\":\"true\"}}}" 
+kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-sa.yaml
+kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-rbac.yaml
 ```
-
+### To retrieve SA token for PowerProtect
+```
+SA_NAME="powerprotect"
+kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep ${SA_NAME} | awk '{print $1}')
+```
 # Delete the EKS cluster
 
 ### Before deleting the cluster, ensure that the CSI driver gets uninstalled
