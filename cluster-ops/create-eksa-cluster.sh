@@ -8,7 +8,7 @@ echo -e "${RED}#################################################################
 read -p 'Workload cluster name: ' workloadClusterName
 read -p 'Management cluster name: ' mgmtClusterName
 read -p 'staticIp for API server High Availability: ' apiServerIpAddress
-read -p 'Kubernetes version 1.21, 1.22, v1.23, etc.: ' kubernetesVersion
+read -p 'Kubernetes version 1.21, 1.22, 1.23, etc.: ' kubernetesVersion
 if ping -c 1 $staticIp &> /dev/null
 then
   echo "Error., cannot contintue...Static IP conflict, address in use"
