@@ -8,7 +8,10 @@ sed -i "s/fqdnOfSockShopFrontEnd/$fqdnOfSockShopFrontEnd/g" ./ingress-sockshop.y
 openssl req -x509 -nodes -days 730 -newkey rsa:2048 -keyout tls.key -out tls.crt -config sslcert.conf -extensions 'v3_req'
 kubectl create -f $HOME/eks-anywhere/sock-shop/namespace-sockshop.yaml
 sleep 3
-kubectl create secret tls sockshop-tls -n sock-shop --key tls.key --cert tls.crt
+#kubectl create secret tls sockshop-tls -n sock-shop --key tls.key --cert tls.crt
+#Converting secret creation to YAML for supporting ArgoCD/GitOps
+kubectl create secret tls sockshop-tls -n sock-shop --key tls.key --cert tls.crt --dry-run=client --output=yaml > sockshop-tls.yaml
+kubectl create -f $HOME/eks-anywhere/sock-shop/sockshop-tls.yaml
 sleep 3
 kubectl create -f $HOME/eks-anywhere/ingress-controllers/nginx-ingress-controller-eks-nlb.yaml
 sleep 120
