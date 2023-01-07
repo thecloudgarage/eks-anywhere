@@ -56,3 +56,4 @@ cd $HOME/$clusterName/csi-powerscale/dell-csi-helm-installer
 cd $HOME/$clusterName/csi-powerscale/dell-csi-helm-installer
 cp $HOME/eks-anywhere/powerscale/powerscale-storageclass.yaml ./powerscale-storageclass.yaml
 kubectl create -f $HOME/$clusterName/csi-powerscale/dell-csi-helm-installer/powerscale-storageclass.yaml
+kubectl create -f $HOME/eks-anywhere/powerscale/powerscale-volumesnapshotclass.yaml
