@@ -16,8 +16,9 @@ sleep 3
 kubectl create -f $HOME/eks-anywhere/ingress-controllers/nginx-ingress-controller-eks-nlb.yaml
 sleep 120
 kubectl create -f $HOME/eks-anywhere/ingress-controllers/nginx-ingress-class.yaml
-sed -i 's/powerstore-ext4/ebs-sc/g' $HOME/eks-anywhere/sock-shop/complete-demo-with-persistence.yaml
-sed -i 's/8Gi/1Gi/g' $HOME/eks-anywhere/sock-shop/complete-demo-with-persistence.yaml
-kubectl create -f $HOME/eks-anywhere/sock-shop/complete-demo-with-persistence.yaml
+cp complete-demo-with-persistence.yaml complete-demo-with-persistence-aws.yaml
+sed -i 's/powerstore-ext4/ebs-sc/g' $HOME/eks-anywhere/sock-shop/complete-demo-with-persistence-aws.yaml
+sed -i 's/8Gi/1Gi/g' $HOME/eks-anywhere/sock-shop/complete-demo-with-persistence-aws.yaml
+kubectl create -f $HOME/eks-anywhere/sock-shop/complete-demo-with-persistence-aws.yaml
 sleep 60
 kubectl create -f $HOME/eks-anywhere/sock-shop/ingress-sockshop.yaml
