@@ -1,0 +1,11 @@
+version: '3'
+services:
+  master:
+    image: thecloudgarage/haproxy-with-dataplane
+    ports:
+    - "3009:3009"
+    - "111:111"
+    - "2049:2049"
+    - "2052:2052"
+    volumes:
+    - /home/ubuntu/haproxy/:/usr/local/etc/haproxy
