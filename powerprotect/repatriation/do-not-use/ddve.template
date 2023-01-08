@@ -1,0 +1,4331 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "AWS CloudFormation for DDVE: This template creates one DDVE instance attached with Meta Data Disk(s). \n**WARNING** This template creates an Amazon EC2 instance and EBS Volumes. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Parameters": {
+        "DdveNameTag": {
+            "Description": "Provide a name tag for the EC2 instance and EBS volumes that are created.",
+            "Type": "String"
+        },
+        "DdveModel": {
+            "Description": "  ",
+            "Type": "String",
+            "Default": "16TB-Model--m5.xlarge",
+            "AllowedValues": [
+                "16TB-Model--m5.xlarge",
+                "32TB-Model--m5.2xlarge",
+                "96TB-Model--m5.4xlarge",
+                "256TB-Model--m5.8xlarge"
+            ]
+        },
+        "DdveMetadataDiskNumber": {
+            "Description": "Recommended metadata disk storage is 10% of the total capacity. The default number of metadata disks attached for each model : 16 TB Model - 2 * 1 TiB disks, 32 TB Model - 4 * 1 TiB disks, 96 TB Model - 10 * 1 TiB disks, 256 TB Model - 13 * 2 TiB disks. Override the default number of metadata disks below:",
+            "Type": "String",
+            "Default": "Default",
+            "AllowedValues": [
+                "Default",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10",
+                "11",
+                "12",
+                "13",
+                "14",
+                "15",
+                "16",
+                "17",
+                "18",
+                "19",
+                "20",
+                "21",
+                "22",
+                "23",
+                "24"
+            ]
+        },
+        "DdveOption4CreateS3Bucket": {
+            "Description": "User can choose Yes to create S3 bucket from this Cloud Formation or No to create S3 bucket at another occasion.",
+            "Type": "String",
+            "Default": "No, I will create S3 bucket separately",
+            "AllowedValues": [
+                "Yes, I want to create S3 bucket in this Cloud Formation stack",
+                "No, I will create S3 bucket separately"
+            ]
+        },
+        "DdveS3BucketName": {
+            "Description": "S3 Bucket Name. Note: 1. this field is valid only when you choose Yes in above S3 Bucket Creation Option parameter. 2. please follow AWS S3 Bucket naming rules - https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucketnamingrules.html,  do not include dot(.) in bucket name as we recommend to use hosted-style URL to access S3. 3. make sure the access to this S3 bucket is granted in the IAM role.",
+            "Type": "String",
+            "Default": ""
+        },
+        "DdveIAMRole": {
+            "Description": "The IAM Role that grants S3 access to the DDVE instance. If it is not already created, you can click this URL: https://console.aws.amazon.com/iam/home#/roles to create the IAM role. Alternatively, you can leave this field blank to create and attach the IAM role later to the DDVE instance.",
+            "Type": "String",
+            "Default": ""
+        },
+        "DdveSubnetId": {
+            "Type": "AWS::EC2::Subnet::Id",
+            "Default": "",
+            "Description": "DDVE Subnet ID in your Virtual Private Cloud (VPC)"
+        },
+        "DdveSecurityGroupIds": {
+            "Description": "Security groups that can be used to control access to the DDVE instances",
+            "Type": "List<AWS::EC2::SecurityGroup::Id>",
+            "ConstraintDescription": "must be list of EC2 security group ids"
+        },
+        "DdveKeyPairName": {
+            "Description": "Key Pair that can be used to access the DDVE instance",
+            "Type": "AWS::EC2::KeyPair::KeyName"
+        },
+        "DdvePrivateIPOption": {
+            "Description": "Auto-Assign Private IP or Custom Private IP",
+            "Type": "String",
+            "Default": "Custom Private IP",
+            "AllowedValues": [
+                "Auto-Assign Private IP",
+                "Custom Private IP"
+            ]
+        },
+        "DdveCustomPrivateIPAddress": {
+            "Description": "Assign custom private IP address to DDVE primary network interface. Note: this field is used only if you choose the Custom Private IP option in above Private IP Address Option parameter. Please make sure the IP address is, 1. a valid IPv4 address; 2. in the CIDR range of the selected subnet; 3. available in the selected subnet, otherwise the stack creation would fail.",
+            "Type": "String",
+            "Default": "172.24.165.50",
+            "AllowedPattern": "(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})\\.(\\d{1,3})"
+        }
+    },
+    "Metadata": {
+        "AWS::CloudFormation::Interface": {
+            "ParameterGroups": [
+                {
+                    "Label": {
+                        "default": "DDVE Instance Configuration"
+                    },
+                    "Parameters": [
+                        "DdveModel",
+                        "DdveMetadataDiskNumber",
+                        "DdveNameTag",
+                        "DdveIAMRole",
+                        "DdveKeyPairName"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "DDVE Network Configuration"
+                    },
+                    "Parameters": [
+                        "DdveSubnetId",
+                        "DdveSecurityGroupIds"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Advanced Configuration"
+                    },
+                    "Parameters": [
+                        "DdveOption4CreateS3Bucket",
+                        "DdveS3BucketName",
+                        "DdvePrivateIPOption",
+                        "DdveCustomPrivateIPAddress"
+                    ]
+                }
+            ],
+            "ParameterLabels": {
+                "DdveModel": {
+                    "default": "DDVE Model"
+                },
+                "DdveMetadataDiskNumber": {
+                    "default": "Override default Metadata disks"
+                },
+                "DdveNameTag": {
+                    "default": "DDVE Name Tag"
+                },
+                "DdveIAMRole": {
+                    "default": "IAM Role for S3 access"
+                },
+                "DdveKeyPairName": {
+                    "default": "Key Pair"
+                },
+                "DdveSubnetId": {
+                    "default": "Subnet ID"
+                },
+                "DdveSecurityGroupIds": {
+                    "default": "Security Groups"
+                },
+                "DdveOption4CreateS3Bucket": {
+                    "default": "S3 Bucket Creation Option"
+                },
+                "DdveS3BucketName": {
+                    "default": "S3 Bucket Name"
+                },
+                "DdvePrivateIPOption": {
+                    "default": "Private IP Address Option"
+                },
+                "DdveCustomPrivateIPAddress": {
+                    "default": "Custom Private IPv4 Address"
+                }
+            }
+        }
+    },
+    "Mappings": {
+        "DdveConfigPerModel": {
+            "16TB-Model--m5.xlarge": {
+                "InstanceType": "m5.xlarge",
+                "RootDiskType": "gp3",
+                "RootDiskSize": "250",
+                "NvramDiskType": "gp3",
+                "NvramDiskSize": "10",
+                "MetadataDiskType": "gp3",
+                "PerMetadataDiskSize": "1024",
+                "MetadataDiskDefaultNum": "2"
+            },
+            "32TB-Model--m5.2xlarge": {
+                "InstanceType": "m5.2xlarge",
+                "RootDiskType": "gp3",
+                "RootDiskSize": "250",
+                "NvramDiskType": "gp3",
+                "NvramDiskSize": "10",
+                "MetadataDiskType": "gp3",
+                "PerMetadataDiskSize": "1024",
+                "MetadataDiskDefaultNum": "4"
+            },
+            "96TB-Model--m5.4xlarge": {
+                "InstanceType": "m5.4xlarge",
+                "RootDiskType": "gp3",
+                "RootDiskSize": "250",
+                "NvramDiskType": "gp3",
+                "NvramDiskSize": "10",
+                "MetadataDiskType": "gp3",
+                "PerMetadataDiskSize": "1024",
+                "MetadataDiskDefaultNum": "10"
+            },
+            "256TB-Model--m5.8xlarge": {
+                "InstanceType": "m5.8xlarge",
+                "RootDiskType": "gp3",
+                "RootDiskSize": "250",
+                "NvramDiskType": "gp3",
+                "NvramDiskSize": "10",
+                "MetadataDiskType": "gp3",
+                "PerMetadataDiskSize": "2048",
+                "MetadataDiskDefaultNum": "13"
+            }
+        },
+        "DdveMetadataDiskNumPerUserSelect": {
+            "16TB-Model--m5.xlarge": {
+                "Default": "2",
+                "1": "1",
+                "2": "2",
+                "3": "3",
+                "4": "4",
+                "5": "5",
+                "6": "6",
+                "7": "7",
+                "8": "8",
+                "9": "9",
+                "10": "10",
+                "11": "11",
+                "12": "12",
+                "13": "13",
+                "14": "14",
+                "15": "15",
+                "16": "16",
+                "17": "17",
+                "18": "18",
+                "19": "19",
+                "20": "20",
+                "21": "21",
+                "22": "22",
+                "23": "23",
+                "24": "24"
+            },
+            "32TB-Model--m5.2xlarge": {
+                "Default": "4",
+                "1": "1",
+                "2": "2",
+                "3": "3",
+                "4": "4",
+                "5": "5",
+                "6": "6",
+                "7": "7",
+                "8": "8",
+                "9": "9",
+                "10": "10",
+                "11": "11",
+                "12": "12",
+                "13": "13",
+                "14": "14",
+                "15": "15",
+                "16": "16",
+                "17": "17",
+                "18": "18",
+                "19": "19",
+                "20": "20",
+                "21": "21",
+                "22": "22",
+                "23": "23",
+                "24": "24"
+            },
+            "96TB-Model--m5.4xlarge": {
+                "Default": "10",
+                "1": "1",
+                "2": "2",
+                "3": "3",
+                "4": "4",
+                "5": "5",
+                "6": "6",
+                "7": "7",
+                "8": "8",
+                "9": "9",
+                "10": "10",
+                "11": "11",
+                "12": "12",
+                "13": "13",
+                "14": "14",
+                "15": "15",
+                "16": "16",
+                "17": "17",
+                "18": "18",
+                "19": "19",
+                "20": "20",
+                "21": "21",
+                "22": "22",
+                "23": "23",
+                "24": "24"
+            },
+            "256TB-Model--m5.8xlarge": {
+                "Default": "13",
+                "1": "1",
+                "2": "2",
+                "3": "3",
+                "4": "4",
+                "5": "5",
+                "6": "6",
+                "7": "7",
+                "8": "8",
+                "9": "9",
+                "10": "10",
+                "11": "11",
+                "12": "12",
+                "13": "13",
+                "14": "14",
+                "15": "15",
+                "16": "16",
+                "17": "17",
+                "18": "18",
+                "19": "19",
+                "20": "20",
+                "21": "21",
+                "22": "22",
+                "23": "23",
+                "24": "24"
+            }
+        },
+        "DdveConfigPerRegion": {
+            "us-east-1": {
+                "RegionName": "US East (N. Virginia)",
+                "AmiId": "ami-090eb8b68127e24c7",
+                "AmiDescription": "7.10.0.0-1017741"
+            },
+            "us-east-2": {
+                "RegionName": "US East (Ohio)",
+                "AmiId": "ami-0771b3723b8fee538",
+                "AmiDescription": "7.10.0.0-1017741"
+            },
+            "us-west-1": {
+                "RegionName": "US West (N. California)",
+                "AmiId": "ami-0ebfb0f206e879dae",
+                "AmiDescription": "7.10.0.0-1017741"
+            },
+            "us-west-2": {
+                "RegionName": "US West (Oregon)",
+                "AmiId": "ami-068aeac55ce559e5a",
+                "AmiDescription": "7.10.0.0-1017741"
+            },
+            "eu-west-3": {
+                "RegionName": "EU (Paris)",
+                "AmiId": "ami-04738c2ea5a116008",
+                "AmiDescription": "7.10.0.0-1017741"
+            },
+            "eu-west-2": {
+                "RegionName": "EU (London)",
+                "AmiId": "ami-0ccd6259e58c955d0",
+                "AmiDescription": "7.10.0.0-1017741"
+            },
+            "eu-west-1": {
+                "RegionName": "EU (Ireland)",
+                "AmiId": "ami-084e9403a5803636d",
+                "AmiDescription": "7.10.0.0-1017741"
+            },
+            "eu-central-1": {
+                "RegionName": "EU (Frankfurt)",
+                "AmiId": "ami-0b9a3d12076f7ca63",
+                "AmiDescription": "7.10.0.0-1017741"
+            },
+            "eu-north-1": {
+                "RegionName": "EU (Stockholm)",
+                "AmiId": "ami-0148ad0c64a3328c7",
+                "AmiDescription": "7.10.0.0-1017741"
+            },
+            "ap-south-1": {
+                "RegionName": "Asia Pacific (Mumbai)",
+                "AmiId": "ami-0984d8c75ed715fbd",
+                "AmiDescription": "7.10.0.0-1017741"
+            },
+            "ap-northeast-2": {
+                "RegionName": "Asia Pacific (Seoul)",
+                "AmiId": "ami-03cf07326fee68cae",
+                "AmiDescription": "7.10.0.0-1017741"
+            },
+            "ap-northeast-3": {
+                "RegionName": "Asia Pacific (Osaka)",
+                "AmiId": "ami-0aeedb6d842e5782c",
+                "AmiDescription": "7.10.0.0-1017741"
+            },
+            "ap-northeast-1": {
+                "RegionName": "Asia Pacific (Tokyo)",
+                "AmiId": "ami-06e3b85f81410031a",
+                "AmiDescription": "7.10.0.0-1017741"
+            },
+            "ap-southeast-1": {
+                "RegionName": "Asia Pacific (Singapore)",
+                "AmiId": "ami-09603272387078da2",
+                "AmiDescription": "7.10.0.0-1017741"
+            },
+            "ap-southeast-2": {
+                "RegionName": "Asia Pacific (Sydney)",
+                "AmiId": "ami-0bdf2f78932a7a56b",
+                "AmiDescription": "7.10.0.0-1017741"
+            },
+            "sa-east-1": {
+                "RegionName": "South America (Sao Paulo)",
+                "AmiId": "ami-0fc50151234e74564",
+                "AmiDescription": "7.10.0.0-1017741"
+            },
+            "ca-central-1": {
+                "RegionName": "Canada (Central)",
+                "AmiId": "ami-0426ee1022782cce3",
+                "AmiDescription": "7.10.0.0-1017741"
+            },
+            "us-gov-west-1": {
+                "RegionName": "AWS GovCloud (US West)",
+                "AmiId": "ami-04a9c0da1a48c62c0",
+                "AmiDescription": "7.10.0.0-1017741"
+            },
+            "us-gov-east-1": {
+                "RegionName": "AWS GovCloud (US East)",
+                "AmiId": "ami-0291fc17af6240504",
+                "AmiDescription": "7.10.0.0-1017741"
+            },
+            "eu-south-1": {
+                "RegionName": "EU (Milan)",
+                "AmiId": "ami-08b996bd6daf5fb6a",
+                "AmiDescription": "7.10.0.0-1017741"
+            },
+            "af-south-1": {
+                "RegionName": "Africa (Cape Town)",
+                "AmiId": "ami-0cc2d6961c820199c",
+                "AmiDescription": "7.10.0.0-1017741"
+            },
+            "ap-east-1": {
+                "RegionName": "Asia Pacific (Hong Kong)",
+                "AmiId": "ami-0970f10c9bc569d36",
+                "AmiDescription": "7.10.0.0-1017741"
+            },
+            "ap-southeast-3": {
+                "RegionName": "Asia Pacific (Jakarta)",
+                "AmiId": "ami-050a75781382dd4c5",
+                "AmiDescription": "7.10.0.0-1017741"
+            },
+            "me-south-1": {
+                "RegionName": "Middle East (Bahrain)",
+                "AmiId": "ami-0e552baf8669e5ff7",
+                "AmiDescription": "7.10.0.0-1017741"
+            }
+        }
+    },
+    "Conditions": {
+        "IsRoleApplied": {
+            "Fn::Not": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Ref": "DdveIAMRole"
+                        },
+                        ""
+                    ]
+                }
+            ]
+        },
+        "IsS3BucketToBeCreated": {
+            "Fn::Equals": [
+                {
+                    "Ref": "DdveOption4CreateS3Bucket"
+                },
+                "Yes, I want to create S3 bucket in this Cloud Formation stack"
+            ]
+        },
+        "IsS3BucketNameVacant": {
+            "Fn::Equals": [
+                {
+                    "Ref": "DdveS3BucketName"
+                },
+                ""
+            ]
+        },
+        "IsCustomPrivateIPUsed": {
+            "Fn::Equals": [
+                {
+                    "Ref": "DdvePrivateIPOption"
+                },
+                "Custom Private IP"
+            ]
+        },
+        "IsDefaultMetadataDiskNumUsed": {
+            "Fn::Equals": [
+                {
+                    "Ref": "DdveMetadataDiskNumber"
+                },
+                "Default"
+            ]
+        },
+        "IsThisMetadataDiskValid4MetadataDiskNum15-24": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "15"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "16"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "17"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "18"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "19"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "20"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "21"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "22"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "23"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "24"
+                    ]
+                }
+            ]
+        },
+        "IsThisMetadataDiskValid4MetadataDiskNum8-24": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "8"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "9"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "10"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "11"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "12"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "13"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "14"
+                    ]
+                },
+                {
+                    "Condition": "IsThisMetadataDiskValid4MetadataDiskNum15-24"
+                }
+            ]
+        },
+        "IsMetadataDisk1Valid": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "1"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "2"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "3"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "4"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "5"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "6"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "7"
+                    ]
+                },
+                {
+                    "Condition": "IsThisMetadataDiskValid4MetadataDiskNum8-24"
+                }
+            ]
+        },
+        "IsMetadataDisk2Valid": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "2"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "3"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "4"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "5"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "6"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "7"
+                    ]
+                },
+                {
+                    "Condition": "IsThisMetadataDiskValid4MetadataDiskNum8-24"
+                }
+            ]
+        },
+        "IsMetadataDisk3Valid": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "3"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "4"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "5"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "6"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "7"
+                    ]
+                },
+                {
+                    "Condition": "IsThisMetadataDiskValid4MetadataDiskNum8-24"
+                }
+            ]
+        },
+        "IsMetadataDisk4Valid": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "4"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "5"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "6"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "7"
+                    ]
+                },
+                {
+                    "Condition": "IsThisMetadataDiskValid4MetadataDiskNum8-24"
+                }
+            ]
+        },
+        "IsMetadataDisk5Valid": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "5"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "6"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "7"
+                    ]
+                },
+                {
+                    "Condition": "IsThisMetadataDiskValid4MetadataDiskNum8-24"
+                }
+            ]
+        },
+        "IsMetadataDisk6Valid": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "6"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "7"
+                    ]
+                },
+                {
+                    "Condition": "IsThisMetadataDiskValid4MetadataDiskNum8-24"
+                }
+            ]
+        },
+        "IsMetadataDisk7Valid": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "7"
+                    ]
+                },
+                {
+                    "Condition": "IsThisMetadataDiskValid4MetadataDiskNum8-24"
+                }
+            ]
+        },
+        "IsMetadataDisk8Valid": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "8"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "9"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "10"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "11"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "12"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "13"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "14"
+                    ]
+                },
+                {
+                    "Condition": "IsThisMetadataDiskValid4MetadataDiskNum15-24"
+                }
+            ]
+        },
+        "IsMetadataDisk9Valid": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "9"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "10"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "11"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "12"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "13"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "14"
+                    ]
+                },
+                {
+                    "Condition": "IsThisMetadataDiskValid4MetadataDiskNum15-24"
+                }
+            ]
+        },
+        "IsMetadataDisk10Valid": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "10"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "11"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "12"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "13"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "14"
+                    ]
+                },
+                {
+                    "Condition": "IsThisMetadataDiskValid4MetadataDiskNum15-24"
+                }
+            ]
+        },
+        "IsMetadataDisk11Valid": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "11"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "12"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "13"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "14"
+                    ]
+                },
+                {
+                    "Condition": "IsThisMetadataDiskValid4MetadataDiskNum15-24"
+                }
+            ]
+        },
+        "IsMetadataDisk12Valid": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "12"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "13"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "14"
+                    ]
+                },
+                {
+                    "Condition": "IsThisMetadataDiskValid4MetadataDiskNum15-24"
+                }
+            ]
+        },
+        "IsMetadataDisk13Valid": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "13"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "14"
+                    ]
+                },
+                {
+                    "Condition": "IsThisMetadataDiskValid4MetadataDiskNum15-24"
+                }
+            ]
+        },
+        "IsMetadataDisk14Valid": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "14"
+                    ]
+                },
+                {
+                    "Condition": "IsThisMetadataDiskValid4MetadataDiskNum15-24"
+                }
+            ]
+        },
+        "IsMetadataDisk15Valid": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "15"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "16"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "17"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "18"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "19"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "20"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "21"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "22"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "23"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "24"
+                    ]
+                }
+            ]
+        },
+        "IsMetadataDisk16Valid": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "16"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "17"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "18"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "19"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "20"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "21"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "22"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "23"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "24"
+                    ]
+                }
+            ]
+        },
+        "IsMetadataDisk17Valid": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "17"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "18"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "19"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "20"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "21"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "22"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "23"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "24"
+                    ]
+                }
+            ]
+        },
+        "IsMetadataDisk18Valid": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "18"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "19"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "20"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "21"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "22"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "23"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "24"
+                    ]
+                }
+            ]
+        },
+        "IsMetadataDisk19Valid": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "19"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "20"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "21"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "22"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "23"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "24"
+                    ]
+                }
+            ]
+        },
+        "IsMetadataDisk20Valid": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "20"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "21"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "22"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "23"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "24"
+                    ]
+                }
+            ]
+        },
+        "IsMetadataDisk21Valid": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "21"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "22"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "23"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "24"
+                    ]
+                }
+            ]
+        },
+        "IsMetadataDisk22Valid": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "22"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "23"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "24"
+                    ]
+                }
+            ]
+        },
+        "IsMetadataDisk23Valid": {
+            "Fn::Or": [
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "23"
+                    ]
+                },
+                {
+                    "Fn::Equals": [
+                        {
+                            "Fn::FindInMap": [
+                                "DdveMetadataDiskNumPerUserSelect",
+                                {
+                                    "Ref": "DdveModel"
+                                },
+                                {
+                                    "Ref": "DdveMetadataDiskNumber"
+                                }
+                            ]
+                        },
+                        "24"
+                    ]
+                }
+            ]
+        },
+        "IsMetadataDisk24Valid": {
+            "Fn::Equals": [
+                {
+                    "Fn::FindInMap": [
+                        "DdveMetadataDiskNumPerUserSelect",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        {
+                            "Ref": "DdveMetadataDiskNumber"
+                        }
+                    ]
+                },
+                "24"
+            ]
+        }
+    },
+    "Resources": {
+        "DdveEc2Instance": {
+            "Type": "AWS::EC2::Instance",
+            "Properties": {
+                "ImageId": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerRegion",
+                        {
+                            "Ref": "AWS::Region"
+                        },
+                        "AmiId"
+                    ]
+                },
+                "InstanceType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "InstanceType"
+                    ]
+                },
+                "SubnetId": {
+                    "Ref": "DdveSubnetId"
+                },
+                "SecurityGroupIds": {
+                    "Ref": "DdveSecurityGroupIds"
+                },
+                "PrivateIpAddress": {
+                    "Fn::If": [
+                        "IsCustomPrivateIPUsed",
+                        {
+                            "Ref": "DdveCustomPrivateIPAddress"
+                        },
+                        {
+                            "Ref": "AWS::NoValue"
+                        }
+                    ]
+                },
+                "IamInstanceProfile": {
+                    "Fn::If": [
+                        "IsRoleApplied",
+                        {
+                            "Ref": "DdveIAMRole"
+                        },
+                        {
+                            "Ref": "AWS::NoValue"
+                        }
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Ref": "DdveNameTag"
+                        }
+                    }
+                ],
+                "KeyName": {
+                    "Ref": "DdveKeyPairName"
+                },
+                "BlockDeviceMappings": [
+                    {
+                        "DeviceName": "/dev/sda1",
+                        "Ebs": {
+                            "DeleteOnTermination": "true",
+                            "VolumeType": {
+                                "Fn::FindInMap": [
+                                    "DdveConfigPerModel",
+                                    {
+                                        "Ref": "DdveModel"
+                                    },
+                                    "RootDiskType"
+                                ]
+                            },
+                            "VolumeSize": {
+                                "Fn::FindInMap": [
+                                    "DdveConfigPerModel",
+                                    {
+                                        "Ref": "DdveModel"
+                                    },
+                                    "RootDiskSize"
+                                ]
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "S3Bucket": {
+            "Type": "AWS::S3::Bucket",
+            "Condition": "IsS3BucketToBeCreated",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "AccessControl": "Private",
+                "BucketName": {
+                    "Ref": "DdveS3BucketName"
+                }
+            }
+        },
+        "NVRAM": {
+            "Type": "AWS::EC2::Volume",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "NvramDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "NvramDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_NVRAM"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk1": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk1Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_1"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk2": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk2Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_2"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk3": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk3Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_3"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk4": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk4Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_4"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk5": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk5Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_5"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk6": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk6Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_6"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk7": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk7Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_7"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk8": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk8Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_8"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk9": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk9Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_9"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk10": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk10Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_10"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk11": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk11Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_11"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk12": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk12Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_12"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk13": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk13Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_13"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk14": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk14Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_14"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk15": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk15Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_15"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk16": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk16Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_16"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk17": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk17Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_17"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk18": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk18Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_18"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk19": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk19Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_19"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk20": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk20Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_20"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk21": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk21Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_21"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk22": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk22Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_22"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk23": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk23Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_23"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MetadataDisk24": {
+            "Type": "AWS::EC2::Volume",
+            "Condition": "IsMetadataDisk24Valid",
+            "DeletionPolicy": "Retain",
+            "Properties": {
+                "Size": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "PerMetadataDiskSize"
+                    ]
+                },
+                "VolumeType": {
+                    "Fn::FindInMap": [
+                        "DdveConfigPerModel",
+                        {
+                            "Ref": "DdveModel"
+                        },
+                        "MetadataDiskType"
+                    ]
+                },
+                "AvailabilityZone": {
+                    "Fn::GetAtt": [
+                        "DdveEc2Instance",
+                        "AvailabilityZone"
+                    ]
+                },
+                "Tags": [
+                    {
+                        "Key": "Name",
+                        "Value": {
+                            "Fn::Join": [
+                                "",
+                                [
+                                    {
+                                        "Ref": "DdveNameTag"
+                                    },
+                                    "_MetadataDisk_24"
+                                ]
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        "MountPoint4Nvram": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "NVRAM"
+                },
+                "Device": "/dev/sdb"
+            }
+        },
+        "MountPoint4MetadataDisk1": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk1Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk1"
+                },
+                "Device": "/dev/sdc"
+            }
+        },
+        "MountPoint4MetadataDisk2": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk2Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk2"
+                },
+                "Device": "/dev/sdd"
+            }
+        },
+        "MountPoint4MetadataDisk3": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk3Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk3"
+                },
+                "Device": "/dev/sde"
+            }
+        },
+        "MountPoint4MetadataDisk4": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk4Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk4"
+                },
+                "Device": "/dev/sdf"
+            }
+        },
+        "MountPoint4MetadataDisk5": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk5Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk5"
+                },
+                "Device": "/dev/sdg"
+            }
+        },
+        "MountPoint4MetadataDisk6": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk6Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk6"
+                },
+                "Device": "/dev/sdh"
+            }
+        },
+        "MountPoint4MetadataDisk7": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk7Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk7"
+                },
+                "Device": "/dev/sdi"
+            }
+        },
+        "MountPoint4MetadataDisk8": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk8Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk8"
+                },
+                "Device": "/dev/sdj"
+            }
+        },
+        "MountPoint4MetadataDisk9": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk9Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk9"
+                },
+                "Device": "/dev/sdk"
+            }
+        },
+        "MountPoint4MetadataDisk10": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk10Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk10"
+                },
+                "Device": "/dev/sdl"
+            }
+        },
+        "MountPoint4MetadataDisk11": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk11Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk11"
+                },
+                "Device": "/dev/sdm"
+            }
+        },
+        "MountPoint4MetadataDisk12": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk12Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk12"
+                },
+                "Device": "/dev/sdn"
+            }
+        },
+        "MountPoint4MetadataDisk13": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk13Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk13"
+                },
+                "Device": "/dev/sdo"
+            }
+        },
+        "MountPoint4MetadataDisk14": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk14Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk14"
+                },
+                "Device": "/dev/sdp"
+            }
+        },
+        "MountPoint4MetadataDisk15": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk15Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk15"
+                },
+                "Device": "/dev/sdq"
+            }
+        },
+        "MountPoint4MetadataDisk16": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk16Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk16"
+                },
+                "Device": "/dev/sdr"
+            }
+        },
+        "MountPoint4MetadataDisk17": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk17Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk17"
+                },
+                "Device": "/dev/sds"
+            }
+        },
+        "MountPoint4MetadataDisk18": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk18Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk18"
+                },
+                "Device": "/dev/sdt"
+            }
+        },
+        "MountPoint4MetadataDisk19": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk19Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk19"
+                },
+                "Device": "/dev/sdu"
+            }
+        },
+        "MountPoint4MetadataDisk20": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk20Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk20"
+                },
+                "Device": "/dev/sdv"
+            }
+        },
+        "MountPoint4MetadataDisk21": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk21Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk21"
+                },
+                "Device": "/dev/sdw"
+            }
+        },
+        "MountPoint4MetadataDisk22": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk22Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk22"
+                },
+                "Device": "/dev/sdx"
+            }
+        },
+        "MountPoint4MetadataDisk23": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk23Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk23"
+                },
+                "Device": "/dev/sdy"
+            }
+        },
+        "MountPoint4MetadataDisk24": {
+            "Type": "AWS::EC2::VolumeAttachment",
+            "Condition": "IsMetadataDisk24Valid",
+            "Properties": {
+                "InstanceId": {
+                    "Ref": "DdveEc2Instance"
+                },
+                "VolumeId": {
+                    "Ref": "MetadataDisk24"
+                },
+                "Device": "/dev/sdz"
+            }
+        }
+    },
+    "Outputs": {
+        "InstanceId": {
+            "Description": "InstanceId of the newly created EC2 instance",
+            "Value": {
+                "Ref": "DdveEc2Instance"
+            }
+        },
+        "Username": {
+            "Description": "The user name to use SSH or DDSM(GUI) to connect to DDVE",
+            "Value": "sysadmin"
+        },
+        "Password": {
+            "Description": "The password to use SSH or DDSM(GUI) to connect to DDVE",
+            "Value": {
+                "Ref": "DdveEc2Instance"
+            }
+        },
+        "PrivateIp": {
+            "Description": "The prviate IP of DDVE",
+            "Value": {
+                "Fn::GetAtt": [
+                    "DdveEc2Instance",
+                    "PrivateIp"
+                ]
+            }
+        },
+        "PrivateDnsName": {
+            "Description": "The prviate DNS Name of DDVE",
+            "Value": {
+                "Fn::GetAtt": [
+                    "DdveEc2Instance",
+                    "PrivateDnsName"
+                ]
+            }
+        },
+        "S3Bucket": {
+            "Condition": "IsS3BucketToBeCreated",
+            "Description": "The name of S3 Bucket",
+            "Value": {
+                "Ref": "S3Bucket"
+            }
+        }
+    }
+}
