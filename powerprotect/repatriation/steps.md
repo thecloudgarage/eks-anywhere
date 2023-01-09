@@ -5,7 +5,7 @@ ssh-keygen
 Deploy EKS cluster
 ```
 cd $HOME
-CLUSTER_NAME=c4-eks-aws-1
+CLUSTER_NAME=eks-aws-1
 mkdir -p $HOME/$CLUSTER_NAME
 cd $HOME/$CLUSTER_NAME
 cp $HOME/.ssh/id_rsa ~/eks
