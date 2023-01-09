@@ -2,7 +2,7 @@ Generate keys for EKS cluster
 ```
 ssh-keygen
 ```
-Deploy EKS cluster
+* Deploy EKS cluster
 ```
 cd $HOME
 CLUSTER_NAME=eks-aws-1
@@ -15,8 +15,8 @@ sed -i "s/ekstest/$CLUSTER_NAME/g" $HOME/$CLUSTER_NAME/$CLUSTER_NAME.yaml
 AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY eksctl create cluster -f $HOME/$CLUSTER_NAME/$CLUSTER_NAME.yaml --kubeconfig=$HOME/$CLUSTER_NAME/$CLUSTER_NAME-eks-cluster.kubeconfig
 KUBECONFIG=$HOME/$CLUSTER_NAME/$CLUSTER_NAME-eks-cluster.kubeconfig
 ```
-Apply EBS CSI driver IAM policy for the EKS cluster IAM role
-Deploy EBS CSI drivers along with storage class, snapshot class and powerprotect sa plus rbac
+* Apply EBS CSI driver IAM policy for the EKS cluster IAM role
+* Deploy EBS CSI drivers along with storage class, snapshot class and powerprotect sa plus rbac
 ```
 kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
 kubectl apply -f $HOME/eks-anywhere/eks-aws/ebs-sc.yaml
@@ -40,17 +40,17 @@ Get the ingress NLB url
 ```
 kubectl get ingress -n sock-shop
 ```
-Update the hosts file with NLB IP (not url)
-Access sock-shop application and create users/orders
-Retrieve PowerProtect SA token
+* Update the hosts file with NLB IP (not url)
+* Access sock-shop application and create users/orders
+* Retrieve PowerProtect SA token
 ```
 SA_NAME="powerprotect"
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep ${SA_NAME} | awk '{print $1}')
 ```
-Discover the EKS cluster in PPDM
-Create the backup policy
-Backup the state of sock-shop application
-Deploy EKS Anywhere cluster with add-ons
+* Discover the EKS cluster in PPDM
+* Create the backup policy
+* Backup the state of sock-shop application
+* Deploy EKS Anywhere cluster with add-ons
 ```
 source create-eksa-with-addons.sh
 ```
@@ -59,5 +59,10 @@ Deploy powerprotect sa plus rbac
 kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-sa.yaml
 kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-rbac.yaml
 ```
-Discover the EKS Anywhere cluster in PPDM
-Initiate a restore of the sock-shop asset
+Retrieve the token
+```
+SA_NAME="powerprotect"
+kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep ${SA_NAME} | awk '{print $1}')
+```
+* Discover the EKS Anywhere cluster in PPDM
+* Initiate a restore of the sock-shop asset
