@@ -15,7 +15,7 @@ sed -i "s/ekstest/$CLUSTER_NAME/g" $HOME/$CLUSTER_NAME/$CLUSTER_NAME.yaml
 AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY eksctl create cluster -f $HOME/$CLUSTER_NAME/$CLUSTER_NAME.yaml --kubeconfig=$HOME/$CLUSTER_NAME/$CLUSTER_NAME-eks-cluster.kubeconfig
 KUBECONFIG=$HOME/$CLUSTER_NAME/$CLUSTER_NAME-eks-cluster.kubeconfig
 ```
-* Apply EBS CSI driver IAM policy for the EKS cluster IAM role
+## Apply EBS CSI driver IAM policy for the EKS cluster IAM role
 * Deploy EBS CSI drivers along with storage class, snapshot class and powerprotect sa plus rbac
 ```
 kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
@@ -62,6 +62,25 @@ Deploy powerprotect sa plus rbac
 kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-sa.yaml
 kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-rbac.yaml
 ```
+# Delete the stack
+Delete sock-shop
+```
+cd $HOME
+source $HOME/eks-anywhere/sock-shop/delete-sockshop-aws.sh
+```
+Delete storage class
+```
+kubectl delete sc ebs-sc
+```
+kubectl delete -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
+```
+## Detach IAM policy and then
+```
+cd $HOME/$CLUSTER_NAME
+eksctl delete cluster -f $CLUSTER_NAME.yaml
+```
+
+
 Retrieve the token
 ```
 SA_NAME="powerprotect"
