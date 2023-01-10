@@ -19,7 +19,7 @@ vpc:
         cidr: "172.24.166.0/24"  # (optional, must match CIDR used by the given subnet)
 nodeGroups:
   - name: ng-1
-    instanceType: t3.medium
+    instanceType: t2.medium
     desiredCapacity: 2
     securityGroups:
       attachIDs: ["sg-041a3e0a16b148731"]
