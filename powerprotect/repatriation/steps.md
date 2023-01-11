@@ -15,7 +15,8 @@ sed -i "s/ekstest/$CLUSTER_NAME/g" $HOME/$CLUSTER_NAME/$CLUSTER_NAME.yaml
 AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY eksctl create cluster -f $HOME/$CLUSTER_NAME/$CLUSTER_NAME.yaml --kubeconfig=$HOME/$CLUSTER_NAME/$CLUSTER_NAME-eks-cluster.kubeconfig
 KUBECONFIG=$HOME/$CLUSTER_NAME/$CLUSTER_NAME-eks-cluster.kubeconfig
 ```
-## 🔴 CAUTION: DO NOT PROCEED WITHOUT APPLYING EBS CSI DRIVER TO THE IAM NODE ROLE
+## 🔴 CAUTION: DO NOT PROCEED WITHOUT APPLYING EBS CSI IAM POLICY TO THE IAM NODE ROLE
+* Once the Node role includes the EBS CSI DRIVER IAM policy, then proceed with the below commands
 * Deploy EBS CSI drivers along with storage class, snapshot class and powerprotect sa plus rbac
 ```
 kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
