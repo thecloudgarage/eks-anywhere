@@ -15,13 +15,13 @@ sed -i "s/ekstest/$CLUSTER_NAME/g" $HOME/$CLUSTER_NAME/$CLUSTER_NAME.yaml
 AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY eksctl create cluster -f $HOME/$CLUSTER_NAME/$CLUSTER_NAME.yaml --kubeconfig=$HOME/$CLUSTER_NAME/$CLUSTER_NAME-eks-cluster.kubeconfig
 KUBECONFIG=$HOME/$CLUSTER_NAME/$CLUSTER_NAME-eks-cluster.kubeconfig
 ```
-## CAUTION: DO NOT PROCEED WITHOUT APPLYING EBS CSI DRIVER TO THE IAM NODE ROLE
+## 🔴 CAUTION: DO NOT PROCEED WITHOUT APPLYING EBS CSI DRIVER TO THE IAM NODE ROLE
 * Deploy EBS CSI drivers along with storage class, snapshot class and powerprotect sa plus rbac
 ```
 kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
 kubectl apply -f $HOME/eks-anywhere/eks-aws/ebs-sc.yaml
 ```
-## CAUTION: WAIT TILL EBS CSI PODS ARE RUNNING
+## 🔴 CAUTION: WAIT TILL EBS CSI PODS ARE RUNNING
 Apply the below YAML to deploy storage class and volume snapshot class along with external snapshotter
 ```
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/master/client/config/crd/snapshot.storage.k8s.io_volumesnapshotclasses.yaml
@@ -98,7 +98,7 @@ kubectl delete -f https://raw.githubusercontent.com/kubernetes-csi/external-snap
 ```
 kubectl delete -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
 ```
-## CAUTION: Do not proceed without detatching IAM policy
+## 🔴 CAUTION: Do not proceed without detatching IAM policy
 Go to AWS console and detatch the EBS CSI Driver policy from the Node IAM role
 
 ## Delete the EKS cluster
