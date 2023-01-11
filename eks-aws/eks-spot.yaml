@@ -19,14 +19,14 @@ vpc:
         cidr: "172.24.166.0/24"  # (optional, must match CIDR used by the given subnet)
 nodeGroups:
   - name: ng-1
-    minSize: 2
-    maxSize: 5
+    minSize: 1
+    maxSize: 1
     securityGroups:
       attachIDs: ["sg-041a3e0a16b148731"]
     maxPodsPerNode: 80
     instancesDistribution:
-      maxPrice: 0.017
-      instanceTypes: ["t3.medium"] # At least one instance type should be specified
+      maxPrice: 0.09
+      instanceTypes: ["t2.xlarge"] # At least one instance type should be specified
       onDemandBaseCapacity: 0
       onDemandPercentageAboveBaseCapacity: 50
       spotInstancePools: 1
