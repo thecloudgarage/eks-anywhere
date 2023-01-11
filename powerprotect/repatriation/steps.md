@@ -102,6 +102,16 @@ kubectl delete -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernet
 ## 🔴 CAUTION: Do not proceed without detatching IAM policy
 Go to AWS console and detatch the EBS CSI Driver policy from the Node IAM role
 
+## Delete PowerProtect components
+```
+kubectl delete crd -l app.kubernetes.io/part-of=powerprotect.dell.com
+kubectl delete clusterrolebinding powerprotect:cluster-role-binding
+kubectl delete namespace powerprotect
+kubectl delete crd -l component=velero
+kubectl delete clusterrolebinding -l component=velero
+kubectl delete namespace velero-ppdm
+```
+
 ## Delete the EKS cluster
 ```
 cd $HOME/$CLUSTER_NAME
