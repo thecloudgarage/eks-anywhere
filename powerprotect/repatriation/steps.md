@@ -3,6 +3,7 @@
 ssh-keygen
 ```
 ### Deploy EKS cluster
+* Ensure IAM keys for the eksctl user are present on the machine.
 ```
 cd $HOME
 CLUSTER_NAME=c4-eks-aws-1
@@ -16,7 +17,9 @@ AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KE
 KUBECONFIG=$HOME/$CLUSTER_NAME/$CLUSTER_NAME-eks-cluster.kubeconfig
 ```
 ## 🔴 CAUTION: DO NOT PROCEED WITHOUT APPLYING EBS CSI IAM POLICY TO THE IAM NODE ROLE
-* Once the Node role includes the EBS CSI DRIVER IAM policy, then proceed with the below commands
+* Create an IAM policy named Amazon_EBS_CSI_Driver and apply this JSON https://github.com/thecloudgarage/eks-anywhere/blob/main/powerprotect/repatriation/Amazon_EBS_CSI_Driver.json
+* Associate the IAM Node role created for the cluster by eksctl with the above policy
+*  Once the Node role includes the EBS CSI DRIVER IAM policy, then proceed with the below commands
 * Deploy EBS CSI drivers along with storage class, snapshot class and powerprotect sa plus rbac
 ```
 kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
@@ -64,6 +67,8 @@ kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | gre
 ## Deploy EKS Anywhere cluster with add-ons
 ```
 cd $HOME
+cp $HOME/eks-anywhere/powerprotect/repatriation/create-eks-with-addons.sh $HOME
+chmod +x $HOME/create-eksa-with-addons.sh
 source create-eksa-with-addons.sh
 ```
 ## Integrate EKS Anywhere cluster with PowerProtect Data Manager
