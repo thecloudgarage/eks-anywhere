@@ -77,14 +77,10 @@ kubectl -n kube-system kustomize deploy/kubernetes/snapshot-controller | kubectl
 kubectl create namespace csi-powerstore
 cd $HOME/$workloadClusterName/csi-powerstore/dell-csi-helm-installer
 cp $HOME/eks-anywhere/powerstore/secret.yaml secret.yaml
-sed -i "s/powerstore_endpoint/$ipOrFqdnOfPowerStoreArray/g" $HOME/$workloadClusterName/csi-powerstore/dell-csi-
-helm-installer/secret.yaml
-sed -i "s/powerstore_globalid/$globalIdOfPowerStoreArray/g" $HOME/$workloadClusterName/csi-powerstore/dell-csi-
-helm-installer/secret.yaml
-sed -i "s/powerstore_username/$userNameOfPowerStoreArray/g" $HOME/$workloadClusterName/csi-powerstore/dell-csi-
-helm-installer/secret.yaml
-sed -i "s/powerstore_password/$passwordOfPowerStoreArray/g" $HOME/$workloadClusterName/csi-powerstore/dell-csi-
-helm-installer/secret.yaml
+sed -i "s/powerstore_endpoint/$ipOrFqdnOfPowerStoreArray/g" $HOME/$workloadClusterName/csi-powerstore/dell-csi-helm-installer/secret.yaml
+sed -i "s/powerstore_globalid/$globalIdOfPowerStoreArray/g" $HOME/$workloadClusterName/csi-powerstore/dell-csi-helm-installer/secret.yaml
+sed -i "s/powerstore_username/$userNameOfPowerStoreArray/g" $HOME/$workloadClusterName/csi-powerstore/dell-csi-helm-installer/secret.yaml
+sed -i "s/powerstore_password/$passwordOfPowerStoreArray/g" $HOME/$workloadClusterName/csi-powerstore/dell-csi-helm-installer/secret.yaml
 kubectl create secret generic powerstore-config -n csi-powerstore --from-file=config=secret.yaml
 cd $HOME/$workloadClusterName/csi-powerstore/dell-csi-helm-installer
 cp $HOME/$workloadClusterName/csi-powerstore/helm/csi-powerstore/values.yaml my-powerstore-settings.yaml
@@ -92,22 +88,16 @@ sed -i "s/csivol/$workloadClusterName-vol/g" my-powerstore-settings.yaml
 sed -i "s/csisnap/$workloadClusterName-snap/g" my-powerstore-settings.yaml
 sed -i "s/csi-node/eksa-node/g" my-powerstore-settings.yaml
 cd $HOME/$workloadClusterName/csi-powerstore/dell-csi-helm-installer
-./csi-install.sh --namespace csi-powerstore --values ./my-powerstore-settings.yaml --skip-verify --skip-verify-
-node
+./csi-install.sh --namespace csi-powerstore --values ./my-powerstore-settings.yaml --skip-verify --skip-verify-node
 cd $HOME/$workloadClusterName/csi-powerstore/dell-csi-helm-installer
-cp $HOME/$workloadClusterName/csi-powerstore/samples/storageclass/powerstore-ext4.yaml ./powerstore-ext4-iscsi-
-storage-class.yaml
-sed -i "s/Unique/$globalIdOfPowerStoreArray/g" $HOME/$workloadClusterName/csi-powerstore/dell-csi-helm-installe
-r/powerstore-ext4-iscsi-storage-class.yaml
-sed -i "s/Immediate/WaitForFirstConsumer/g" $HOME/$clusterName/csi-powerstore/dell-csi-helm-installer//powersto
-re-ext4-iscsi-storage-class.yaml
-kubectl create -f $HOME/$workloadClusterName/csi-powerstore/dell-csi-helm-installer/powerstore-ext4-iscsi-stora
-ge-class.yaml
+cp $HOME/$workloadClusterName/csi-powerstore/samples/storageclass/powerstore-ext4.yaml ./powerstore-ext4-iscsi-storage-class.yaml
+sed -i "s/Unique/$globalIdOfPowerStoreArray/g" $HOME/$workloadClusterName/csi-powerstore/dell-csi-helm-installer/powerstore-ext4-iscsi-storage-class.yaml
+sed -i "s/Immediate/WaitForFirstConsumer/g" $HOME/$clusterName/csi-powerstore/dell-csi-helm-installer/powerstore-ext4-iscsi-storage-class.yaml
+kubectl create -f $HOME/$workloadClusterName/csi-powerstore/dell-csi-helm-installer/powerstore-ext4-iscsi-storage-class.yaml
 kubectl create -f $HOME/eks-anywhere/powerstore/powerstore-ext4-iscsi-snap-class.yaml
 #
 # CREATE METALLB LOAD BALANCER
-helm upgrade --install --wait --timeout 15m   --namespace metallb-system --create-namespace   --repo https://me
-tallb.github.io/metallb metallb metallb
+helm upgrade --install --wait --timeout 15m   --namespace metallb-system --create-namespace   --repo https://metallb.github.io/metallb metallb metallb
 sleep 30
 cd $HOME/$workloadClusterName
 rm -rf $HOME/$workloadClusterName/metallb-crd.yaml
@@ -138,8 +128,7 @@ kubectl create -f $HOME/eks-anywhere/ingress-controllers/nginx-ingress-controlle
 # REGISTER EKS-A CLUSTER WITH AWS CONSOLE
 cd $HOME/$workloadClusterName
 if AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
-        eksctl register cluster --name $workloadClusterName --provider eks_anywhere --region $AWS_REGION > /dev
-/null 2>&1
+        eksctl register cluster --name $workloadClusterName --provider eks_anywhere --region $AWS_REGION > /dev/null 2>&1
 then
 CLUSTER_NAME=$workloadClusterName
 KUBECONFIG=$HOME/$workloadClusterName/$workloadClusterName-eks-a-cluster.kubeconfig
@@ -149,8 +138,7 @@ mv eks-connector-clusterrole.yaml eks-connector/
 mv eks-connector-console-dashboard-full-access-group.yaml eks-connector/
 kubectl apply -f /home/ubuntu/$workloadClusterName/eks-connector/eks-connector.yaml
 kubectl apply -f /home/ubuntu/$workloadClusterName/eks-connector/eks-connector-clusterrole.yaml
-kubectl apply -f /home/ubuntu/$workloadClusterName/eks-connector/eks-connector-console-dashboard-full-access-gr
-oup.yaml
+kubectl apply -f /home/ubuntu/$workloadClusterName/eks-connector/eks-connector-console-dashboard-full-access-group.yaml
 cd /home/ubuntu
 echo "EKS ANYWHERE cluster $workloadClusterName is registered in AWS console"
 #
@@ -170,9 +158,10 @@ mv eks-connector-clusterrole.yaml eks-connector/
 mv eks-connector-console-dashboard-full-access-group.yaml eks-connector/
 kubectl apply -f $HOME/$workloadClusterName/eks-connector/eks-connector.yaml
 kubectl apply -f $HOME/$workloadClusterName/eks-connector/eks-connector-clusterrole.yaml
-kubectl apply -f $HOME/$workloadClusterName/eks-connector/eks-connector-console-dashboard-full-access-group.yam
-l
+kubectl apply -f $HOME/$workloadClusterName/eks-connector/eks-connector-console-dashboard-full-access-group.yaml
 cd /home/ubuntu
 echo "EKS ANYWHERE cluster $workloadClusterName is registered in AWS console"
 fi
+kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-sa.yaml
+kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-rbac.yaml
 echo $(date +"%T")
