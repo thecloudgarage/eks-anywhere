@@ -38,13 +38,25 @@ cd $HOME && cat <<EOF > $HOME/temp-ebs-csi-driver-policy.json
     ]
 }
 EOF
-#export eks_nodegroup_role=eksctl-$eksAwsClusterName-nodegroup
-#export eks_nodegroup_iam_role_arn=$(aws iam list-roles | jq -r '.Roles[] | select(.RoleName|match("'$eksAwsClusterName-nodegroup'")) | .Arn')
+# OPTION 1 TO ATTACH CSI DRIVER POLICY AS INLINE POLICY FOR EKS NODEGROUP ROLE
 export eks_nodegroup_iam_role_name=$(aws iam list-roles | jq -r '.Roles[] | select(.RoleName|match("'$eksAwsClusterName-nodegroup'")) | .RoleName')
 aws iam put-role-policy --role-name $eks_nodegroup_iam_role_name --policy-name ebsCsiDriverPolicy --policy-document file://./temp-ebs-csi-driver-policy.json
-kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=master"
+#
+#
+# NOT USED: OPTION 2 CAN BE USED ALTERNATIVELY TO CREATE A MANAGED POLICY AND ATTACH IT TO THE EKS NODEGROUP ROLE
+#aws iam create-policy --policy-name Amazon_EBS_CSI_Driver --policy-document file://./temp-ebs-csi-driver-policy.json &> /dev/null
+#export ebs_csi_driver_policy_arn=$(aws iam list-policies | jq -r '.Policies[] | select(.PolicyName|match("Amazon_EBS_CSI_Driver")) | .Arn')
+#export eks_nodegroup_iam_role_name=$(aws iam list-roles | jq -r '.Roles[] | select(.RoleName|match("'$eksAwsClusterName-nodegroup'")) | .RoleName')
+#aws iam attach-role-policy --policy-arn $ebs_csi_driver_policy_arn --role-name $eks_nodegroup_iam_role_name
+#
+#
+#DEPLOY THE EBS CSI DRIVERS AND CREATE STORAGE CLASS
+#EDIT THE EBS CSI RELEASE NUMBER BASED ON EBS CSI GITHUB GUIDANCE
+kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.14"
 kubectl apply -f $HOME/eks-anywhere/eks-aws/ebs-sc.yaml
-sleep 3m
+sleep 120
+#
+# DEPLOY EXTERNAL SNAPSHOTTER AND PATCH DEFAULT STORAGE CLASS
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/master/client/config/crd/snapshot.storage.k8s.io_volumesnapshotclasses.yaml
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/master/client/config/crd/snapshot.storage.k8s.io_volumesnapshotcontents.yaml
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/master/client/config/crd/snapshot.storage.k8s.io_volumesnapshots.yaml
@@ -53,6 +65,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snaps
 kubectl apply -f https://raw.githubusercontent.com/kubernetes-csi/external-snapshotter/master/deploy/kubernetes/snapshot-controller/setup-snapshot-controller.yaml
 kubectl patch storageclass gp2 -p "{\"metadata\": {\"annotations\":{\"storageclass.kubernetes.io/is-default-class\":\"false\"}}}"
 kubectl patch storageclass ebs-sc -p "{\"metadata\": {\"annotations\":{\"storageclass.kubernetes.io/is-default-class\":\"true\"}}}"
-sleep 60
+#
+# DEPLOY POWERPROTECT SERVICE ACCOUNT AND RBAC
 kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-sa.yaml
 kubectl apply -f $HOME/eks-anywhere/powerprotect/powerprotect-rbac.yaml
