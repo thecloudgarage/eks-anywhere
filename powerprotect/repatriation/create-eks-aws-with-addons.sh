@@ -1,4 +1,5 @@
 read -p 'EKS AWS CLUSTER NAME: ' eksAwsClusterName
+read -p 'EC2 provisioning, type spot or on-demand: ' ec2ProvisioningType
 cd $HOME
 rm -rf $eksAwsClusterName
 CLUSTER_NAME=$eksAwsClusterName
@@ -7,10 +8,9 @@ mkdir -p $HOME/$CLUSTER_NAME
 cd $HOME/$CLUSTER_NAME
 cp $HOME/.ssh/id_rsa ~/eks
 cp $HOME/.ssh/id_rsa.pub ~/eks.pub
-cp $HOME/eks-anywhere/eks-aws/eks-on-demand.yaml $HOME/$CLUSTER_NAME/$CLUSTER_NAME.yaml
+cp $HOME/eks-anywhere/eks-aws/eks-$ec2ProvisioningType.yaml $HOME/$CLUSTER_NAME/$CLUSTER_NAME.yaml
 sed -i "s/ekstest/$CLUSTER_NAME/g" $HOME/$CLUSTER_NAME/$CLUSTER_NAME.yaml
-AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY eksctl create cluster -f $HOME/$CLUSTER_NAME/$CLUSTER_NAME.yaml --kubeconfig=$HOME/$CLUSTER_NAME/$CLUSTER_N
-AME-eks-cluster.kubeconfig
+AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY eksctl create cluster -f $HOME/$CLUSTER_NAME/$CLUSTER_NAME.yaml --kubeconfig=$HOME/$CLUSTER_NAME/$CLUSTER_NAME-eks-cluster.kubeconfig
 KUBECONFIG=$HOME/$CLUSTER_NAME/$CLUSTER_NAME-eks-cluster.kubeconfig
 rm -rf $HOME/temp-ebs-csi-driver-policy.json
 cd $HOME && cat <<EOF > $HOME/temp-ebs-csi-driver-policy.json
