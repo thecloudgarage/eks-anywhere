@@ -2,6 +2,7 @@ read -p 'EKS AWS CLUSTER NAME: ' eksAwsClusterName
 cd $HOME
 rm -rf $eksAwsClusterName
 CLUSTER_NAME=$eksAwsClusterName
+rm -rf $HOME/$CLUSTER_NAME
 mkdir -p $HOME/$CLUSTER_NAME
 cd $HOME/$CLUSTER_NAME
 cp $HOME/.ssh/id_rsa ~/eks
