@@ -1,0 +1,35 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    name: open-ocr-httpd
+  name: open-ocr-httpd
+spec:
+  selector:
+    matchLabels:
+      name: open-ocr-httpd
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: open-ocr-httpd
+    spec:
+      containers:
+        -
+          env:
+            - name: RABBITMQ_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rabbit-mq-password
+                  key: password
+          command:
+            - /usr/bin/open-ocr-httpd
+            - -amqp_uri=amqp://admin:$(RABBITMQ_PASSWORD)@rabbitmq-service/
+            - -http_port=8080
+          image: tleyden5iwx/open-ocr
+          name: open-ocr-httpd
+          ports:
+            -
+              containerPort: 8080
+              name: httpport
