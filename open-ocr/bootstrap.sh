@@ -52,16 +52,6 @@ create_rabbitmq_secret(){
     kubectl create secret generic rabbit-mq-password --from-file=./password
 }
 
-# Clone the repo if not cloned.
-first_run() {
-    local LOCAL_REPO="open-ocr"
-
-    if [ -d $LOCAL_REPO ]; then
-        echo Clone OpenOCR repo
-        git clone https://github.com/tleyden/open-ocr.git
-    fi
-}
-
 # Launch RabbitMQ 
 launch_rabbitmq() {
     local RABBITMQ_STATUS
@@ -110,7 +100,6 @@ test_rest_api() {
 
 # usage: -i - installs the entire demo
 run_install() {
-    first_run
     create_rabbitmq_secret
     launch_rabbitmq
     launch_rest_api
