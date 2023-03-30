@@ -24,7 +24,7 @@ cleanup() {
     echo "cleaning up the Kubernetes environment"
 
     kubectl delete -f \
-    manifests/rabbitmq.yaml,manifests/rabbitmq.yml,manifests/open-ocr-worker.yaml,manifests/open_ocr_httpd.yml,manifests/open_ocr_httpd.yml
+    manifests/rabbitmq.yaml,manifests/rabbitmq_service.yaml,manifests/open-ocr-worker.yaml,manifests/open_ocr_httpd.yaml,manifests/open_ocr_httpd_service.yaml
 
     kubectl delete secrets rabbit-mq-password
     exit 0
@@ -65,8 +65,8 @@ first_run() {
 # Launch RabbitMQ 
 launch_rabbitmq() {
     local RABBITMQ_STATUS
-    kubectl create -f pods/rabbitmq.yaml
-    kubectl create -f services/rabbitmq.yml
+    kubectl create -f manifests/rabbitmq.yaml
+    kubectl create -f manifests/rabbitmq_service.yml
 
     printf "%s" "waiting until RabitMQ is ready"
 
@@ -83,14 +83,14 @@ launch_rabbitmq() {
 # Launch REST API Server
 launch_rest_api(){
     echo "creating the REST API Server\n"
-    kubectl create -f pods/open_ocr_httpd.yml
-    kubectl create -f services/open_ocr_httpd.yml
+    kubectl create -f manifests/open_ocr_httpd.yaml
+    kubectl create -f manifests/open_ocr_httpd_service.yaml
 }
 
 # Launch OCR Worker
 launch_ocr_worker(){
     echo "creating the Open-OCR workers\n"
-    kubectl create -f replication-controllers/open-ocr-worker.yaml
+    kubectl create -f manifests/open-ocr-worker.yaml
 }
 
 # usage: -t - checks if the LoadBalancer IP address is up and running
