@@ -33,3 +33,8 @@ spec:
             -
               containerPort: 8080
               name: httpport
+          resources:
+            requests:
+              cpu: "50m"
+            limits:
+              cpu: "100m"
