@@ -56,7 +56,7 @@ create_rabbitmq_secret(){
 launch_rabbitmq() {
     local RABBITMQ_STATUS
     kubectl create -f manifests/rabbitmq.yaml
-    kubectl create -f manifests/rabbitmq_service.yml
+    kubectl create -f manifests/rabbitmq_service.yaml
 
     printf "%s" "waiting until RabitMQ is ready"
 
