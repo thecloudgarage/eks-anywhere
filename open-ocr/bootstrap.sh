@@ -80,7 +80,7 @@ launch_rest_api(){
 # Launch OCR Worker
 launch_ocr_worker(){
     echo "creating the Open-OCR workers\n"
-    kubectl create -f manifests/open-ocr-worker.yaml
+    kubectl create -f manifests/open_ocr_worker.yaml
 }
 
 # usage: -t - checks if the LoadBalancer IP address is up and running
