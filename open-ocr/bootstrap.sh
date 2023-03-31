@@ -24,7 +24,7 @@ cleanup() {
     echo "cleaning up the Kubernetes environment"
 
     kubectl delete -f \
-    manifests/rabbitmq.yaml,manifests/rabbitmq_service.yaml,manifests/open-ocr-worker.yaml,manifests/open_ocr_httpd.yaml,manifests/open_ocr_httpd_service.yaml
+    manifests/rabbitmq.yaml,manifests/rabbitmq_service.yaml,manifests/open_ocr_worker.yaml,manifests/open_ocr_httpd.yaml,manifests/open_ocr_httpd_service.yaml
 
     kubectl delete secrets rabbit-mq-password
     exit 0
