@@ -34,7 +34,7 @@ kubectl apply -f cd $HOME/open-ocr/manifests/hpa-open-ocr-httpd.yaml
 ```
 kubectl get pods
 kubectl get nodes
-kubetcl get hpa
+kubectl get hpa
 kubectl top pods
 kubectl top nodes
 ```
@@ -47,7 +47,7 @@ kubectl run -i --tty load-generator-1 --rm --image=quay.io/quay/busybox --restar
 ```
 kubectl get pods
 kubectl get nodes
-kubetcl get hpa
+kubectl get hpa
 kubectl top pods
 kubectl top nodes
 ```
@@ -60,7 +60,7 @@ kubectl run -i --tty load-generator-2 --rm --image=quay.io/quay/busybox --restar
 ```
 kubectl get pods
 kubectl get nodes
-kubetcl get hpa
+kubectl get hpa
 kubectl top pods
 kubectl top nodes
 ```
@@ -73,7 +73,7 @@ kubectl run -i --tty load-generator-3 --rm --image=quay.io/quay/busybox --restar
 ```
 kubectl get pods
 kubectl get nodes
-kubetcl get hpa
+kubectl get hpa
 kubectl top pods
 kubectl top nodes
 ```
