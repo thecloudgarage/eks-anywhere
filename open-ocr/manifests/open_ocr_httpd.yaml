@@ -27,7 +27,7 @@ spec:
             - /usr/bin/open-ocr-httpd
             - -amqp_uri=amqp://admin:$(RABBITMQ_PASSWORD)@rabbitmq-service/
             - -http_port=8080
-          image: tleyden5iwx/open-ocr
+          image: public.ecr.aws/h1c1m2y2/open-ocr
           imagePullPolicy: IfNotPresent
           name: open-ocr-httpd
           ports:
