@@ -1,4 +1,28 @@
-* Download manifests
+### Deploy EKS Anywhere Kubernetes cluster with auto-scaling attributes
+### Deploy MetalLB Software Defined Load Balancer
+```
+helm upgrade --install --wait --timeout 15m   --namespace metallb-system --create-namespace   --repo https://metallb.github.io/metallb metallb metallb
+```
+### Configure MetalLB load balancer
+```
+cat <<EOF | kubectl apply -f -
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: first-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 172.24.165.21-172.24.165.25
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: example
+  namespace: metallb-system
+EOF
+```
+### Download manifests
 ```
 cd $HOME
 rm -rf open-ocr
@@ -25,6 +49,19 @@ kubectl apply -f $HOME/open-ocr/manifests/metrics-server.yaml
 cd $HOME/open-ocr
 ./bootstrap.sh -c
 ./bootstrap.sh -i
+```
+### Validate Open OCR application
+Image-1
+```
+curl -X POST http://172.24.165.21:80/ocr -H "Content-Type: application/json" -d '{"img_url":"https://s3.amazonaws.com/walnuteks.thecloudgarage.com/open-ocr/image1.png","engine":"tesseract"}' 
+```
+Image-2
+```
+curl -X POST http://172.24.165.21:80/ocr -H "Content-Type: application/json" -d '{"img_url":"https://s3.amazonaws.com/walnuteks.thecloudgarage.com/open-ocr/image2.png","engine":"tesseract"}' 
+```
+Image-3
+```
+curl -X POST http://172.24.165.21:80/ocr -H "Content-Type: application/json" -d '{"img_url":"https://s3.amazonaws.com/walnuteks.thecloudgarage.com/open-ocr/image3.png","engine":"tesseract"}' 
 ```
 ### Deploy Horizontal Pod Autoscaler for OCR HTTPD session
 ```
