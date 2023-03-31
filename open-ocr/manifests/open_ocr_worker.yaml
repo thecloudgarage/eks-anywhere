@@ -17,6 +17,7 @@ spec:
       containers:
         - name: open-ocr-worker-rc
           image: tleyden5iwx/open-ocr
+          imagePullPolicy: IfNotPresent
           env:
             - name: RABBITMQ_PASSWORD
               valueFrom:
