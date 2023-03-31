@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: rabbitmq
-          image: tutum/rabbitmq
+          image: public.ecr.aws/h1c1m2y2/rabbitmq
           env:
             - name: RABBITMQ_PASS
               valueFrom:
