@@ -28,10 +28,10 @@ cd $HOME
 rm -rf open-ocr
 mkdir open-ocr
 mkdir open-ocr/manifests
-cd $HOME/open-ocr/manifests
+cd $HOME/open-ocr/
 wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/open-ocr/bootstrap.sh
 chmox +x boostrap.sh
-cd open-ocr/manifests
+cd $HOME/open-ocr/manifests
 wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/open-ocr/manifests/links.txt
 wget -i links.txt
 ```
