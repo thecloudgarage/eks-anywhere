@@ -1,3 +1,4 @@
+https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/open-ocr/manifests/eksa-cluster-autoscaler.yaml
 https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/open-ocr/manifests/hpa-open-ocr-httpd.yaml
 https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/open-ocr/manifests/metrics-server.yaml
 https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/open-ocr/manifests/open_ocr_httpd.yaml
