@@ -8,5 +8,5 @@ spec:
    kind: Deployment
    name: open-ocr-httpd
  minReplicas: 1
- maxReplicas: 10
- targetCPUUtilizationPercentage: 10
+ maxReplicas: 500
+ targetCPUUtilizationPercentage: 2
