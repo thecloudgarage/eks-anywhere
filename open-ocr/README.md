@@ -36,6 +36,7 @@ wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/open-ocr
 wget -i links.txt
 ```
 ### Deploy cluster autoscaler manifest
+First edit line 26 in the manifest file to change the cluster name
 ```
 kubectl apply -f $HOME/open-ocr/manifests/eksa-cluster-autoscaler.yaml
 ```
