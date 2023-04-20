@@ -11,7 +11,7 @@ class WebsiteUser(HttpUser):
         self.client.verify = False
     @task(2)
     def get_index(self):
-        base64string = base64.encodebytes(('%s:%s' % ('user', 'password')).encode()).decode().strip()
+        base64string = base64.encodebytes(('%s:%s' % ('ambar', 'Test@1234')).encode()).decode().strip()
         catalogue = self.client.get("/catalogue").json()
         category_item = choice(catalogue)
         item_id = category_item["id"]
