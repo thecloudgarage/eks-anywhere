@@ -1,15 +1,14 @@
 import base64
 import time
-from locust import HttpUser, TaskSet, task, between
+from locust import HttpUser, TaskSet, task, between, FastHttpUser
 from random import randint, choice
 
 class WebsiteUser(HttpUser):
-    wait_time = between(1, 5)
-
-    @task(1)
+    wait_time = between(1, 2.5)
+    @task
     def on_start(self):
         self.client.verify = False
-    @task(2)
+    @task
     def get_index(self):
         base64string = base64.encodebytes(('%s:%s' % ('ambar', 'Test@1234')).encode()).decode().strip()
         catalogue = self.client.get("/catalogue").json()
