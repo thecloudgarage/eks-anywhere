@@ -1,0 +1,170 @@
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: Cluster
+metadata:
+ name: workload-cluster-name
+spec:
+  clusterNetwork:
+    cni: cilium
+    pods:
+      cidrBlocks:
+      - 192.168.0.0/16
+    services:
+      cidrBlocks:
+      - 10.96.0.0/12
+  controlPlaneConfiguration:
+    count: 2
+    endpoint:
+      host: "api-server-ip"
+    machineGroupRef:
+      kind: VSphereMachineConfig
+      name: workload-cluster-name-cp
+  datacenterRef:
+    kind: VSphereDatacenterConfig
+    name: workload-cluster-name-dcconfig
+  externalEtcdConfiguration:
+    count: 3
+    machineGroupRef:
+      kind: VSphereMachineConfig
+      name: workload-cluster-name-etcd
+  kubernetesVersion: "1.21"
+  managementCluster:
+    name: management-cluster-name
+  workerNodeGroupConfigurations:
+  - count: 2
+    autoscalingConfiguration:
+      minCount: 2
+      maxCount: 5  
+    machineGroupRef:
+      kind: VSphereMachineConfig
+      name: workload-wk-md-0
+    name: md-0
+    labels:
+     group: md-0
+  - count: 2
+    autoscalingConfiguration:
+      minCount: 2
+      maxCount: 5  
+    machineGroupRef:
+      kind: VSphereMachineConfig
+      name: workload-wk-md-1
+    name: md-1
+    labels:
+      group: md-1
+  - count: 2
+    autoscalingConfiguration:
+      minCount: 2
+      maxCount: 5  
+    machineGroupRef:
+      kind: VSphereMachineConfig
+      name: workload-wk-md-2
+    name: md-2
+    labels:
+      group: md-2  
+
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: VSphereDatacenterConfig
+metadata:
+  name: workload-cluster-name-dcconfig
+spec:
+  datacenter: "IAC-SSC"
+  insecure: true
+  network: "iac_pg"
+  server: "vc.iac.ssc"
+  thumbprint: "F7:A3:92:55:2D:73:B1:BA:1C:77:A8:AC:A3:AD:F3:62:8A:E0:53:CE"
+
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: VSphereMachineConfig
+metadata:
+  name: workload-cluster-name-cp
+spec:
+  datastore: "CommonDS"
+  diskGiB: 25
+  folder: "test-eks-anywhere"
+  memoryMiB: 8192
+  numCPUs: 2
+  osFamily: ubuntu
+  template: "ubuntu-2004-kube-v1.21"
+  resourcePool: "Test"
+  users:
+  - name: capv
+    sshAuthorizedKeys:
+    - ""
+
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: VSphereMachineConfig
+metadata:
+  name: workload-wk-md-0
+spec:
+  datastore: "CommonDS"
+  diskGiB: 25
+  folder: "test-eks-anywhere"
+  memoryMiB: 8192
+  numCPUs: 2
+  osFamily: ubuntu
+  template: "ubuntu-2004-kube-v1.21"
+  resourcePool: "Test"
+  users:
+  - name: capv
+    sshAuthorizedKeys:
+    - ""
+
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: VSphereMachineConfig
+metadata:
+  name: workload-wk-md-1
+spec:
+  datastore: "CommonDS"
+  diskGiB: 25
+  folder: "test-eks-anywhere"
+  memoryMiB: 8192
+  numCPUs: 2
+  osFamily: ubuntu
+  template: "ubuntu-2004-kube-v1.21"
+  resourcePool: "Test"
+  users:
+  - name: capv
+    sshAuthorizedKeys:
+    - ""
+
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: VSphereMachineConfig
+metadata:
+  name: workload-wk-md-2
+spec:
+  datastore: "CommonDS"
+  diskGiB: 25
+  folder: "test-eks-anywhere"
+  memoryMiB: 8192
+  numCPUs: 2
+  osFamily: ubuntu
+  template: "ubuntu-2004-kube-v1.21"
+  resourcePool: "Test"
+  users:
+  - name: capv
+    sshAuthorizedKeys:
+    - ""
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: VSphereMachineConfig
+metadata:
+  name: workload-cluster-name-etcd
+spec:
+  datastore: "CommonDS"
+  diskGiB: 25
+  folder: "test-eks-anywhere"
+  memoryMiB: 8192
+  numCPUs: 2
+  osFamily: ubuntu
+  template: "ubuntu-2004-kube-v1.21"
+  resourcePool: "Test"
+  users:
+  - name: capv
+    sshAuthorizedKeys:
+    - ""
+
+---
