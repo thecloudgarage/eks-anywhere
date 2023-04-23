@@ -36,7 +36,6 @@ kubectl create configmap sockshop-loadtest-locustfile --from-file ./locustfile.p
 ```
 
 ### Install locust on Kubernetes with a distributed worker model with support for Node groups
-```
 Advanced with HPA and node selector
 ```
 helm upgrade --install locust deliveryhero/locust  \
