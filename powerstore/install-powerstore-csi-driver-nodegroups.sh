@@ -51,5 +51,6 @@ cd $HOME/$clusterName/csi-powerstore/dell-csi-helm-installer
 cd $HOME/$clusterName/csi-powerstore/dell-csi-helm-installer
 cp $HOME/$clusterName/csi-powerstore/samples/storageclass/powerstore-ext4.yaml ./powerstore-ext4-iscsi-storage-class.yaml
 sed -i "s/Unique/$globalIdOfPowerStoreArray/g" $HOME/$clusterName/csi-powerstore/dell-csi-helm-installer/powerstore-ext4-iscsi-storage-class.yaml
+sed -i "s/12.34.56.78/$ipOrFqdnOfPowerStoreArray/g" $HOME/$clusterName/csi-powerstore/dell-csi-helm-installer/powerstore-ext4-iscsi-storage-class.yaml
 kubectl create -f $HOME/$clusterName/csi-powerstore/dell-csi-helm-installer/powerstore-ext4-iscsi-storage-class.yaml
 kubectl create -f $HOME/eks-anywhere/powerstore/powerstore-ext4-iscsi-snap-class.yaml
