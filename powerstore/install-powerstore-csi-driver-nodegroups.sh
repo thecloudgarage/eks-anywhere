@@ -38,6 +38,7 @@ sed -i "s/powerstore_endpoint/$ipOrFqdnOfPowerStoreArray/g" $HOME/$clusterName/c
 sed -i "s/powerstore_globalid/$globalIdOfPowerStoreArray/g" $HOME/$clusterName/csi-powerstore/dell-csi-helm-installer/secret.yaml
 sed -i "s/powerstore_username/$userNameOfPowerStoreArray/g" $HOME/$clusterName/csi-powerstore/dell-csi-helm-installer/secret.yaml
 sed -i "s/powerstore_password/$passwordOfPowerStoreArray/g" $HOME/$clusterName/csi-powerstore/dell-csi-helm-installer/secret.yaml
+sed -i "s/auto/ISCSI/g" $HOME/$clusterName/csi-powerstore/dell-csi-helm-installer/secret.yaml
 kubectl create secret generic powerstore-config -n csi-powerstore --from-file=config=secret.yaml
 cd $HOME/$clusterName/csi-powerstore/dell-csi-helm-installer
 cp $HOME/$clusterName/csi-powerstore/helm/csi-powerstore/values.yaml my-powerstore-settings.yaml
