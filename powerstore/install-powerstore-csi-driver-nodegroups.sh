@@ -48,8 +48,8 @@ sed -i "/nodeSelector:$/ a\ \ \ \ group: $nodeSelectorGroupName" my-powerstore-s
 cd $HOME/$clusterName/csi-powerstore/dell-csi-helm-installer
 ./csi-install.sh --namespace csi-powerstore --values ./my-powerstore-settings.yaml --skip-verify --skip-verify-node
 cd $HOME/$clusterName/csi-powerstore/dell-csi-helm-installer
-cp $HOME/$clusterName/csi-powerstore/samples/storageclass/powerstore-topology.yaml ./powerstore-ext4-iscsi-storage-class.yaml
+cp $HOME/eks-anywhere/powerstore/powerstore-ext4-iscsi-storage-class.yaml ./powerstore-ext4-iscsi-storage-class.yaml
 sed -i "s/Unique/$globalIdOfPowerStoreArray/g" $HOME/$clusterName/csi-powerstore/dell-csi-helm-installer/powerstore-ext4-iscsi-storage-class.yaml
-sed -i "s/12.34.56.78/$ipOrFqdnOfPowerStoreArray/g" $HOME/$clusterName/csi-powerstore/dell-csi-helm-installer/powerstore-ext4-iscsi-storage-class.yaml
+sed -i "s/groupValue/$nodeSelectorGroupName/g" $HOME/$clusterName/csi-powerstore/dell-csi-helm-installer/powerstore-ext4-iscsi-storage-class.yaml
 kubectl create -f $HOME/$clusterName/csi-powerstore/dell-csi-helm-installer/powerstore-ext4-iscsi-storage-class.yaml
 kubectl create -f $HOME/eks-anywhere/powerstore/powerstore-ext4-iscsi-snap-class.yaml
