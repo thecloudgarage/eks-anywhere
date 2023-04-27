@@ -61,3 +61,16 @@ argcod login <FQDN:443> --sso
 * We will use this as the login credentials
 * Once logged in via the web console cmd argocd cli, we can use the same logged in session via the putty
 * Switch back to the putty session to the EKS Anywhere admin machine and continue executing argocd commands
+
+# Connect with a Gitlab host
+* We will be using GitLab as a source system in the saga series
+* First act in the ArgoCD setup will be to connect to this GitLab system
+* In my case, the GitLab is available via a HTTPS self signed certificate and is running on port 10443
+* Let's observe how we add the self signed cert for this GitLab source
+* While on the EKS Anywhere Admin machine and logged in via ArgoCD CLI
+```
+GITLAB_HOST="gitlab.oidc.thecloudgarage.com"
+sudo echo -n | openssl s_client -connect $GITLAB_HOST:10443 -servername $GITLAB_HOST | openssl x509 > $HOME/$GITLAB_HOST.crt
+argocd cert add-tls --from $HOME/$GITLAB_HOST.crt $GITLAB_HOST
+```
+* This will add the GitLab's self signed certificate in the argoCD system such that it will not create errors
