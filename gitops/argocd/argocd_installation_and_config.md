@@ -14,7 +14,7 @@ server:
   service:
     type: LoadBalancer
   config:
-    url: https://argocd.oidc.thecloudgarage.com
+    url: https://argocdtest.oidc.thecloudgarage.com
     application.instanceLabelKey: argocd.argoproj.io/instance
     admin.enabled: 'false'
     resource.exclusions: |
@@ -35,7 +35,33 @@ server:
   rbacConfig:
     policy.default: role:readonly
     policy.csv: |
-      g, kube-admin, role:admin
+      p, role:org-admin, applications, create, *, allow
+      p, role:org-admin, applications, update, *, allow
+      p, role:org-admin, applications, delete, *, allow
+      p, role:org-admin, applications, sync, *, allow
+      p, role:org-admin, applications, override, *, allow
+      p, role:org-admin, applications, action/*, *, allow
+      p, role:org-admin, applicationsets, get, *, allow
+      p, role:org-admin, applicationsets, create, *, allow
+      p, role:org-admin, applicationsets, update, *, allow
+      p, role:org-admin, applicationsets, delete, *, allow
+      p, role:org-admin, certificates, create, *, allow
+      p, role:org-admin, certificates, update, *, allow
+      p, role:org-admin, certificates, delete, *, allow
+      p, role:org-admin, clusters, create, *, allow
+      p, role:org-admin, clusters, update, *, allow
+      p, role:org-admin, clusters, delete, *, allow
+      p, role:org-admin, repositories, create, *, allow
+      p, role:org-admin, repositories, update, *, allow
+      p, role:org-admin, repositories, delete, *, allow
+      p, role:org-admin, projects, create, *, allow
+      p, role:org-admin, projects, update, *, allow
+      p, role:org-admin, projects, delete, *, allow
+      p, role:org-admin, accounts, update, *, allow
+      p, role:org-admin, gpgkeys, create, *, allow
+      p, role:org-admin, gpgkeys, delete, *, allow
+      p, role:org-admin, exec, create, *, allow
+      g, kube-admin, role:org-admin
 EOF
 ```
 * Get the External IP and create a DNS entry
