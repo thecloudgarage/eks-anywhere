@@ -14,7 +14,7 @@ server:
   service:
     type: LoadBalancer
   config:
-    url: https://argocdtest.oidc.thecloudgarage.com
+    url: https://argocd.oidc.thecloudgarage.com
     application.instanceLabelKey: argocd.argoproj.io/instance
     admin.enabled: 'false'
     resource.exclusions: |
