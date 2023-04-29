@@ -51,7 +51,7 @@ rm argocd-linux-amd64
 * Login to the vSphere web client and open the web console for EKS Anywhere admin machine
 * The EKS Anywhere admin machine is a ubuntu desktop image with firefox loaded
 * Once into the web console of the EKS Anywhere admin machine, open the cmd terminal and type the below
-* Please note that FQDN:443 should not consist of https:// ... just the hostname and port is enough. Example: argocdtest.oidc.thecloudgarage.com:443
+* Please note that FQDN:443 should not consist of https:// ... just the hostname and port is enough. Example: argocd.oidc.thecloudgarage.com:443
 ```
 argcod login <FQDN:443> --sso
 ```
