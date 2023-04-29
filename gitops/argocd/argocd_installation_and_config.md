@@ -1,7 +1,7 @@
-# Pre-requisites
+### Pre-requisites
 * Ensure MetalLB is installed and configured before hand
 * KeyCloak is setup for ArgoCD web and CLI client that uses grpc
-# Perform the below procedure on the EKS Anywhere admin machine
+### Perform the below procedure on the EKS Anywhere admin machine
 ```
 helm repo add argo https://argoproj.github.io/argo-helm
 helm repo update
@@ -62,7 +62,7 @@ argcod login <FQDN:443> --sso
 * Once logged in via the web console cmd argocd cli, we can use the same logged in session via the putty
 * Switch back to the putty session to the EKS Anywhere admin machine and continue executing argocd commands
 
-# Connect with a Gitlab host
+### Connect with a Gitlab host
 * We will be using GitLab as a source system in the saga series
 * First act in the ArgoCD setup will be to connect to this GitLab system
 * In my case, the GitLab is available via a HTTPS self signed certificate and is running on port 10443
