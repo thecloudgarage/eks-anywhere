@@ -30,36 +30,31 @@ spec:
   managementCluster:
     name: management-cluster-name
   workerNodeGroupConfigurations:
-  - count: 2
-    autoscalingConfiguration:
+  - autoscalingConfiguration: #Creates a worker node pool named md-0 with autoscaling
       minCount: 2
-      maxCount: 5  
+      maxCount: 5
     machineGroupRef:
       kind: VSphereMachineConfig
       name: workload-wk-md-0
     name: md-0
     labels:
      group: md-0
-  - count: 2
-    autoscalingConfiguration:
+  - autoscalingConfiguration: #Creates a worker node pool named md-1 with autoscaling
       minCount: 2
-      maxCount: 5  
+      maxCount: 5
     machineGroupRef:
       kind: VSphereMachineConfig
       name: workload-wk-md-1
     name: md-1
     labels:
       group: md-1
-  - count: 2
-    autoscalingConfiguration:
-      minCount: 2
-      maxCount: 5  
+  - count: 3 #Creates a worker node pool named md-2 with a static count, ideal for stateful applications
     machineGroupRef:
       kind: VSphereMachineConfig
       name: workload-wk-md-2
     name: md-2
     labels:
-      group: md-2  
+      group: md-2
 
 ---
 apiVersion: anywhere.eks.amazonaws.com/v1alpha1
@@ -157,8 +152,8 @@ spec:
   datastore: "CommonDS"
   diskGiB: 25
   folder: "test-eks-anywhere"
-  memoryMiB: 8192
-  numCPUs: 2
+  memoryMiB: 16384
+  numCPUs: 8
   osFamily: ubuntu
   template: "ubuntu-2004-kube-v1.21"
   resourcePool: "Test"
