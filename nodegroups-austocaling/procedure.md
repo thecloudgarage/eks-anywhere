@@ -1,5 +1,5 @@
 # OBJECTIVE
-### Implement a cluster topology with a standalone workload cluster consisting of node groups with and without auto-scaling
+#### Implement an EKS Anywhere cluster topology with a standalone workload cluster (can also be done with a managed workload cluster) consisting of node groups and auto-scaling
 
 * Ensure that you have cloned the latest version of the EKS Anywhere GitHub repository associated with this saga series.
 * SSH into the EKS Anywhere Administrative machine. Navigate to $HOME/eks-anywhere/cluster-samples/ sub-directory and edit the cluster-sample-nodepools-autoscaling.yaml file to reflect the vSphere environment as noted in the previous blogs.
