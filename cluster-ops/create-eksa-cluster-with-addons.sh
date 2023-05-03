@@ -13,7 +13,7 @@ echo -e "${RED}Please copy the filename of the template intended for the cluster
 echo -e "${RED}######################################################################${NC}"
 ls $HOME/eks-anywhere/cluster-samples/*.y* |xargs -n1 basename
 read -p 'Cluster template filename: ' clusterTemplateFileName
-read -p 'Kubernetes version 1.21, 1.22, v1.23, etc.: ' kubernetesVersion
+read -p 'Kubernetes version 1.21, 1.22, 1.23, etc.: ' kubernetesVersion
 if ping -c 1 $staticIp &> /dev/null
 then
   echo "Error., cannot contintue...Static IP conflict, address in use"
