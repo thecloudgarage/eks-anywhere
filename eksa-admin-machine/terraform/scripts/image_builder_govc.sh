@@ -2,8 +2,8 @@
 mkdir -p /home/image-builder/.ssh
 sudo mkdir -p /tmp/eks-image-builder-cni
 sudo chown -R image-builder:image-builder /tmp/eks-image-builder-cni
-sudo apt update -y
-sudo snap install yq
+#sudo apt update -y
+#sudo snap install yq
 sudo apt install jq unzip make ansible -y
 sudo apt install python3 python3-setuptools python3-dev python3-pip -y
 echo "HostKeyAlgorithms +ssh-rsa" >> /home/$USER/.ssh/config
