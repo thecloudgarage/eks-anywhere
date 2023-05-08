@@ -131,6 +131,7 @@ resource "null_resource" "eks_anywhere_provisioner" {
       user     = "ubuntu"
       password = var.virtual_machine_root_password
       host     = var.virtual_machine_static_ip_address
+      script_path = "/home/ubuntu/terraform_provisioner_%RAND%.sh"
   }
   // Without the first eval line, the brew installations will fail
   provisioner "remote-exec" {
@@ -157,6 +158,7 @@ resource "null_resource" "set_vsphere_credentials_in_profile" {
       user     = "ubuntu"
       password = var.virtual_machine_root_password
       host     = var.virtual_machine_static_ip_address
+      script_path = "/home/ubuntu/terraform_provisioner_%RAND%.sh"
   }
   // The below will set the vsphere credentials in the ubuntu profile for EKSA cluster provisioning
   provisioner "remote-exec" {
@@ -176,6 +178,7 @@ resource "null_resource" "install_image_builder_and_govc" {
       user     = "image-builder"
       password = var.virtual_machine_root_password
       host     = var.virtual_machine_static_ip_address
+      script_path = "/home/image-builder/terraform_provisioner_%RAND%.sh"
   }
   // The below will perform the necessary actions to install govc and image-builder
   provisioner "remote-exec" {
@@ -192,6 +195,27 @@ resource "null_resource" "install_image_builder_and_govc" {
       "find $HOME/eks-anywhere/ -name \"*.sh\" -type f -print0 | xargs -0 chmod +x",
       "cp $HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/vsphere-connection.json $HOME/vsphere-connection.json",
       "echo ${var.virtual_machine_root_password} | sudo -S apt-get update -y",
+      "sleep 10"
+    ]
+  }
+}
+
+
+# Next we will install govc, image-builder and related utilities
+resource "null_resource" "install_image_builder_and_govc_1" {
+  depends_on = [null_resource.install_image_builder_and_govc]
+  connection {
+      type     = "ssh"
+      user     = "image-builder"
+      password = var.virtual_machine_root_password
+      host     = var.virtual_machine_static_ip_address
+      script_path = "/home/image-builder/terraform_provisioner_%RAND%.sh"
+  }
+  // The below will perform the necessary actions to install govc and image-builder
+  provisioner "remote-exec" {
+    inline = [
+      "sleep 10",
+      "echo ${var.virtual_machine_root_password} | sudo -S ls",
       "$HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/image_builder_govc.sh",
       "sleep 10"
     ]
@@ -200,7 +224,7 @@ resource "null_resource" "install_image_builder_and_govc" {
 
 resource "time_sleep" "wait_for_image_builder_govc" {
   create_duration = "20s"
-  depends_on = [null_resource.install_image_builder_and_govc]
+  depends_on = [null_resource.install_image_builder_and_govc_1]
 }
 
 # Next we will set the vsphere connection settings for image-builder process
@@ -226,7 +250,7 @@ resource "null_resource" "set_image_builder_vsphere_connection" {
       "sed -i 's/vsphere_user/${var.vsphere_user}/g' $HOME/vsphere-connection.json",
       "sed -i 's/vsphere_server/${var.vsphere_server}/g' $HOME/vsphere-connection.json",
       "cp $HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/ubuntu_node_template* $HOME/",
+      "echo ${var.virtual_machine_root_password} | sudo -S snap install yq"
     ]
   }
 }
-
