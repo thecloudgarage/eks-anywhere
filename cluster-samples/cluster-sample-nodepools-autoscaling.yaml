@@ -35,7 +35,7 @@ spec:
       maxCount: 5
     machineGroupRef:
       kind: VSphereMachineConfig
-      name: workload-wk-md-0
+      name: workload-cluster-name-md-0
     name: md-0
     labels:
      group: md-0
@@ -44,14 +44,14 @@ spec:
       maxCount: 5
     machineGroupRef:
       kind: VSphereMachineConfig
-      name: workload-wk-md-1
+      name: workload-cluster-name-md-1
     name: md-1
     labels:
       group: md-1
   - count: 3 #Creates a worker node pool named md-2 with a static count, ideal for stateful applications
     machineGroupRef:
       kind: VSphereMachineConfig
-      name: workload-wk-md-2
+      name: workload-cluster-name-md-2
     name: md-2
     labels:
       group: md-2
@@ -91,7 +91,7 @@ spec:
 apiVersion: anywhere.eks.amazonaws.com/v1alpha1
 kind: VSphereMachineConfig
 metadata:
-  name: workload-wk-md-0
+  name: workload-cluster-name-md-0
 spec:
   datastore: "CommonDS"
   diskGiB: 25
@@ -110,7 +110,7 @@ spec:
 apiVersion: anywhere.eks.amazonaws.com/v1alpha1
 kind: VSphereMachineConfig
 metadata:
-  name: workload-wk-md-1
+  name: workload-cluster-name-md-1
 spec:
   datastore: "CommonDS"
   diskGiB: 25
@@ -129,7 +129,7 @@ spec:
 apiVersion: anywhere.eks.amazonaws.com/v1alpha1
 kind: VSphereMachineConfig
 metadata:
-  name: workload-wk-md-2
+  name: workload-cluster-name-md-2
 spec:
   datastore: "CommonDS"
   diskGiB: 25
