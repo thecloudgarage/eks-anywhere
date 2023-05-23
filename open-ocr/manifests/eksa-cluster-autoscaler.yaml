@@ -1,4 +1,3 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -23,7 +22,7 @@ spec:
         - /cluster-autoscaler
         args:
         - --cloud-provider=clusterapi
-        - --node-group-auto-discovery=clusterapi:clusterName=c41
+        - --node-group-auto-discovery=clusterapi:clusterName=EKSA_CLUSTER_NAME
       serviceAccountName: cluster-autoscaler
       terminationGracePeriodSeconds: 10
       tolerations:
