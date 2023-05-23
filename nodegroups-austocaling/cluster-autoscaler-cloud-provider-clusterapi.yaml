@@ -1,4 +1,3 @@
-cat <<EOF | kubectl apply -f -
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -172,4 +171,3 @@ rules:
     - list
     - update
     - watch
-EOF
