@@ -23,7 +23,7 @@ spec:
         - /cluster-autoscaler
         args:
         - --cloud-provider=clusterapi
-#       - --node-group-auto-discovery=clusterapi:clusterName=EKSA_CLUSTER_NAME #keep adding this statement for individual clusters by changing the cluster name
+#       - --node-group-auto-discovery=clusterapi:clusterName=EKSA_CLUSTER_NAME #APPEND AUTO-DISCOVERY STATEMENTS FOR EACH WORKLOAD_CLUSTER
       serviceAccountName: cluster-autoscaler
       terminationGracePeriodSeconds: 10
       tolerations:
