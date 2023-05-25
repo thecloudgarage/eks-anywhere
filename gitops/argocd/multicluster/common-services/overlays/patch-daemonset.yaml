@@ -6,4 +6,4 @@ spec:
   template:
     spec:
       nodeSelector:
-        group: md-2
+        group: md-0
