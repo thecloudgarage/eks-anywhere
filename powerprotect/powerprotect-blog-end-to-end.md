@@ -61,7 +61,8 @@ passwordOfPowerStoreArray:
 ```
 * DEPLOY METALLB Load Balancer
 ```
-helm upgrade --install --wait --timeout 15m   --namespace metallb-system --create-namespace   --repo https://metallb.github.io/metallb metallb metallb
+helm repo add metallb https://metallb.github.io/metallb
+helm install metallb metallb/metallb --wait --timeout 15m --namespace metallb-system --create-namespace
 ```
 * Deploy IP pools and advertisement CRDs for MetalLB
 ```
@@ -197,7 +198,8 @@ passwordOfPowerStoreArray:
 ```
 * DEPLOY METALLB Load Balancer along with IP advertisement CRDs
 ```
-helm upgrade --install --wait --timeout 15m   --namespace metallb-system --create-namespace   --repo https://metallb.github.io/metallb metallb metallb
+helm repo add metallb https://metallb.github.io/metallb
+helm install metallb metallb/metallb --wait --timeout 15m --namespace metallb-system --create-namespace
 ```
 * Configure MetalLB pool and advertisements
 ```
