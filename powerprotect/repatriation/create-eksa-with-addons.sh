@@ -97,7 +97,8 @@ kubectl create -f $HOME/$workloadClusterName/csi-powerstore/dell-csi-helm-instal
 kubectl create -f $HOME/eks-anywhere/powerstore/powerstore-ext4-iscsi-snap-class.yaml
 #
 # CREATE METALLB LOAD BALANCER
-helm upgrade --install --wait --timeout 15m   --namespace metallb-system --create-namespace   --repo https://metallb.github.io/metallb metallb metallb
+helm repo add metallb https://metallb.github.io/metallb
+helm install metallb metallb/metallb --wait --timeout 15m --namespace metallb-system --create-namespace
 sleep 30
 cd $HOME/$workloadClusterName
 rm -rf $HOME/$workloadClusterName/metallb-crd.yaml
