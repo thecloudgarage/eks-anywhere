@@ -1,13 +1,14 @@
 Install MetalLB (option-1 flat worker pool)
 ```
-helm upgrade --install --wait --timeout 15m   --namespace metallb-system --create-namespace   --repo https://metallb.github.io/metallb metallb metallb
+helm repo add metallb https://metallb.github.io/metallb
+helm install metallb metallb/metallb --wait --timeout 15m --namespace metallb-system --create-namespace
 ```
 Install MetalLB (option-2 nodegroup support)
 ```
-helm upgrade --install --wait --timeout 15m \
+helm repo add metallb https://metallb.github.io/metallb
+helm upgrade install metallb metallb/metallb --wait --timeout 15m \
 --namespace metallb-system \
 --create-namespace \
---repo https://metallb.github.io/metallb metallb metallb \
 --set controller.nodeSelector."group"="md-2" \
 --set speaker.nodeSelector."group"="md-2"
 ```
