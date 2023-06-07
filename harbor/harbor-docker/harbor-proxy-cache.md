@@ -80,13 +80,13 @@ sed -i '/dns/d' docker-compose.yml
 docker-compose up -d
 docker ps and observe if all containers are working fine
 ```
-* Login to Harbor and create proxy-cache registry end points
-- docker-hub with the selectable as Docker Hub
-- gcr-io with the selectable as Docker registry and URL as https://gcr.io
-- k8s-gcr-io with the selectable as Docker registry and URL as https://k8s.gcr.io
-- quay-io with the selectable as Docker registry and URL as https://quay.io
-* Create the following projects as proxy-cache and set them as public
-- proxy.docker.io (select the registry end point as docker-hub
-- proxy.gcr.io (select the registry end point as gcr-io)
-- proxy.k8s.gcr.io (select the registry end point as k8s-gcr-io)
-- proxy.quay.io (select the registry end point as quay-io)
+#### Login to Harbor and create proxy-cache registry end points
+* docker-hub with the selectable as Docker Hub
+* gcr-io with the selectable as Docker registry and URL as https://gcr.io
+* k8s-gcr-io with the selectable as Docker registry and URL as https://k8s.gcr.io
+* quay-io with the selectable as Docker registry and URL as https://quay.io
+#### Create the following projects as proxy-cache and set them as public
+* proxy.docker.io (select the registry end point as docker-hub
+* proxy.gcr.io (select the registry end point as gcr-io)
+* proxy.k8s.gcr.io (select the registry end point as k8s-gcr-io)
+* proxy.quay.io (select the registry end point as quay-io)
