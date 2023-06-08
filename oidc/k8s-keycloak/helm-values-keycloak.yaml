@@ -1,0 +1,29 @@
+extraEnv: |
+  - name: KEYCLOAK_LOGLEVEL
+    value: DEBUG
+  - name: KEYCLOAK_USER
+    value: admin
+  - name: KEYCLOAK_PASSWORD
+    value: admin@12345678
+  - name: PROXY_ADDRESS_FORWARDING
+    value: "true"
+
+args:
+  - -Dkeycloak.profile.feature.docker=enabled
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  rules:
+    - host: keycloak.oidc.thecloudgarage.com
+      paths:
+      - path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - keycloak.oidc.thecloudgarage.com
+    secretName: thecloudgarage-tls
+
+postgresql:
+  enabled: true
+  postgresqlPassword: asdfaso97sadfjylfasdsf78
