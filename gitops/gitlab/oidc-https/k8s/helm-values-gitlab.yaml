@@ -1,0 +1,58 @@
+# Values for gitlab/gitlab chart on GKE
+global:
+  edition: ce
+  certificates:
+    customCAs:
+      - secret: secret-custom-ca
+  hosts:
+    domain: thecloudgarage.com
+    https: true
+    gitlab:
+      name: gitlab.oidc.thecloudgarage.com
+      https: true
+    registry:
+      name: gitlab-registry.oidc.thecloudgarage.com
+      https: true
+    minio:
+      name: gitlab-minio.oidc.thecloudgarage.com
+      https: true
+  minio:
+    enabled: true
+  ## doc/charts/globals.md#configure-ingress-settings
+  ingress:
+    configureCertmanager: false
+    class: "nginx"
+    enabled: true
+    tls:
+      enabled: true
+      secretName: "thecloudgarage-tls"
+  appConfig:
+    omniauth:
+      allowBypassTwoFactor: []
+      allowSingleSignOn:
+        - openid_connect
+      autoLinkLdapUser: false
+      autoLinkSamlUser: false
+      blockAutoCreatedUsers: false
+      enabled: true
+      externalProviders: []
+      providers:
+        - secret: openid-connect
+          key: provider
+      syncProfileAttributes:
+        - email
+      syncProfileFromProvider: []
+certmanager:
+  install: false
+nginx-ingress:
+  enabled: false
+prometheus:
+  install: true
+redis:
+  install: true
+postgresql:
+  install: true
+gitlab-runner:
+  install: false
+registry:
+  enable: true
