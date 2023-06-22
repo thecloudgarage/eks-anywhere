@@ -1,3 +1,4 @@
+#root with fake_password
 apiVersion: v1
 data:
   password: ZmFrZV9wYXNzd29yZA==
