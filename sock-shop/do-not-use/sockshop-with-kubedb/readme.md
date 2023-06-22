@@ -1,3 +1,4 @@
+#### INSTALL KUBEDB OPERATOR ON THE CLUSTER
 * Register for an API token with AppsCode
 ```
 curl -d "email=***" -X POST https://license-issuer.appscode.com/register
