@@ -1,0 +1,31 @@
+apiVersion: kubedb.com/v1alpha2
+kind: MySQL
+metadata:
+  name: catalogue-db
+  namespace: sock-shop
+spec:
+  version: "5.7.41"
+  authSecret:
+    name: sockshop-db-creds
+    externallyManaged: true
+  topology:
+    mode: GroupReplication
+  replicas: 3
+  storage:
+    storageClassName: #specify if required else patch the powerstore class as default beforehand
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 1Gi
+  init:
+    script:
+      configMap:
+        name: catalogue-db-init-script
+  podTemplate:
+    spec:
+      nodeSelector:
+        group: md-0
+      env:
+      - name: MYSQL_DATABASE
+        value: socksdb

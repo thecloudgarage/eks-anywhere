@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-end
+  namespace: sock-shop
+spec:
+  selector:
+    matchLabels:
+      name: front-end
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: front-end
+    spec:
+      containers:
+      - name: front-end
+        image: weaveworksdemos/front-end:0.3.12
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+        ports:
+        - containerPort: 8079
+        env:
+        - name: SESSION_REDIS
+          value: "true"
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 10001
+          capabilities:
+            drop:
+              - all
+          readOnlyRootFilesystem: true
+        volumeMounts:
+        - name: front-end-config-js
+          mountPath: /usr/src/app/config.js
+          subPath: config.js
+          readOnly: true
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: front-end-config-js
+        name: front-end-config-js
+#Ensure configmap for config.js is created before hand
+#Ensure filename is maintained as config.js
+#kubectl -n sock-shop create configmap front-end-config-js --from-file=config.js
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: front-end
+  labels:
+    name: front-end
+  namespace: sock-shop
+spec:
+  ports:
+  - port: 80
+    targetPort: 8079
+    protocol: TCP
+  selector:
+    name: front-end
