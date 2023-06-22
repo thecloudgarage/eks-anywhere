@@ -6,7 +6,10 @@ curl -d "email=***" -X POST https://license-issuer.appscode.com/register
 * Upon registration an API token is received via email (mytoken: b89b801a-733c-41ac-a6db-5568a438e1bc)
 * For each new cluster or new license, download and run the below script
 ```
-https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/kubedb/get-mysql-community-edition-license-keys.sh
+cd $HOME
+wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/kubedb/get-kubedb-community-edition-license-keys.sh
+chmod +x $HOME/get-kubedb-community-edition-license-keys.sh
+source get-kubedb-community-edition-license-keys.sh
 ```
 * Install KubeDB on the cluster
 ```
