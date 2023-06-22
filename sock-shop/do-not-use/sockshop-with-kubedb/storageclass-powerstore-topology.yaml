@@ -19,6 +19,8 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: "powerstore-topology"
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
 provisioner: "csi-powerstore.dellemc.com"
 parameters:
   # arrayID: id of array to be used for volumes
