@@ -13,6 +13,7 @@ resources:
   - ./sockshop-user-db-mongo.yaml
   - ./sockshop-carts.yaml
   - ./sockshop-catalogue.yaml
+  - ./sockshop-front-end-config-js.yaml
   - ./sockshop-front-end.yaml
   - ./sockshop-orders.yaml
   - ./sockshop-payment.yaml
