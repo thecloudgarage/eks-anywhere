@@ -1,0 +1,9 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: does-not-matter
+spec:
+  template:
+    spec:
+      nodeSelector:
+        group: md-0
