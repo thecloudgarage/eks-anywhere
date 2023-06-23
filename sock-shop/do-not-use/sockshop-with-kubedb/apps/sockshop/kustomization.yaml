@@ -1,7 +1,29 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./external-snapshotter.yaml
+  - ./sockshop-namespace.yaml
+  - ./sockshop-db-creds.yaml
+  - ./sockshop-carts-db-mongo.yaml
+  - ./sockshop-catalogue-db-init.yaml
+  - ./sockshop-catalogue-db-mysql.yaml
+  - ./sockshop-orders-db-mongo.yaml
+  - ./sockshop-rabbitmq.yaml
+  - ./sockshop-session-db-redis.yaml
+  - ./sockshop-user-db-init.yaml
+  - ./sockshop-user-db-mongo.yaml
+  - ./sockshop-carts.yaml
+  - ./sockshop-catalogue.yaml
+  - ./sockshop-front-end.yaml
+  - ./sockshop-orders.yaml
+  - ./sockshop-payment.yaml
+  - ./sockshop-queue-master.yaml
+  - ./sockshop-shipping.yaml
+  - ./sockshop-user.yaml
+  - ./sockshop-tls.yaml
+  - ./sockshop-ingress.yaml
+  - ./sockshop-locust-configmap.yaml
+  - ./sockshop-locust-ingress.yaml
+  - ./sockshop-front-end-hpa.yaml
 patchesJSON6902:
 - target:
     group: apps
