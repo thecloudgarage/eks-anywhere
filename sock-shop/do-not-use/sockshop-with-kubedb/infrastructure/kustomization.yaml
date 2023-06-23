@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./external-snapshotter.yaml
+  - ./csi-powerstore-namespace.yaml
+  - ./csi-powerstore-2.5.0.yaml
+  - ./storageclass-standard-non-default.yaml
+  - ./storageclass-powerstore-topology.yaml
+  - ./volumesnapshotclass-powerstore.yaml
+  - ./metallb.yaml
+  - ./metallb-config.yaml
+  - ./nginx-ingress-controller.yml
+  - ./cluster-autoscaler.yaml
+  - ./ppdm-rbac.yaml
+patches:
+  - path: ./patch-deployment.yaml
+    target:
+      kind: Deployment
+  - path: ./patch-daemonset.yaml
+    target:
+      kind: DaemonSet
