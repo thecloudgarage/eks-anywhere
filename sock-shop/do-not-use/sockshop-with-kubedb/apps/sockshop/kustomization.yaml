@@ -24,7 +24,7 @@ resources:
   - ./sockshop-locust-configmap.yaml
   - ./sockshop-locust-ingress.yaml
   - ./sockshop-front-end-hpa.yaml
-patchesJSON6902:
+patches:
 - target:
     group: apps
     version: v1
@@ -33,8 +33,9 @@ patchesJSON6902:
     namespace: sock-shop
   patch: |-
     - op: add
-      path: /spec/nodeSelector/group
-      value: md-1
+      path: /spec/template/spec/nodeSelector
+      value:
+        group: md-1
 - target:
     group: apps
     version: v1
@@ -43,8 +44,9 @@ patchesJSON6902:
     namespace: sock-shop
   patch: |-
     - op: add
-      path: /spec/nodeSelector/group
-      value: md-1
+      path: /spec/template/spec/nodeSelector
+      value:
+        group: md-1
 - target:
     group: apps
     version: v1
@@ -53,8 +55,9 @@ patchesJSON6902:
     namespace: sock-shop
   patch: |-
     - op: add
-      path: /spec/nodeSelector/group
-      value: md-1
+      path: /spec/template/spec/nodeSelector
+      value:
+        group: md-1
 - target:
     group: apps
     version: v1
@@ -63,8 +66,9 @@ patchesJSON6902:
     namespace: sock-shop
   patch: |-
     - op: add
-      path: /spec/nodeSelector/group
-      value: md-1
+      path: /spec/template/spec/nodeSelector
+      value:
+        group: md-1
 - target:
     group: apps
     version: v1
@@ -73,8 +77,9 @@ patchesJSON6902:
     namespace: sock-shop
   patch: |-
     - op: add
-      path: /spec/nodeSelector/group
-      value: md-1
+      path: /spec/template/spec/nodeSelector
+      value:
+        group: md-1
 - target:
     group: apps
     version: v1
@@ -83,8 +88,9 @@ patchesJSON6902:
     namespace: sock-shop
   patch: |-
     - op: add
-      path: /spec/nodeSelector/group
-      value: md-1
+      path: /spec/template/spec/nodeSelector
+      value:
+        group: md-1
 - target:
     group: apps
     version: v1
@@ -93,8 +99,9 @@ patchesJSON6902:
     namespace: sock-shop
   patch: |-
     - op: add
-      path: /spec/nodeSelector/group
-      value: md-1
+      path: /spec/template/spec/nodeSelector
+      value:
+        group: md-1
 - target:
     group: apps
     version: v1
@@ -103,5 +110,6 @@ patchesJSON6902:
     namespace: sock-shop
   patch: |-
     - op: add
-      path: /spec/nodeSelector/group
-      value: md-1
+      path: /spec/template/spec/nodeSelector
+      value:
+        group: md-1
