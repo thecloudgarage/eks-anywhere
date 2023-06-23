@@ -1,0 +1,85 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./external-snapshotter.yaml
+patchesJSON6902:
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: carts
+    namespace: sock-shop
+  patch: |-
+    - op: add
+      path: /spec/nodeSelector/group
+      value: md-1
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: catalogue
+    namespace: sock-shop
+  patch: |-
+    - op: add
+      path: /spec/nodeSelector/group
+      value: md-1
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: front-end
+    namespace: sock-shop
+  patch: |-
+    - op: add
+      path: /spec/nodeSelector/group
+      value: md-1
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: orders
+    namespace: sock-shop
+  patch: |-
+    - op: add
+      path: /spec/nodeSelector/group
+      value: md-1
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: payment
+    namespace: sock-shop
+  patch: |-
+    - op: add
+      path: /spec/nodeSelector/group
+      value: md-1
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: queue-master
+    namespace: sock-shop
+  patch: |-
+    - op: add
+      path: /spec/nodeSelector/group
+      value: md-1
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: shipping
+    namespace: sock-shop
+  patch: |-
+    - op: add
+      path: /spec/nodeSelector/group
+      value: md-1
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: user
+    namespace: sock-shop
+  patch: |-
+    - op: add
+      path: /spec/nodeSelector/group
+      value: md-1
