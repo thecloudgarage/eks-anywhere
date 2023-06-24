@@ -23,7 +23,7 @@ spec:
          - containerPort: 80
         env:
          - name: SPRING_DATA_MONGODB_URI
-           value: "mongodb://root:fake_password@carts-db:27017/data" 
+           value: mongodb://root:fake_password@carts-db:27017/data 
          - name: ZIPKIN
            value: zipkin.jaeger.svc.cluster.local
          - name: JAVA_OPTS
