@@ -1,3 +1,4 @@
+#GOLANG APP WITH MONGODB BACKEND
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -22,7 +23,11 @@ spec:
         - containerPort: 80
         env:
         - name: MONGO_HOST
-          value: "root:fake_password@user-db:27017"
+          value: user-db:27017
+        - name: MONGO_USER
+          value: root
+        - name: MONGO_PASS
+          value: fake_password
         securityContext:
           runAsNonRoot: true
           runAsUser: 10001
