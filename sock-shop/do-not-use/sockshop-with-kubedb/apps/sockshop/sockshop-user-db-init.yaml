@@ -1,6 +1,14 @@
 apiVersion: v1
 data:
   init.js: |-
+    db = db.getSiblingDB('users');
+    db.createUser(
+    {
+    user: "mongouser",
+    pwd: "mongopassword",
+    roles: [ { role: "readWrite", db: "users" } ]
+    })
+    db = db.getSiblingDB('users');
     db.createCollection("addresses");
     db.createCollection("cards");
     db.createCollection("customers");
