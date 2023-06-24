@@ -25,9 +25,9 @@ spec:
         - name: MONGO_HOST
           value: user-db:27017
         - name: MONGO_USER
-          value: root
+          value: mongouser
         - name: MONGO_PASS
-          value: fake_password
+          value: mongopassword
         securityContext:
           runAsNonRoot: true
           runAsUser: 10001
