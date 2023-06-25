@@ -1,0 +1,123 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+#other resources
+  - ./namespace-sockshop.yaml
+  - ./db-creds.yaml
+  - ./cm-locust.yaml
+#data-services configmaps
+  - ./cm-init-mongodb-user.yaml
+  - ./cm-init-mysqldb-catalogue.yaml
+  - ./cm-init-mongodb-carts.yaml
+  - ./cm-init-mongodb-orders.yaml
+#data-services
+  - ./mongodb-user.yaml
+  - ./mysqldb-catalogue.yaml
+  - ./mongodb-carts.yaml
+  - ./mongodb-orders.yaml
+  - ./rabbitmq-queue-processor.yaml
+  - ./redisdb-session.yaml
+#  - ./redisdb-session-original.yaml
+#microservices
+  - ./cm-config-js-nodejs-front-end.yaml
+  - ./nodejs-front-end.yaml
+  - ./nodejs-front-end-hpa.yaml
+  - ./golang-user.yaml
+  - ./golang-catalogue.yaml
+  - ./springboot-carts.yaml
+  - ./springboot-queue-master.yaml
+  - ./springboot-orders.yaml
+  - ./golang-payment.yaml
+  - ./springboot-shipping.yaml
+#ingress
+  - ./tls.yaml
+  - ./ingress.yaml
+patches:
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: carts
+    namespace: sock-shop
+  patch: |-
+    - op: add
+      path: /spec/template/spec/nodeSelector
+      value:
+        group: md-1
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: catalogue
+    namespace: sock-shop
+  patch: |-
+    - op: add
+      path: /spec/template/spec/nodeSelector
+      value:
+        group: md-1
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: front-end
+    namespace: sock-shop
+  patch: |-
+    - op: add
+      path: /spec/template/spec/nodeSelector
+      value:
+        group: md-1
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: orders
+    namespace: sock-shop
+  patch: |-
+    - op: add
+      path: /spec/template/spec/nodeSelector
+      value:
+        group: md-1
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: payment
+    namespace: sock-shop
+  patch: |-
+    - op: add
+      path: /spec/template/spec/nodeSelector
+      value:
+        group: md-1
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: queue-master
+    namespace: sock-shop
+  patch: |-
+    - op: add
+      path: /spec/template/spec/nodeSelector
+      value:
+        group: md-1
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: shipping
+    namespace: sock-shop
+  patch: |-
+    - op: add
+      path: /spec/template/spec/nodeSelector
+      value:
+        group: md-1
+- target:
+    group: apps
+    version: v1
+    kind: Deployment
+    name: user
+    namespace: sock-shop
+  patch: |-
+    - op: add
+      path: /spec/template/spec/nodeSelector
+      value:
+        group: md-1
