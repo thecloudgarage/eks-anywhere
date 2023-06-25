@@ -1,0 +1,9 @@
+#root with fake_password
+apiVersion: v1
+data:
+  password: ZmFrZV9wYXNzd29yZA==
+  username: cm9vdA==
+kind: Secret
+metadata:
+  name: sockshop-db-creds
+  namespace: sock-shop
