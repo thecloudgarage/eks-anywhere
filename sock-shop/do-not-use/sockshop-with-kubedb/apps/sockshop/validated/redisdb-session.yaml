@@ -1,0 +1,24 @@
+#Deployed in Standalone mode. Cluster mode breaks the front-end.
+apiVersion: kubedb.com/v1alpha2
+kind: Redis
+metadata:
+  name: session-db
+  namespace: sock-shop
+spec:
+  authSecret:
+    name: sockshop-db-creds
+    externallyManaged: true
+  version: 5.0.14
+  storageType: Durable
+  storage:
+    resources:
+      requests:
+        storage: 1Gi
+    storageClassName:
+    accessModes:
+    - ReadWriteOnce
+  terminationPolicy: Halt
+  podTemplate:
+    spec:
+      nodeSelector:
+        group: md-0
