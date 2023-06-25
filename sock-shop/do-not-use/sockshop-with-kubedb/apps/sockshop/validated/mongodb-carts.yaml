@@ -1,0 +1,29 @@
+apiVersion: kubedb.com/v1alpha2
+kind: MongoDB
+metadata:
+  name: carts-db
+  namespace: sock-shop
+spec:
+  version: "4.2.3"
+  authSecret:
+    name: sockshop-db-creds
+    externallyManaged: true
+  replicaSet:
+    name: "rs0"
+  replicas: 3
+  storageType: Durable
+  storage:
+    storageClassName: #specify if required else patch the powerstore class as default beforehand
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: 1Gi
+  init:
+    script:
+      configMap:
+        name: cartsdb-init-script
+  podTemplate:
+    spec:
+      nodeSelector:
+        group: md-0
