@@ -1,0 +1,13 @@
+apiVersion: v1
+data:
+  config.js: "(function (){\r\n  'use strict';\r\n\r\n  var session      = require(\"express-session\"),\r\n
+    \     RedisStore   = require('connect-redis')(session)\r\n\r\n  module.exports
+    = {\r\n    session: {\r\n      name: 'md.sid',\r\n      secret: 'sooper secret',\r\n
+    \     resave: false,\r\n      saveUninitialized: true\r\n    },\r\n\r\n    session_redis:
+    {\r\n      store: new RedisStore({host: \"session-db\", port: 6379, user: \"root\", password:
+    \"fake_password\"}),\r\n      name: 'md.sid',\r\n      secret: 'sooper secret',\r\n
+    \     resave: false,\r\n      saveUninitialized: true\r\n    }\r\n  };\r\n}());\r\n"
+kind: ConfigMap
+metadata:
+  name: front-end-config-js
+  namespace: sock-shop
