@@ -1,0 +1,15 @@
+apiVersion: v1
+data:
+  init.js: |-
+    db = db.getSiblingDB('data');
+    db.createUser(
+    {
+    user: "root",
+    pwd: "fake_password",
+    roles: [ { role: "readWrite", db: "data" } ]
+    });
+    db = db.getSiblingDB('data');
+kind: ConfigMap
+metadata:
+  name: ordersdb-init-script
+  namespace: sock-shop
