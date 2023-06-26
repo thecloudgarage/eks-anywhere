@@ -18,6 +18,13 @@ spec:
       containers:
       - name: queue-master
         image: weaveworksdemos/queue-master:0.3.1
+        env:
+         - name: SPRING_RABBITMQ_HOST
+           value: rabbitmq
+         - name: SPRING_RABBITMQ_USERNAME
+           value: root
+         - name: SPRING_RABBITMQ_PASSWORD
+           value: fake_password
         ports:
         - containerPort: 80
 ---
