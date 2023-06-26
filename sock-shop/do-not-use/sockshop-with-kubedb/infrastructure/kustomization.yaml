@@ -12,6 +12,7 @@ resources:
   - ./metallb-config.yaml
   - ./nginx-ingress-controller.yml
   - ./cluster-autoscaler.yaml
+  - ./rabbitmq-operator.yaml
   - ./ppdm-rbac.yaml
 patches:
   - path: ./patch-deployment.yaml
