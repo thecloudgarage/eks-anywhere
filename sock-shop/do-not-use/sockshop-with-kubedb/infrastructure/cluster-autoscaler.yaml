@@ -1,3 +1,4 @@
+#Change the value of the EKSA cluster name in line 26
 apiVersion: apps/v1
 kind: Deployment
 metadata:
