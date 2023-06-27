@@ -21,3 +21,17 @@ patches:
   - path: ./patch-daemonset.yaml
     target:
       kind: DaemonSet
+  - path: ./patch-nginx-ingress-controller.yaml
+    target:
+      group: core
+      version: v1
+      kind: Service
+      name: ingress-nginx-controller
+      namespace: ingress-nginx
+  - path: ./patch-metallb-config.yaml
+    target:
+      group: metallb.io
+      version: v1beta1
+      kind: IPAddressPool
+      name: first-pool
+      namespace: metallb-system
