@@ -10,7 +10,7 @@ resources:
   - ./volumesnapshotclass-powerstore.yaml
   - ./metallb.yaml
   - ./metallb-config.yaml
-  - ./nginx-ingress-controller.yml
+  - ./nginx-ingress-controller.yaml
   - ./cluster-autoscaler.yaml
   - ./rabbitmq-operator.yaml
   - ./ppdm-rbac.yaml
