@@ -1,0 +1,11 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cluster-1-autoscaler-management
+  namespace: kube-system
+spec:
+  template:
+    spec:
+      containers:
+        args:
+        - --node-group-auto-discovery=clusterapi:clusterName=CHANGE_ME_WITH_CLUSTER_NAME
