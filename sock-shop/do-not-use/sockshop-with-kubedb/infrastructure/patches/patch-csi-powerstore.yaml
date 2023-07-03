@@ -9,7 +9,7 @@ spec:
       containers:
       - name: provisioner
           args:
-            - "--volume-name-prefix=CHANGE_ME_WITH_CLUSTER_NAME-eksa-vol"
+            - "--volume-name-prefix=EKSA_CLUSTER_NAME-eksa-vol"
       - name: snapshotter
           args:
-            - "--snapshot-name-prefix=CHANGE_ME_WITH_CLUSTER_NAME_eksa-snap"
+            - "--snapshot-name-prefix=EKSA_CLUSTER_NAME_eksa-snap"
