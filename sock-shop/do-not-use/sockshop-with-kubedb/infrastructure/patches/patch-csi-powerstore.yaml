@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: powerstore-controller
+  namespace: csi-powerstore
+spec:
+  template:
+    spec:
+      containers:
+      - name: provisioner
+          args:
+            - "--volume-name-prefix=CHANGE_ME_WITH_CLUSTER_NAME-eksa-vol"
+      - name: snapshotter
+          args:
+            - "--snapshot-name-prefix=CHANGE_ME_WITH_CLUSTER_NAME_eksa-snap"
