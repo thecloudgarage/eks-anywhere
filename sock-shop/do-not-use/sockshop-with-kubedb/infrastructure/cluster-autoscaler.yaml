@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cluster-1-autoscaler-management
+  name: cluster-autoscaler-management
   namespace: kube-system
   labels:
     app: cluster-autoscaler
