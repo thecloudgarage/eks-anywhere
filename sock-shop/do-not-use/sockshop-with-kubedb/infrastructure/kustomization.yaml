@@ -15,23 +15,30 @@ resources:
   - ./rabbitmq-operator.yaml
   - ./ppdm-rbac.yaml
 patches:
-  - path: ./patch-deployment.yaml
+  - path: ./patches/patch-deployment.yaml
     target:
       kind: Deployment
-  - path: ./patch-daemonset.yaml
+  - path: ./patches/patch-daemonset.yaml
     target:
       kind: DaemonSet
-  - path: ./patch-nginx-ingress-controller.yaml
+  - path: ./patches/patch-nginx-ingress-controller.yaml
     target:
       group: core
       version: v1
       kind: Service
       name: ingress-nginx-controller
       namespace: ingress-nginx
-  - path: ./patch-metallb-config.yaml
+  - path: ./patches/patch-metallb-config.yaml
     target:
       group: metallb.io
       version: v1beta1
       kind: IPAddressPool
       name: first-pool
       namespace: metallb-system
+  - path: ./patches/patchcsi-powerstore.yaml
+    target:
+      group: apps
+      version: v1
+      kind: Deployment
+      name: powerstore-controller
+      namespace: csi-powerstore
