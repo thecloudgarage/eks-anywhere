@@ -49,3 +49,9 @@ patches:
       kind: Deployment
       name: cluster-autoscaler-management
       namespace: kube-system
+  - path: ./patches/patch-powerstore-storage-class.yaml
+    target:
+      group: storage.k8s.io
+      version: v1
+      kind: StorageClass
+      name: powerstore-topology
