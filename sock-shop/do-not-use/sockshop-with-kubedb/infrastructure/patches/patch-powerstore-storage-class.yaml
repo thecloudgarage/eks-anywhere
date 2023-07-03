@@ -1,0 +1,11 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: "powerstore-topology"
+parameters:
+  arrayID: "PS4ebb8d4e8488"
+allowedTopologies:
+  - matchLabelExpressions:
+      - key: "csi-powerstore.dellemc.com/172.24.185.106-iscsi"
+        values:
+          - "true"
