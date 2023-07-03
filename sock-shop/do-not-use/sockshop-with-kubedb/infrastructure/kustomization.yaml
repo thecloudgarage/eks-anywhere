@@ -35,7 +35,7 @@ patches:
       kind: IPAddressPool
       name: first-pool
       namespace: metallb-system
-  - path: ./patches/patchcsi-powerstore.yaml
+  - path: ./patches/patch-csi-powerstore.yaml
     target:
       group: apps
       version: v1
