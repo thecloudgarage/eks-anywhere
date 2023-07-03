@@ -8,4 +8,4 @@ spec:
     spec:
       containers:
         args:
-        - --node-group-auto-discovery=clusterapi:clusterName=CHANGE_ME_WITH_CLUSTER_NAME
+        - --node-group-auto-discovery=clusterapi:clusterName=EKSA_CLUSTER_NAME
