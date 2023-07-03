@@ -23,7 +23,7 @@ spec:
         - /cluster-autoscaler
         args:
         - --cloud-provider=clusterapi
-#        - --node-group-auto-discovery=clusterapi:clusterName=EKSA_CLUSTER_NAME #CHANGE THIS VALUE
+        - --node-group-auto-discovery=clusterapi:clusterName=EKSA_CLUSTER_NAME #CHANGE THIS VALUE
       serviceAccountName: cluster-autoscaler
       terminationGracePeriodSeconds: 10
       tolerations:
