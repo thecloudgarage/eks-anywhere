@@ -44,7 +44,7 @@ source ~/.profile
 ```
 sudo su
 cd /home/ubuntu/common-certs
-export HARBOR_FQDN=harbor.oidc.thecloudgarage.com
+export HARBOR_FQDN=harbor-proxycache.oidc.thecloudgarage.com
 ```
 * Add the harbor wildcard certificate for docker daemon on the EKS Anywhere admin machine
 ```
@@ -65,7 +65,7 @@ cp harbor.yml.tmpl harbor.yml
 ```
 * Edit the harbor.yml and change only the details mentioned herein
 ```
-hostname: harbor.oidc.thecloudgarage.com
+hostname: harbor-proxycache.oidc.thecloudgarage.com
 certificate: /home/ubuntu/common-certs/harbor.oidc.thecloudgarage.com.crt
 private_key: /home/ubuntu/common-certs/harbor.oidc.thecloudgarage.com.key
 Under trivy... set insecure to false
