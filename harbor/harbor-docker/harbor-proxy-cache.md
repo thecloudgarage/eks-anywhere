@@ -56,6 +56,7 @@ ls -al
 systemctl restart docker
 ```
 * Download offline installer for Harbor
+```
 cd /home/ubuntu
 wget https://github.com/goharbor/harbor/releases/download/v2.8.1/harbor-offline-installer-v2.8.1.tgz
 tar xvzf harbor-offline-installer*.tgz
