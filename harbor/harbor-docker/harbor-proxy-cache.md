@@ -66,8 +66,8 @@ cp harbor.yml.tmpl harbor.yml
 * Edit the harbor.yml and change only the details mentioned herein
 ```
 hostname: harbor-proxycache.oidc.thecloudgarage.com
-certificate: /home/ubuntu/common-certs/harbor.oidc.thecloudgarage.com.crt
-private_key: /home/ubuntu/common-certs/harbor.oidc.thecloudgarage.com.key
+certificate: /home/ubuntu/common-certs/harbor-proxycache.oidc.thecloudgarage.com.crt
+private_key: /home/ubuntu/common-certs/harbor-proxycache.oidc.thecloudgarage.com.key
 Under trivy... set insecure to false
 ```
 * Install Harbor
