@@ -77,6 +77,7 @@ cd /home/ubuntu/harbor
 docker-compose down
 ```
 * This hack is required else, no registry endpoints can be pinged from the container
+```
 sed -i '/dns/d' docker-compose.yml
 docker-compose up -d
 docker ps and observe if all containers are working fine
