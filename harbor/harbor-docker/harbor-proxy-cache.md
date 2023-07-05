@@ -91,3 +91,27 @@ docker ps and observe if all containers are working fine
 * proxy.gcr.io (select the registry end point as gcr-io)
 * proxy.k8s.gcr.io (select the registry end point as k8s-gcr-io)
 * proxy.quay.io (select the registry end point as quay-io)
+
+#### Adjust the EKSA cluster template as shown below
+```
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: Cluster
+metadata:
+ name: workload-cluster-name
+spec:
+  registryMirrorConfiguration:
+    endpoint: "harbor-proxycache.oidc.thecloudgarage.com"
+    insecureSkipVerify: true
+    port: 443
+    ociNamespaces:
+      - registry: docker.io
+        namespace: proxy.docker.io
+      - registry: gcr.io
+        namespace: proxy.gcr.io
+      - registry: k8s.gcr.io
+        namespace: proxy.k8s.gcr.io
+      - registry: quay.io
+        namespace: proxy.quay.io
+      - registry: registry.k8s.io
+        namespace: proxy.registry.k8s.io
+```
