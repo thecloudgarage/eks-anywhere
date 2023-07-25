@@ -191,6 +191,7 @@ resource "null_resource" "install_image_builder_and_govc" {
       "echo \"GOVC_PASSWORD=${var.vsphere_password}; export GOVC_PASSWORD\" >> ~/.profile",
       "echo \"GOVC_INSECURE=true; export GOVC_INSECURE\" >> ~/.profile",
       "echo \"GOVC_DATASTORE=${var.vsphere_datastore}; export GOVC_DATASTORE\" >> ~/.profile",
+      "echo \"GOVC_DATACENTER=${var.vsphere_datacenter}; export GOVC_DATACENTER\" >> ~/.profile",
       "git clone https://github.com/thecloudgarage/eks-anywhere.git",
       "find $HOME/eks-anywhere/ -name \"*.sh\" -type f -print0 | xargs -0 chmod +x",
       "cp $HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/vsphere-connection.json $HOME/vsphere-connection.json",
