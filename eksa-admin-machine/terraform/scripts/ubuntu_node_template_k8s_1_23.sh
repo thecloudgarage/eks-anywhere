@@ -17,9 +17,10 @@ image-builder build --os ubuntu --hypervisor vsphere --release-channel 1-23 --vs
 export vsphere_templates_folder_full_path=/$vsphere_datacenter/vm/$vsphere_templates_folder
 mv $HOME/ubuntu.ova $HOME/$ubuntu_template_name.ova
 govc library.import $vsphere_content_library $HOME/$ubuntu_template_name.ova
-govc library.deploy -pool $vsphere_resource_pool -folder $vsphere_templates_folder_full_path /$vsphere_content_library/$ubuntu_template_name $ubuntu_template_name
-govc snapshot.create -vm $ubuntu_template_name root
-govc vm.markastemplate $ubuntu_template_name
+govc library.deploy -dc=$GOVC_DATACENTER -pool $vsphere_resource_pool -folder $vsphere_templates_folder_full_path /$vsphere_content_library/$ubuntu_template_name $ubuntu_template_name
+govc snapshot.create -dc=$GOVC_DATACENTER -vm $ubuntu_template_name root
+govc vm.markastemplate -dc=$GOVC_DATACENTER $ubuntu_template_name
+govc tags.category.create -t VirtualMachine os 2> /dev/null
 govc tags.create -c os os:ubuntu 2> /dev/null
 govc tags.category.create -t VirtualMachine eksdRelease 2> /dev/null
 govc tags.create -c eksdRelease eksdRelease:$eksd_release_tag 2> /dev/null
