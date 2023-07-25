@@ -2,7 +2,7 @@
 mkdir -p /home/image-builder/.ssh
 sudo mkdir -p /tmp/eks-image-builder-cni
 sudo chown -R image-builder:image-builder /tmp/eks-image-builder-cni
-#sudo chmod 777 -R /tmp
+sudo chmod 777 -R /tmp
 #sudo apt update -y
 #sudo snap install yq
 sudo apt install jq unzip make ansible -y
