@@ -11,7 +11,7 @@ file=$(sudo -Hiu ubuntu ls /home/ubuntu/eks-anywhere-downloads/1.23/eks-distro/ 
 export eksd_release_tag=$(echo $file | rev | awk -v FS='.' '{print $2}' | rev)
 echo $eksd_release_tag
 vsphere_content_library=eks-anywhere-template-$RANDOM
-govc library.create "$vsphere_content_library"
+govc library.create -dc=$GOVC_DATACENTER "$vsphere_content_library"
 sed -i "s/vsphere_content_library/$vsphere_content_library/g" $HOME/vsphere-connection.json
 image-builder build --os ubuntu --hypervisor vsphere --release-channel 1-23 --vsphere-config $HOME/vsphere-connection.json
 export vsphere_templates_folder_full_path=/$vsphere_datacenter/vm/$vsphere_templates_folder
