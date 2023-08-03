@@ -1,3 +1,7 @@
 VxRail-Virtual-SAN-Datastore-9cda2d8e-54da-466b-8203-cb97974fa0d7
 
 govc library.deploy -pool eksa -folder /VxRail-Datacenter/vm/Templates /$vsphere_content_library/ubuntu-2004-kube-v1.23 ubuntu-2004-kube-v1.23
+
+apt-get install openssh-server
+systemctl enable ssh --now
+systemctl start ssh
