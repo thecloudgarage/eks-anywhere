@@ -4,6 +4,7 @@ metadata:
   labels:
     app.kubernetes.io/name: load-balancer-example
   name: hello-world
+  namespace: hello-world
 spec:
   replicas: 2
   selector:
