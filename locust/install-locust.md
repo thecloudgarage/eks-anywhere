@@ -29,7 +29,7 @@ class WebsiteUser(HttpUser):
         self.client.post("/orders")
 EOF
 ```
-
+## NOTE: ALl locust resources are being created in default namespace.
 ### Create a configmap 
 ```
 kubectl create configmap sockshop-loadtest-locustfile --from-file ./locustfile.py
@@ -38,17 +38,32 @@ kubectl create configmap sockshop-loadtest-locustfile --from-file ./locustfile.p
 ### Install locust on Kubernetes with a distributed worker model with support for Node groups
 Advanced with HPA and node selector
 ```
+helm repo add deliveryhero https://charts.deliveryhero.io/
+helm repo update
 helm upgrade --install locust deliveryhero/locust  \
---set loadtest.name=sockshop-loadtest  \
---set loadtest.locust_locustfile_configmap=sockshop-loadtest-locustfile  \
+--set loadtest.name=loadtest  \
+--set loadtest.locust_locustfile_configmap=locust-configmap  \
 --set loadtest.locust_locustfile=locustfile.py \
 --set worker.resources.requests.cpu=500m \
 --set worker.resources.requests.memory=512Mi \
---set nodeSelector."group"="md-0" \
+--set nodeSelector."group"="md-1" \
 --set worker.hpa.enabled=true \
 --set worker.hpa.minReplicas=5 \
 --set worker.hpa.targetCPUUtilizationPercentage=70
 ```
+Alternatively to generate a YAML template
+```
+helm template locust deliveryhero/locust  \
+--set loadtest.name=loadtest  \
+--set loadtest.locust_locustfile_configmap=locust-configmap  \
+--set loadtest.locust_locustfile=locustfile.py \
+--set worker.resources.requests.cpu=500m \
+--set worker.resources.requests.memory=512Mi \
+--set nodeSelector."group"="md-1" \
+--set worker.hpa.enabled=true \
+--set worker.hpa.minReplicas=5 \
+--set worker.hpa.targetCPUUtilizationPercentage=70 \
+> locust-helm-default-namespace.yaml
 ### Create the Ingress resource
 ```
 cat <<EOF | kubectl apply -f -
