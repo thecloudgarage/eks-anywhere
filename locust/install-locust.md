@@ -64,6 +64,7 @@ helm template locust deliveryhero/locust  \
 --set worker.hpa.minReplicas=5 \
 --set worker.hpa.targetCPUUtilizationPercentage=70 \
 > locust-helm-default-namespace.yaml
+```
 ### Create the Ingress resource
 ```
 cat <<EOF | kubectl apply -f -
