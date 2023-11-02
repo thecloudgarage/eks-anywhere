@@ -39,7 +39,7 @@ cd $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer
 wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/secret.yaml
 sed -i "s/powerflex_endpoint/$ipOrFqdnOfpowerflexCluster/g" $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer/secret.yaml
 sed -i "s/powerflex_systemid/$systemIdOfPowerFlexCluster/g" $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer/secret.yaml
-sed -i "s/powerflex_username/$userNameOfPowerFlexClusterx/g" $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer/secret.yaml
+sed -i "s/powerflex_username/$userNameOfPowerFlexCluster/g" $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer/secret.yaml
 sed -i "s/powerflex_password/$passwordOfPowerFlexCluster/g" $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer/secret.yaml
 sed -i "s/powerflex_mdm_ip_addresses/$ipAddressesOfMdmsForPowerFlexCluster/g" $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer/secret.yaml
 kubectl create secret generic vxflexos-config -n vxflexos --from-file=config=secret.yaml
