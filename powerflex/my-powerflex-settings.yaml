@@ -198,6 +198,7 @@ node:
 # These options control the running of the monitoring container
 # This container gather diagnostic information in case of failure
 renameSDC:
+  enabled: true
   approveSDC:
     enabled: true
 monitor:
