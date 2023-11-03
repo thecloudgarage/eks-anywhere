@@ -153,7 +153,8 @@ node:
     #   false: disable checking of health condition of CSI volumes
     # Default value: None
     enabled: false
-
+  approveSDC:
+    enabled: true
   # "node.nodeSelector" defines what nodes would be selected for pods of node daemonset
   # Leave as blank to use all nodes
   # Allowed values: map of key-value pairs
@@ -197,10 +198,6 @@ node:
 # monitoring pod details
 # These options control the running of the monitoring container
 # This container gather diagnostic information in case of failure
-renameSDC:
-  enabled: true
-  approveSDC:
-    enabled: true
 monitor:
   # enabled allows the usage of the monitoring pod to be disabled
   # Allowed values: true, false
