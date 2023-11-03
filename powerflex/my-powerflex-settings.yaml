@@ -197,6 +197,9 @@ node:
 # monitoring pod details
 # These options control the running of the monitoring container
 # This container gather diagnostic information in case of failure
+renameSDC:
+  approveSDC:
+    enabled: true
 monitor:
   # enabled allows the usage of the monitoring pod to be disabled
   # Allowed values: true, false
