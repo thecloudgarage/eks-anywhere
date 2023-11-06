@@ -30,7 +30,10 @@ cd $HOME/$clusterName/csi-powerflex
 #Added to accomodate higher releases of csi driver installations
 #eksdistroversion=$(kubectl get nodes -o=jsonpath='{.items[0].status.nodeInfo.kubeletVersion}')
 eksdistroversion=$(kubectl version -o json | jq -r '.serverVersion.gitVersion')
-sed -i "s/>= 1.21.0 < 1.26.0/$eksdistroversion/g" helm/csi-vxflexos/Chart.yaml
+rm -rf helm/csi-vxflexos/Chart.yaml
+wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/$eksdistroversion-Chart.yaml
+mv $eksdistroversion-Chart.yaml helm/csi-vxflexos/Chart.yaml
+sed -i "s/eksDistroVersion/$eksdistroversion/g" helm/csi-vxflexos/Chart.yaml
 cd $HOME/$clusterName/csi-powerflex
 git clone https://github.com/kubernetes-csi/external-snapshotter/
 cd ./external-snapshotter
