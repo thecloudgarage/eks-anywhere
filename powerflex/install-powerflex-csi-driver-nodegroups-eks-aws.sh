@@ -30,8 +30,8 @@ cd $HOME/$clusterName/csi-powerflex
 #eksdistroversion=$(kubectl get nodes -o=jsonpath='{.items[0].status.nodeInfo.kubeletVersion}')
 eksdistroversion=$(kubectl version -o json | jq -r '.serverVersion.gitVersion')
 rm -rf helm/csi-vxflexos/Chart.yaml
-wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/$eksdistroversion-Chart.yaml
-mv $eksdistroversion-Chart.yaml helm/csi-vxflexos/Chart.yaml
+wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/$csiReleaseNumber-Chart.yaml
+mv $csiReleaseNumber-Chart.yaml helm/csi-vxflexos/Chart.yaml
 sed -i "s/eksDistroVersion/$eksdistroversion/g" helm/csi-vxflexos/Chart.yaml
 cd $HOME/$clusterName/csi-powerflex
 git clone https://github.com/kubernetes-csi/external-snapshotter/
