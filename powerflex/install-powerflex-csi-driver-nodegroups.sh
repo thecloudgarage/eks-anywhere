@@ -65,4 +65,4 @@ wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerfle
 wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/powerflex-volumesnapshotclass.yaml
 sed -i "s/powerflexSystemId/$systemIdOfPowerFlexCluster/g" $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer/powerflex-storage-class.yaml
 kubectl create -f $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer/powerflex-storage-class.yaml
-kubectl create -f $HOME/eks-anywhere/powerflex/powerflex-volumesnapshotclass.yaml
+kubectl create -f $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer/powerflex-volumesnapshotclass.yaml
