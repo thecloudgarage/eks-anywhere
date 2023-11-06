@@ -2,7 +2,8 @@
 #onprem 39016cd01df3ab0f
 #onprem 10.204.108.205
 #onprem 10.204.108.206,10.204.108.207,10.204.108.208
-#aws 172.26.2.13
+#aws 5d8c8ebb3c4e3e0f
+#aws 172.26.2.41
 #aws 172.26.2.9,172.26.2.11,172.26.2.49
 echo "Enter Cluster Name on which CSI driver needs to be installed"
 read -p 'clusterName: ' clusterName
