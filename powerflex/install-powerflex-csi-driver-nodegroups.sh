@@ -6,7 +6,7 @@
 #aws 172.26.2.9,172.26.2.11,172.26.2.49
 echo "Enter Cluster Name on which CSI driver needs to be installed"
 read -p 'clusterName: ' clusterName
-echo "Enter PowerFlex CSI release version, e.g. 2.2.0, 2.3.0, 2.4.0, 2.5.0, 2.6.0"
+echo "Enter PowerFlex CSI release version, e.g. 2.2.0, 2.3.0, 2.4.0, 2.5.0"
 read -p 'csiReleaseNumber: ' csiReleaseNumber
 echo "Enter IP or FQDN of the powerflex cluster"
 read -p 'ipOrFqdnOfPowerFlexCluster: ' ipOrFqdnOfpowerflexCluster
@@ -51,12 +51,15 @@ sed -i "s/powerflex_username/$userNameOfPowerFlexCluster/g" $HOME/$clusterName/c
 sed -i "s/powerflex_password/$passwordOfPowerFlexCluster/g" $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer/secret.yaml
 sed -i "s/powerflex_mdm_ip_addresses/$ipAddressesOfMdmsForPowerFlexCluster/g" $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer/secret.yaml
 kubectl create secret generic vxflexos-config -n vxflexos --from-file=config=secret.yaml
+cd $HOME/$clusterName/csi-powerflex/helm/csi-vxflexos/templates
+rm -rf node.yaml
+wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/node.yaml
 cd $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer
 wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/my-powerflex-settings.yaml
 sed -i "s/csivol/$clusterName-vol/g" my-powerflex-settings.yaml
 sed -i "/nodeSelector:$/ a\ \ \ \ group: $nodeSelectorGroupName" my-powerflex-settings.yaml
 cd $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer
-./csi-install.sh --namespace vxflexos --values ./my-powerflex-settings.yaml --skip-verify --skip-verify-node
+./csi-install.sh --namespace vxflexos --values ./my-powerflex-settings.yaml --node-verify-user=capv
 cd $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer
 wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/powerflex-storage-class.yaml
 wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/powerflex-volumesnapshotclass.yaml
