@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+  namespace: demo
+  labels:
+    name: mysql-pv-claim
+    csi: csi-vxflexos.dellemc.com
+spec:
+  storageClassName: powerflex-sc
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
