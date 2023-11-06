@@ -80,7 +80,7 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl enable set_scini_initiator.service
 sudo systemctl start set_scini_initiator.service
-sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ssh/sshd_config
 sudo service ssh restart
 sudo chpasswd <<<"root:ubuntu"
