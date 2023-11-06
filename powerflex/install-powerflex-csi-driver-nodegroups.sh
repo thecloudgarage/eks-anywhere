@@ -1,6 +1,9 @@
 #!/bin/bash
 #onprem 39016cd01df3ab0f
-#aws 
+#onprem 10.204.108.205
+#onprem 10.204.108.206,10.204.108.207,10.204.108.208
+#aws 172.26.2.13
+#aws 172.26.2.9,172.26.2.11,172.26.2.49
 echo "Enter Cluster Name on which CSI driver needs to be installed"
 read -p 'clusterName: ' clusterName
 echo "Enter PowerFlex CSI release version, e.g. 2.2.0, 2.3.0, 2.4.0, 2.5.0, 2.6.0"
