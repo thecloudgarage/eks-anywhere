@@ -1,8 +1,8 @@
 #!/bin/bash
-MDM_IP=172.26.2.9,172.26.2.11,172.26.2.49 dpkg -i EMC-ScaleIO-sdc-3.6-2000.117.Ubuntu.20.04.4.x86_64.deb
+MDM_IP=172.26.2.46,172.26.2.34,172.26.2.12 dpkg -i EMC-ScaleIO-sdc-3.6-2000.117.Ubuntu.20.04.4.x86_64.deb
 export REPO_USER=QNzgdxXix
 export REPO_PASSWORD=Aw3wFAwAq3
-export MDM_IP=172.26.2.9,172.26.2.11,172.26.2.49
+export MDM_IP=172.26.2.46,172.26.2.34,172.26.2.12
 
 cat <<EOF > /bin/emc/scaleio/scini_sync/driver_sync.conf
 # Repository address, prefixed by protocol
@@ -51,7 +51,7 @@ exit
 else
 echo -e "test" > /etc/emc/scaleio/scini_test.txt
 export uuid=\$(uuidgen)
-export MDM_IP=172.26.2.9,172.26.2.11,172.26.2.49
+export MDM_IP=172.26.2.46,172.26.2.34,172.26.2.12
 echo -e "ini_guid \$uuid\nmdm ${MDM_IP}" > /etc/emc/scaleio/drv_cfg.txt
 sleep 10
 systemctl restart scini
