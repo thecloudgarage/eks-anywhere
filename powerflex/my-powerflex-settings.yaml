@@ -81,7 +81,12 @@ fsGroupPolicy: File
 
 # "controller" allows to configure controller specific parameters
 controller:
-
+  replication:
+    enabled: true
+    image: dellemc/dell-csi-replicator:v1.6.0
+    replicationContextPrefix: "powerflex"
+    replicationPrefix: "replication.storage.dell.com" 
+  
   healthMonitor:
     # enabled: Enable/Disable health monitor of CSI volumes
     # Allowed values:
