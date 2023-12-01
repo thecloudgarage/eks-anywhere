@@ -158,8 +158,6 @@ node:
     #   false: disable checking of health condition of CSI volumes
     # Default value: None
     enabled: false
-  approveSDC:
-    enabled: true
   # "node.nodeSelector" defines what nodes would be selected for pods of node daemonset
   # Leave as blank to use all nodes
   # Allowed values: map of key-value pairs
