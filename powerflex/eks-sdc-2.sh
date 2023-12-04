@@ -1,8 +1,18 @@
 #!/bin/bash
-MDM_IP=172.26.2.46,172.26.2.34,172.26.2.12 dpkg -i EMC-ScaleIO-sdc-3.6-2000.117.Ubuntu.20.04.4.x86_64.deb
+cd /home/ubuntu
+wget https://pflex-packages.s3.eu-west-1.amazonaws.com/pflex-45/Software_Only_Complete_4.5.0_287/PowerFlex_4.5.0.287_SDCs_for_manual_install.zip
+unzip PowerFlex_4.5.0.287_SDCs_for_manual_install.zip
+cd PowerFlex_4.5.0.287_SDCs_for_manual_install/
+unzip PowerFlex_4.5.0.287_Ubuntu20.04_SDC.zip
+cd PowerFlex_4.5.0.287_Ubuntu20.04_SDC/
+tar -xvf EMC-ScaleIO-sdc-4.5-0.287.Ubuntu.20.04.4.x86_64.tar
+./siob_extract EMC-ScaleIO-sdc-4.5-0.287.Ubuntu.20.04.4.x86_64.siob
+MDM_IP=172.26.2.124,172.26.2.125,172.26.2.126 dpkg -i EMC-ScaleIO-sdc-4.5-0.287.Ubuntu.20.04.4.x86_64.deb
+
+#MDM_IP=172.26.2.46,172.26.2.34,172.26.2.12 dpkg -i EMC-ScaleIO-sdc-3.6-2000.117.Ubuntu.20.04.4.x86_64.deb
 export REPO_USER=QNzgdxXix
 export REPO_PASSWORD=Aw3wFAwAq3
-export MDM_IP=172.26.2.46,172.26.2.34,172.26.2.12
+export MDM_IP=172.26.2.124,172.26.2.125,172.26.2.126
 
 cat <<EOF > /bin/emc/scaleio/scini_sync/driver_sync.conf
 # Repository address, prefixed by protocol
@@ -40,9 +50,9 @@ emc_public_gpg_key = /etc/emc/scaleio/scini_sync/emc_key.pub
 sync_pattern = .*
 EOF
 touch /etc/emc/scaleio/scini_test.txt
-/bin/emc/scaleio/scini_sync/driver_sync.sh scini retrieve Ubuntu20.04/3.6.2000.117/5.4.0-166-generic
+#/bin/emc/scaleio/scini_sync/driver_sync.sh scini retrieve Ubuntu20.04/3.6.2000.117/5.4.0-166-generic
+/bin/emc/scaleio/scini_sync/driver_sync.sh scini retrieve Ubuntu20.04/4.5.0.287/5.4.0-167-generic/
 systemctl restart scini
-systemctl status scini
 sleep 20
 cat <<EOF > /etc/emc/scaleio/set_scini_initiator.sh
 #!/bin/bash
