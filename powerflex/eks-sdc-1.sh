@@ -57,9 +57,18 @@ sudo systemctl enable set_iscsi_initiator.service
 sudo systemctl start set_iscsi_initiator.service
 
 cd /home/ubuntu
-wget https://anhalwaysfortest.s3.amazonaws.com/EMC-ScaleIO-sdc-3.6-2000.117.Ubuntu.20.04.4.x86_64.tar
-tar -xvf EMC-ScaleIO-sdc-3.6-2000.117.Ubuntu.20.04.4.x86_64.tar
-./siob_extract EMC-ScaleIO-sdc-3.6-2000.117.Ubuntu.20.04.4.x86_64.siob
+wget https://pflex-packages.s3.eu-west-1.amazonaws.com/pflex-45/Software_Only_Complete_4.5.0_287/PowerFlex_4.5.0.287_SDCs_for_manual_install.zip
+unzip PowerFlex_4.5.0.287_SDCs_for_manual_install.zip
+cd PowerFlex_4.5.0.287_SDCs_for_manual_install/
+unzip PowerFlex_4.5.0.287_Ubuntu20.04_SDC.zip
+cd PowerFlex_4.5.0.287_Ubuntu20.04_SDC/
+tar -xvf EMC-ScaleIO-sdc-4.5-0.287.Ubuntu.20.04.4.x86_64.tar
+./siob_extract EMC-ScaleIO-sdc-4.5-0.287.Ubuntu.20.04.4.x86_64.siob
+MDM_IP=172.26.2.124,172.26.2.125,172.26.2.126 dpkg -i EMC-ScaleIO-sdc-4.5-0.287.Ubuntu.20.04.4.x86_64.deb
+
+#wget https://anhalwaysfortest.s3.amazonaws.com/EMC-ScaleIO-sdc-3.6-2000.117.Ubuntu.20.04.4.x86_64.tar
+#tar -xvf EMC-ScaleIO-sdc-3.6-2000.117.Ubuntu.20.04.4.x86_64.tar
+#./siob_extract EMC-ScaleIO-sdc-3.6-2000.117.Ubuntu.20.04.4.x86_64.siob
 cp /etc/default/grub /etc/default/grub.backup
 sed -i \
 s/GRUB_DEFAULT=0/GRUB_DEFAULT='"gnulinux-advanced-d5068d1a-ca5c-4559-bef1-0a480bcb3807>gnulinux-5.4.0-166-generic-advanced-d5068d1a-ca5c-4559-bef1-0a480bcb3807"'/g \
