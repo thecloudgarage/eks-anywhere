@@ -63,7 +63,7 @@ cd /home/ubuntu
 #./siob_extract EMC-ScaleIO-sdc-3.6-2000.117.Ubuntu.20.04.4.x86_64.siob
 cp /etc/default/grub /etc/default/grub.backup
 sed -i \
-s/GRUB_DEFAULT=0/GRUB_DEFAULT='"gnulinux-advanced-d5068d1a-ca5c-4559-bef1-0a480bcb3807>gnulinux-5.4.0-166-generic-advanced-d5068d1a-ca5c-4559-bef1-0a480bcb3807"'/g \
+s/GRUB_DEFAULT=0/GRUB_DEFAULT='"gnulinux-advanced-d5068d1a-ca5c-4559-bef1-0a480bcb3807>gnulinux-5.4.0-167-generic-advanced-d5068d1a-ca5c-4559-bef1-0a480bcb3807"'/g \
 /etc/default/grub
 sudo update-grub
 reboot
