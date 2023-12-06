@@ -1,7 +1,7 @@
 #!/bin/bash
 echo "Enter Cluster Name on which CSI driver needs to be installed"
 read -p 'clusterName: ' clusterName
-echo "Enter PowerFlex CSI release version, e.g. 2.2.0, 2.3.0, 2.4.0, 2.5.0, 2.6.0"
+echo "Enter PowerFlex CSI release version, e.g. 2.6.0"
 read -p 'csiReleaseNumber: ' csiReleaseNumber
 echo "Enter IP or FQDN of the powerflex cluster"
 read -p 'ipOrFqdnOfPowerFlexCluster: ' ipOrFqdnOfpowerflexCluster
@@ -13,7 +13,7 @@ echo "Enter username of the powerflex cluster"
 read -p 'userNameOfPowerFlexCluster: ' userNameOfPowerFlexCluster
 echo "Enter password of the powerflex cluster"
 read -sp 'passwordOfPowerFlexCluster: ' passwordOfPowerFlexCluster
-echo "Enter Node Group name on which drivers will be installed, e.g. md-2"
+echo "Enter Node Group name on which drivers will be installed, e.g. md-0"
 read -p 'nodeSelectorGroupName: ' nodeSelectorGroupName
 echo -e "\n"
 KUBECONFIG=$HOME/$clusterName/$clusterName-eks-cluster.kubeconfig
