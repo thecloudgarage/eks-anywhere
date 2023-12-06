@@ -53,7 +53,7 @@ wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerfle
 sed -i "s/csivol/$clusterName-vol/g" my-powerflex-settings.yaml
 sed -i "/nodeSelector:$/ a\ \ \ \ group: $nodeSelectorGroupName" my-powerflex-settings.yaml
 cd $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer
-./csi-install.sh --namespace vxflexos --values ./my-powerflex-settings.yaml --node-verify-user=capv
+./csi-install.sh --namespace vxflexos --values ./my-powerflex-settings.yaml
 cd $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer
 wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/powerflex-storage-class.yaml
 wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/powerflex-volumesnapshotclass.yaml
