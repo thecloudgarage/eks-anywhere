@@ -3,6 +3,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: mysql-restored-pv-claim-powerflex
+  namespace: demo
   labels:
     name: mysql-restored-pv-claim-powerflex
     csi: csi-vxflexos.dellemc.com
