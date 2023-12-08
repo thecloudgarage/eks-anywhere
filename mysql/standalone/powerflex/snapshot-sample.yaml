@@ -2,6 +2,7 @@ apiVersion: snapshot.storage.k8s.io/v1
 kind: VolumeSnapshot
 metadata:
   name: mysql-snapshot-powerflex-datetime
+  namespace: demo
   labels:
     name: mysql-snapshot-powerflex-datetime
 spec:
