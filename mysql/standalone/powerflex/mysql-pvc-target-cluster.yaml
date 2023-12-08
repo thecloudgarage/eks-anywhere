@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: replicationtarget
+  namespace: demo
+spec:
+  capacity:
+    storage: 8Gi
+  accessModes:
+    - ReadOnlyMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: powerflex-sc
+  volumeMode: Filesystem
+  csi:
+    driver: csi-vxflexos.dellemc.com
+    volumeHandle: eaa62c6100000001
+    fsType: ext4
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pv-claim
+  namespace: demo
+  labels:
+    name: mysql-pv-claim
+    csi: csi-vxflexos.dellemc.com
+spec:
+  volumeName: replicationtarget
+  storageClassName: powerflex-sc
+  accessModes:
+    - ReadOnlyMany
+  resources:
+    requests:
+      storage: 1Gi
