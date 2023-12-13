@@ -72,11 +72,11 @@ unzip PowerFlex_4.5.0.287_Ubuntu20.04_SDC.zip
 cd PowerFlex_4.5.0.287_Ubuntu20.04_SDC/
 tar -xvf EMC-ScaleIO-sdc-4.5-0.287.Ubuntu.20.04.4.x86_64.tar
 ./siob_extract EMC-ScaleIO-sdc-4.5-0.287.Ubuntu.20.04.4.x86_64.siob
-MDM_IP=10.204.111.85,10.204.111.86,10.204.111.87 dpkg -i EMC-ScaleIO-sdc-4.5-0.287.Ubuntu.20.04.4.x86_64.deb
+MDM_IP=172.26.2.124,172.26.2.125,172.26.2.126 dpkg -i EMC-ScaleIO-sdc-4.5-0.287.Ubuntu.20.04.4.x86_64.deb
 
 export REPO_USER=QNzgdxXix
 export REPO_PASSWORD=Aw3wFAwAq3
-export MDM_IP=10.204.111.85,10.204.111.86,10.204.111.87
+export MDM_IP=172.26.2.124,172.26.2.125,172.26.2.126
 
 cat <<EOF > /bin/emc/scaleio/scini_sync/driver_sync.conf
 # Repository address, prefixed by protocol
@@ -117,7 +117,6 @@ exit
 else
 echo -e "test" > /etc/emc/scaleio/scini_test.txt
 export uuid=\$(uuidgen)
-export MDM_IP=172.26.2.46,172.26.2.34,172.26.2.12
 echo -e "ini_guid \$uuid\nmdm ${MDM_IP}" > /etc/emc/scaleio/drv_cfg.txt
 sleep 10
 systemctl restart scini
