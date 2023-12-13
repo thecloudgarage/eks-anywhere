@@ -61,7 +61,7 @@ cp /etc/default/grub /etc/default/grub.backup
 # This ensures compatability with the scini driver files available in Dell FTP site
 # Below we are setting the grub to boot from 167 generic kernel version
 sed -i \
-s/GRUB_DEFAULT=0/GRUB_DEFAULT='GRUB_DEFAULT="Advanced options for Ubuntu>Ubuntu, with Linux 5.4.0-167-generic"'/g \
+s/GRUB_DEFAULT=0/GRUB_DEFAULT='"Advanced options for Ubuntu>Ubuntu, with Linux 5.4.0-167-generic"'/g \
 /etc/default/grub
 sudo update-grub
 cd /home/ubuntu
