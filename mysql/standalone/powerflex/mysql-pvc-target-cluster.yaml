@@ -8,8 +8,8 @@ spec:
   capacity:
     storage: 8Gi
   accessModes:
-    - ReadOnlyMany
-#   - ReadWriteOnce 
+#   - ReadOnlyMany
+    - ReadWriteOnce 
   persistentVolumeReclaimPolicy: Retain
   storageClassName: powerflex-sc
   volumeMode: Filesystem
@@ -31,8 +31,8 @@ spec:
   volumeName: replicationtarget
   storageClassName: powerflex-sc
   accessModes:
-    - ReadOnlyMany
-#   - ReadWriteOnce    
+#   - ReadOnlyMany
+    - ReadWriteOnce    
   resources:
     requests:
       storage: 8Gi
