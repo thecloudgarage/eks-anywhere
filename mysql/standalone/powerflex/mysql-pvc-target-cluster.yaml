@@ -1,3 +1,4 @@
+# PLEASE ENSURE THAT ACCESS MODES ARE CHANGED AS PER SCENARIO
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -8,6 +9,7 @@ spec:
     storage: 8Gi
   accessModes:
     - ReadOnlyMany
+#   - ReadWriteOnce 
   persistentVolumeReclaimPolicy: Retain
   storageClassName: powerflex-sc
   volumeMode: Filesystem
@@ -30,6 +32,7 @@ spec:
   storageClassName: powerflex-sc
   accessModes:
     - ReadOnlyMany
+#   - ReadWriteOnce    
   resources:
     requests:
       storage: 8Gi
