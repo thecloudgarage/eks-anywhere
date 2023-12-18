@@ -20,6 +20,11 @@ wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/kubedb/g
 chmod +x $HOME/get-kubedb-community-edition-license-keys.sh
 source get-kubedb-community-edition-license-keys.sh
 ```
+### Add the helm repo
+```
+helm repo add appscode https://charts.appscode.com/stable/
+helm repo update
+```
 ### Install KubeDB community edition on the cluster
 ```
 helm repo add appscode https://charts.appscode.com/stable/
