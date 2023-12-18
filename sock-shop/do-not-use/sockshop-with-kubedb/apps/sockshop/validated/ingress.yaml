@@ -19,7 +19,7 @@ spec:
   tls:
   - hosts:
       - sockshop.thecloudgarage.com
-    secretName: sockshop-tls
+    secretName: thecloudgarage-tls
   rules:
     - host: sockshop.thecloudgarage.com
       http:
