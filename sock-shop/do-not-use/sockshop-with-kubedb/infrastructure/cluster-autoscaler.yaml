@@ -17,7 +17,7 @@ spec:
         app: cluster-autoscaler
     spec:
       containers:
-      - image: k8s.gcr.io/autoscaling/cluster-autoscaler:v1.23.0 # that matches the K8s version. https://github.com/kubernetes/autoscaler/releases
+      - image: k8s.gcr.io/autoscaling/cluster-autoscaler:v1.26.2 # that matches the K8s version. https://github.com/kubernetes/autoscaler/releases
         name: cluster-autoscaler
         command:
         - /cluster-autoscaler
