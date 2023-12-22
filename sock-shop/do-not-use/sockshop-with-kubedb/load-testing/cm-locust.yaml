@@ -21,12 +21,11 @@ data:
             self.client.get("/login", headers={"Authorization":"Basic %s" % base64string})
             self.client.get("/category.html")
             self.client.get("/detail.html?id={}".format(item_id))
-            self.client.delete("/cart")
+            self.client.delete("/cart")https://github.com/thecloudgarage/eks-anywhere/blob/main/sock-shop/do-not-use/sockshop-with-kubedb/load-testing/cm-locust.yaml
             self.client.post("/cart", json={"id": item_id, "quantity": 1})
             self.client.get("/basket.html")
             self.client.post("/orders")
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: sockshop-locust-configmap
   namespace: sock-shop
