@@ -1,0 +1,70 @@
+karaviTopology:
+  image: dellemc/csm-topology:v1.7.0
+  enabled: true
+  # comma separated list of provisioner names (ex: csi-vxflexos.dellemc.com)
+  provisionerNames: csi-vxflexos.dellemc.com,csi-powerstore.dellemc.com,csi-isilon.dellemc.com,csi-powermax.dellemc.com
+  service:
+    type: ClusterIP
+  logLevel: INFO
+  logFormat: text
+  zipkin:
+    uri: ""
+    serviceName: karavi-topology
+    probability: 0.0
+
+karaviMetricsPowerflex:
+  image: dellemc/csm-metrics-powerflex:v1.7.0
+  enabled: true
+  collectorAddr: otel-collector:55680
+  # comma separated list of provisioner names (ex: csi-vxflexos.dellemc.com)
+  provisionerNames: csi-vxflexos.dellemc.com
+  # set sdcMetricsEnabled to "false" to disable collection of SDC metrics
+  sdcMetricsEnabled: "true"
+  # set polling frequency to the PowerFlex array to get metrics data
+  sdcPollFrequencySeconds: 10
+  volumePollFrequencySeconds: 10
+  # set volumeMetricsEnabled to "false" to disable collection of Volume metrics
+  volumeMetricsEnabled: "true"
+  # set storageClassPoolMetricsEnabled to "false" to disable collection of storage class/pool metrics
+  storageClassPoolMetricsEnabled: "true"
+  # set the polling frequency to configure the interval which storage class/pool metrics are gathered
+  storageClassPoolPollFrequencySeconds: 10
+  # set the the default max concurrent queries to PowerFlex
+  concurrentPowerflexQueries: 10
+  # set the default endpoint for PowerFlex service
+  endpoint: karavi-metrics-powerflex
+  service:
+    type: ClusterIP
+  logLevel: INFO
+  logFormat: text
+  authorization:
+    enabled: false
+    # sidecarProxyImage: the container image used for the csm-authorization-sidecar.
+    # Default value: dellemc/csm-authorization-sidecar:v1.9.0
+    sidecarProxyImage: dellemc/csm-authorization-sidecar:v1.9.0
+    # proxyHost: hostname of the csm-authorization server
+    # Default value: None
+    proxyHost:
+    # skipCertificateValidation: certificate validation of the csm-authorization server
+    # Allowed Values:
+    #   "true" - TLS certificate verification will be skipped
+    #   "false" - TLS certificate will be verified
+    # Default value: "true"
+    skipCertificateValidation: true
+
+
+otelCollector:
+  image: otel/opentelemetry-collector:0.42.0
+  service:
+    type: ClusterIP
+  nginxProxy:
+    image: nginxinc/nginx-unprivileged:1.20
+# Karavi-observability requires cert-manager. If cert-manager is already present in cluster, set enabled to false not to install it.
+cert-manager:
+  enabled: true
+  startupapicheck:
+    enabled: false
+    serviceAccount:
+      create: false
+# Optionally, uncomment and specify the name of the pre-created namespace to install the module in it
+# namespace:
