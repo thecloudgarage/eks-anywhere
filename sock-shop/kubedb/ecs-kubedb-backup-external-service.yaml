@@ -16,6 +16,7 @@ metadata:
   namespace: sock-shop
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/proxy-body-size: "0" #We had to do this else there is a 413 error when backups are sent via PUT request indicating the size is too large
 spec:
   ingressClassName: nginx
   tls:
