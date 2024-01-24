@@ -5148,3 +5148,4 @@ spec:
             memory: 500Mi
       serviceAccountName: rabbitmq-cluster-operator
       terminationGracePeriodSeconds: 10
+      
