@@ -5111,8 +5111,6 @@ metadata:
   name: rabbitmq-cluster-operator
   namespace: rabbitmq-system
 spec:
-  nodeSelector:
-    group: "md-0"
   replicas: 1
   selector:
     matchLabels:
@@ -5125,6 +5123,8 @@ spec:
         app.kubernetes.io/name: rabbitmq-cluster-operator
         app.kubernetes.io/part-of: rabbitmq
     spec:
+      nodeSelector:
+        group: md-0
       containers:
       - command:
         - /manager
