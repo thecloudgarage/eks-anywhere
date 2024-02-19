@@ -79,8 +79,7 @@ nodeGroups:
       # Big Note: Backticks supplied as we are creating a file via cat EOF
       # Do not remove backticks if cat EOF is used to create the file
       # if backtick is removed, the variable substitution will result in empty fields
-      /etc/eks/bootstrap.sh \${CLUSTER_NAME} --container-runtime containerd --kubelet-extra-args "--node-labels=\${NODE_LABELS}" \
-        --apiserver-endpoint \${API_SERVER_URL} --b64-cluster-ca \${B64_CLUSTER_CA}
+      /etc/eks/bootstrap.sh \${CLUSTER_NAME} --container-runtime containerd --kubelet-extra-args "--node-labels=\${NODE_LABELS}" --apiserver-endpoint \${API_SERVER_URL} --b64-cluster-ca \${B64_CLUSTER_CA}
       cd /home/ubuntu
       wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/eks-sdc-new.sh
       chmod +x eks-sdc-new.sh
