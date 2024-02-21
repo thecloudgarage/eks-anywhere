@@ -1,6 +1,7 @@
 #!/bin/bash
 sudo apt update -y
-sudo apt install open-iscsi tree libaio1 linux-image-5.4.0-167-generic linux-image-extra-virtual libnuma1 uuid-runtime nano sshpass unzip -y
+sudo apt install open-iscsi tree libaio1 linux-image-5.4.0-167-generic libnuma1 uuid-runtime nano sshpass unzip -y
+#sudo apt install linux-image-extra-virtual -y
 sudo systemctl enable --now iscsid 
 cd /usr/local/share/ca-certificates
 cat <<EOF > thecloudgarage.crt
