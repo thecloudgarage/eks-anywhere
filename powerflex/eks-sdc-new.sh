@@ -2,9 +2,8 @@
 export mdmIP=172.26.2.124,172.26.2.125,172.26.2.126
 #
 sudo apt update -y
-sudo apt install open-iscsi tree libaio1 linux-image-5.4.0-167-generic libnuma1 uuid-runtime nano sshpass unzip -y
+sudo apt install tree libaio1 linux-image-5.4.0-167-generic libnuma1 uuid-runtime nano sshpass unzip -y
 #
-sudo systemctl enable --now iscsid 
 cd /usr/local/share/ca-certificates
 #
 cat <<EOF > thecloudgarage.crt
@@ -34,32 +33,6 @@ ETuo/amuh+Dr89yv4eenn/fZH6+mAngZz5KusLUGWDRNT8Nba/I=
 EOF
 sudo update-ca-certificates 
 #
-cat <<EOF > /etc/iscsi/set_iscsi_initiator.sh
-#!/bin/bash
-echo -e InitiatorName=iqn.1993-08.org.debian:01:$(hostname) > /etc/iscsi/initiatorname.iscsi
-systemctl restart iscsid
-EOF
-#
-chmod +x /etc/iscsi/set_iscsi_initiator.sh
-cd /etc/systemd/system
-cat <<EOF > set_iscsi_initiator.service
-[Unit]
-Description=Set unique iqn for ISCSI
-After=network.target
-[Service]
-ExecStart=/etc/iscsi/set_iscsi_initiator.sh
-Restart=on-failure
-User=root
-Group=root
-Type=simple
-[Install]
-WantedBy=multi-user.target
-EOF
-#
-sudo systemctl daemon-reload
-sudo systemctl enable set_iscsi_initiator.service
-sudo systemctl start set_iscsi_initiator.service
-#
 cd /home/ubuntu
 #
 cp /etc/default/grub /etc/default/grub.backup
@@ -81,6 +54,9 @@ cd PowerFlex_4.5.0.287_Ubuntu20.04_SDC/
 tar -xvf EMC-ScaleIO-sdc-4.5-0.287.Ubuntu.20.04.4.x86_64.tar
 ./siob_extract EMC-ScaleIO-sdc-4.5-0.287.Ubuntu.20.04.4.x86_64.siob
 MDM_IP=${mdmIP} dpkg -i EMC-ScaleIO-sdc-4.5-0.287.Ubuntu.20.04.4.x86_64.deb
+#
+# Due to a known issue, the automated scini install will fail for ubuntu OS.
+# So we render a driver sync configuration to download the scini.tar from dell FTP site based on the respective kernel version
 #
 sudo wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/driver_sync.conf -P /bin/emc/scaleio/scini_sync
 #
@@ -126,9 +102,12 @@ EOF
 sudo systemctl daemon-reload
 sudo systemctl enable set_scini_initiator.service
 sudo systemctl start set_scini_initiator.service
+#
 sudo sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
 sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/g' /etc/ssh/sshd_config
 sudo service ssh restart
+#
 sudo chpasswd <<<"root:ubuntu"
 sudo chpasswd <<<"ubuntu:ubuntu"
+#
 reboot
