@@ -101,3 +101,10 @@ ssh -i ubuntu@node-ip
 sudo su
 /opt/emc/scaleio/sdc/bin/drv_cfg --query_mdms
 ```
+You should see an output similar to one below
+```
+root@ip-172-26-2-148:~# /opt/emc/scaleio/sdc/bin/drv_cfg --query_mdms
+Retrieved 1 mdm(s)
+MDM-ID d7f6c6427c56ab0f SDC ID 59f89f6100000005 INSTALLATION ID 295ee6f776af5e4c IPs [0]-172.26.2.124 [1]-172.26.2.125 [2]-172.26.2.126
+```
+The MDM-ID is the most important attribute value to note as it is used for CSI driver installation and also for peering purposes.
