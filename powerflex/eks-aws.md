@@ -34,6 +34,7 @@ kind: ClusterConfig
 metadata:
   name: ${CLUSTER_NAME}
   region: eu-west-1
+  version: "1.25"
 vpc:
   publicAccessCIDRs: ["0.0.0.0/0"]
   id: "vpc-00bc8b021dafb7a92"  # (optional, must match VPC ID used for each subnet below)
