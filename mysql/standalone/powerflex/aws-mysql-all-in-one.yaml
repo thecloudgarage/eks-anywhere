@@ -69,7 +69,7 @@ spec:
   volumeMode: Filesystem
   csi:
     driver: csi-vxflexos.dellemc.com
-    volumeHandle: eaa62c6100000001
+    volumeHandle: volume-id
     fsType: ext4
 ---
 apiVersion: v1
