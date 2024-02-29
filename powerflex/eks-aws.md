@@ -95,10 +95,10 @@ nodeGroups:
       /etc/eks/bootstrap.sh \${CLUSTER_NAME} --container-runtime containerd --kubelet-extra-args "--node-labels=\${NODE_LABELS}" --apiserver-endpoint \${API_SERVER_URL} --b64-cluster-ca \${B64_CLUSTER_CA}
       cd /home/ubuntu
       wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/get-powerflex-info.sh
-      wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/eks-sdc-install.sh
-      sed -i "s/mdm-ip-addresses/172.26.2.124,172.26.2.125,172.26.2.126/g" eks-sdc-install.sh
-      chmod +x eks-sdc-install.sh
-      sudo ./eks-sdc-install.sh
+      wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/eks-sdc-new.sh
+      sed -i "s/mdm-ip-addresses/172.26.2.124,172.26.2.125,172.26.2.126/g" eks-sdc-new.sh
+      chmod +x eks-sdc-new.sh
+      sudo ./eks-sdc-new.sh
 EOF
 ```
 Create the nodegroup
