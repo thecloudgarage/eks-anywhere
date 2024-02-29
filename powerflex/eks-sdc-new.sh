@@ -1,5 +1,5 @@
 #!/bin/bash
-export mdmIP=172.26.2.124,172.26.2.125,172.26.2.126
+export mdmIP=mdm-ip-addresses
 #
 sudo apt update -y
 sudo apt install tree libaio1 linux-image-5.4.0-167-generic libnuma1 uuid-runtime nano sshpass unzip -y
