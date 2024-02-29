@@ -97,7 +97,7 @@ nodeGroups:
       wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/get-powerflex-info.sh
       wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/eks-sdc-new.sh
       sed -i "s/mdm-ip-addresses/172.26.2.124,172.26.2.125,172.26.2.126/g" eks-sdc-new.sh
-      chmod +x eks-sdc-new.sh
+      chmod +x *.sh
       sudo ./eks-sdc-new.sh
 EOF
 ```
