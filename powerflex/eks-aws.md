@@ -129,7 +129,8 @@ Verify the cluster
 KUBECONFIG=$HOME/$CLUSTER_NAME/$CLUSTER_NAME-eks-cluster.kubeconfig
 kubectl get nodes
 ```
-### Add a un-managed node group with Custom AMI, i.e. Canonical ubuntu AMI for EKS https://cloud-images.ubuntu.com/docs/aws/eks/
+### Add a Nodegroup with APEX Block AWS/PowerFlex4.5 SDC
+Add a un-managed node group with Custom AMI, i.e. Canonical ubuntu AMI for EKS https://cloud-images.ubuntu.com/docs/aws/eks/
 ```
 cat <<EOF > $CLUSTER_NAME/$CLUSTER_NAME-nodegroup.yaml
 apiVersion: eksctl.io/v1alpha5
