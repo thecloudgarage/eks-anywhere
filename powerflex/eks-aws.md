@@ -84,7 +84,7 @@ nodeGroups:
       attachIDs: ["sg-080b7c006220a6283"]
     volumeSize: 50
     ssh:
-      publicKeyName: "test"
+      publicKeyName: "eks-ssh"
 
     overrideBootstrapCommand: |
       #!/bin/bash
@@ -92,9 +92,6 @@ nodeGroups:
       source /var/lib/cloud/scripts/eksctl/bootstrap.helper.sh
 
       # Note "--node-labels=\${NODE_LABELS}" needs the above helper sourced to work, otherwise will have to be defined manually.
-      # Big Note: Backticks supplied as we are creating a file via cat EOF
-      # Do not remove backticks if cat EOF is used to create the file
-      # if backtick is removed, the variable substitution will result in empty fields
       /etc/eks/bootstrap.sh \${CLUSTER_NAME} --container-runtime containerd --kubelet-extra-args "--node-labels=\${NODE_LABELS}" --apiserver-endpoint \${API_SERVER_URL} --b64-cluster-ca \${B64_CLUSTER_CA}
       cd /home/ubuntu
       wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/eks-sdc-install.sh
