@@ -133,3 +133,40 @@ Retrieved 1 mdm(s)
 MDM-ID d7f6c6427c56ab0f SDC ID 59f89f6100000005 INSTALLATION ID 295ee6f776af5e4c IPs [0]-172.26.2.124 [1]-172.26.2.125 [2]-172.26.2.126
 ```
 The MDM-ID is the most important attribute value to note as it is used for CSI driver installation and also for peering purposes.
+### Installing the CSI driver
+```
+cd $CLUSTER_NAME
+wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/install-powerflex-csi-driver-nodegroups-eks-aws.sh
+chmod +x install-powerflex-csi-driver-nodegroups-eks-aws.sh
+./install-powerflex-csi-driver-nodegroups-eks-aws.sh
+```
+A sample is shown below for my configuration. We can observe that the nodeGroup is provided as md-0 such that the CSI drivers will be installed only on those nodes. Additionally, see the use of SystemID which is retrieved in the previous step. 
+```
+./install-powerflex-csi-driver-nodegroups-eks-aws.sh
+Enter Cluster Name on which CSI driver needs to be installed
+clusterName: c4-eks-apex-block
+Enter PowerFlex CSI release version, e.g. 2.6.0
+csiReleaseNumber: 2.6.0
+Enter IP or FQDN of the powerflex cluster
+ipOrFqdnOfPowerFlexCluster: 10.204.111.71
+Enter Comma separated MDM IP addresses for powerflex cluster
+ipAddressesOfMdmsForPowerFlexCluster: 172.26.2.124,172.26.2.125,172.26.2.126
+Enter System Id of the powerflex cluster
+systemIdOfPowerFlexCluster: d7f6c6427c56ab0f
+Enter username of the powerflex cluster
+userNameOfPowerFlexCluster: admin
+Enter password of the powerflex cluster
+passwordOfPowerFlexCluster: Enter Node Group name on which drivers will be installed, e.g. md-0
+nodeSelectorGroupName: md-0
+```
+### Testing the driver
+* To begin, create a volume in APEX Block-AWS and note the volume ID
+* Download a sample MySQL and Adminer deployment file
+```
+cd $CLUSTER_NAME
+wget https://github.com/thecloudgarage/eks-anywhere/blob/main/mysql/standalone/powerflex/aws-mysql-all-in-one.yaml
+sed -i "s/volume-id/<replace with the volume-id>/g" aws-mysql-all-in-one.yaml
+kubectl create -f aws-mysql-all-in-one.yaml
+```
+That's it!!!
+```
