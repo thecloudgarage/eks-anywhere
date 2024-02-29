@@ -131,7 +131,7 @@ kubectl get nodes
 ```
 ### Add a un-managed node group with Custom AMI, i.e. Canonical ubuntu AMI for EKS https://cloud-images.ubuntu.com/docs/aws/eks/
 ```
-cat <<EOF > $CLUSTER_NAME/$CLUSTER_NAME-nodegroup-1.yaml
+cat <<EOF > $CLUSTER_NAME/$CLUSTER_NAME-nodegroup.yaml
 apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 metadata:
