@@ -94,6 +94,7 @@ nodeGroups:
       # Note "--node-labels=\${NODE_LABELS}" needs the above helper sourced to work, otherwise will have to be defined manually.
       /etc/eks/bootstrap.sh \${CLUSTER_NAME} --container-runtime containerd --kubelet-extra-args "--node-labels=\${NODE_LABELS}" --apiserver-endpoint \${API_SERVER_URL} --b64-cluster-ca \${B64_CLUSTER_CA}
       cd /home/ubuntu
+      wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/get-powerflex-info.sh
       wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/eks-sdc-install.sh
       sed -i "s/mdm-ip-addresses/172.26.2.124,172.26.2.125,172.26.2.126/g" eks-sdc-install.sh
       chmod +x eks-sdc-install.sh
@@ -112,6 +113,16 @@ kubectl get nodes
 ```
 cd $CLUSTER_NAME
 ssh -i ubuntu@node-ip
+sudo ./get-powerflex-info.sh
+```
+You should see a similar output. Note the script is designed to rename the MDM-ID as System ID. This value is important for CSI driver installation.
+```
+sudo ./get-powerflex-info.sh
+System ID         MDPM IPs
+d7f6c6427c56ab0f  172.26.2.124 172.26.2.125 172.26.2.126
+```
+or manually use the sdc command
+```
 sudo su
 /opt/emc/scaleio/sdc/bin/drv_cfg --query_mdms
 ```
