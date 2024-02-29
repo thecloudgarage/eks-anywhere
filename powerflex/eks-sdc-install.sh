@@ -26,9 +26,6 @@ tar -xvf EMC-ScaleIO-sdc-4.5-0.287.Ubuntu.20.04.4.x86_64.tar
 ./siob_extract EMC-ScaleIO-sdc-4.5-0.287.Ubuntu.20.04.4.x86_64.siob
 MDM_IP=${mdmIP} dpkg -i EMC-ScaleIO-sdc-4.5-0.287.Ubuntu.20.04.4.x86_64.deb
 #
-# Due to a known issue, the automated scini install will fail for ubuntu OS.
-# So we render a driver sync configuration to download the scini.tar from dell FTP site based on the respective kernel version
-#
 sudo wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/driver_sync.conf -P /bin/emc/scaleio/scini_sync
 #
 sudo /bin/emc/scaleio/scini_sync/driver_sync.sh scini retrieve Ubuntu20.04/4.5.0.287/5.4.0-167-generic/
@@ -37,8 +34,8 @@ sudo systemctl restart scini
 #
 sleep 20
 #
-export uuid=\$(uuidgen)
-echo -e "ini_guid \$uuid\nmdm ${mdmIP}" > /etc/emc/scaleio/drv_cfg.txt
+export uuid=$(uuidgen)
+echo -e "ini_guid $uuid\nmdm ${mdmIP}" > /etc/emc/scaleio/drv_cfg.txt
 sleep 10
 sudo systemctl restart scini
 #
