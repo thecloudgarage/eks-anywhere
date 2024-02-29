@@ -60,6 +60,8 @@ Verify the cluster
 KUBECONFIG=$HOME/$CLUSTER_NAME/$CLUSTER_NAME-eks-cluster.kubeconfig
 kubectl get nodes
 ```
+NOTE: Dell's SCINI tar files for various OS and kernels can be accessed via ftp://QNzgdxXix:Aw3wFAwAq3@ftp.emc.com
+
 ### Add a Nodegroup with APEX Block AWS/PowerFlex4.5 SDC
 Add a un-managed node group with Custom AMI, i.e. Canonical ubuntu AMI for EKS https://cloud-images.ubuntu.com/docs/aws/eks/
 ```
