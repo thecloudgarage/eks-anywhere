@@ -16,6 +16,7 @@ read -sp 'passwordOfPowerFlexCluster: ' passwordOfPowerFlexCluster
 echo "Enter Node Group name on which drivers will be installed, e.g. md-0"
 read -p 'nodeSelectorGroupName: ' nodeSelectorGroupName
 echo -e "\n"
+export nodeSelectorLabel=group: $nodeSelectorGroupName
 KUBECONFIG=$HOME/$clusterName/$clusterName-eks-cluster.kubeconfig
 mkdir -p $HOME/$clusterName
 cd $HOME/$clusterName
@@ -24,10 +25,7 @@ cd $HOME/$clusterName/csi-powerflex
 #Added to accomodate higher releases of csi driver installations
 #eksdistroversion=$(kubectl get nodes -o=jsonpath='{.items[0].status.nodeInfo.kubeletVersion}')
 eksdistroversion=$(kubectl version -o json | jq -r '.serverVersion.gitVersion')
-rm -rf helm/csi-vxflexos/Chart.yaml
-wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/$csiReleaseNumber-Chart.yaml
-mv $csiReleaseNumber-Chart.yaml helm/csi-vxflexos/Chart.yaml
-sed -i "s/eksDistroVersion/$eksdistroversion/g" helm/csi-vxflexos/Chart.yaml
+export eksdistroversion
 cd $HOME/$clusterName/csi-powerflex
 git clone https://github.com/kubernetes-csi/external-snapshotter/
 cd ./external-snapshotter
@@ -38,7 +36,16 @@ sed -i "/nodeSelector:$/ a\ \ \ \ \ \ \ \ group: $nodeSelectorGroupName" deploy/
 kubectl -n kube-system kustomize deploy/kubernetes/snapshot-controller | kubectl create -f -
 kubectl create namespace vxflexos
 cd $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer
-sed -i "s/\/dell\/helm-charts/\/thecloudgarage\/dell-helm-charts/g" csi-install.sh
+#
+#sed -i "s/\/dell\//\/thecloudgarage\//g" csi-install.sh
+#sed -i "s/helm-charts/dell-helm-charts/g" csi-install.sh
+#
+sed -i '/git$/r'<(
+echo "wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/csi-helper.sh"
+echo "chmod +x csi-helper.sh"
+echo "./csi-helper.sh"
+) csi-install.sh
+#
 wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/secret.yaml
 sed -i "s/powerflex_endpoint/$ipOrFqdnOfpowerflexCluster/g" $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer/secret.yaml
 sed -i "s/powerflex_systemid/$systemIdOfPowerFlexCluster/g" $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer/secret.yaml
@@ -46,17 +53,12 @@ sed -i "s/powerflex_username/$userNameOfPowerFlexCluster/g" $HOME/$clusterName/c
 sed -i "s/powerflex_password/$passwordOfPowerFlexCluster/g" $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer/secret.yaml
 sed -i "s/powerflex_mdm_ip_addresses/$ipAddressesOfMdmsForPowerFlexCluster/g" $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer/secret.yaml
 kubectl create secret generic vxflexos-config -n vxflexos --from-file=config=secret.yaml
-#cd $HOME/$clusterName/csi-powerflex/helm/csi-vxflexos/templates
-#rm -rf node.yaml
-#wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/$csiReleaseNumber-node.yaml
-#mv $csiReleaseNumber-node.yaml node.yaml
+#
 cd $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer
 wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/my-powerflex-settings.yaml
 sed -i "s/csivol/$clusterName-vol/g" my-powerflex-settings.yaml
 sed -i "/nodeSelector:$/ a\ \ \ \ group: $nodeSelectorGroupName" my-powerflex-settings.yaml
 cd $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer 
-sed -i "s/\/dell\//\/thecloudgarage\//g" csi-install.sh
-sed -i "s/helm-charts/dell-helm-charts/g" csi-install.sh
 ./csi-install.sh --namespace vxflexos --values ./my-powerflex-settings.yaml --skip-verify --skip-verify-node
 cd $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer
 wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/powerflex-storage-class.yaml
