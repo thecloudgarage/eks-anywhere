@@ -70,14 +70,15 @@ sed -i '/^ *\initContainers:/{
 sed -i "/nodeSelector:$/ a\ \ \ \ group: $nodeSelectorGroupName" helm-charts/charts/csi-vxflexos/values.yaml
 #
 #MODIFY VOLUME PREFIXES
-sed -i "s/k8s/$clusterName/g" helm-charts/charts/csi-vxflexos/values.yaml
+#sed -i "s/k8s/$clusterName/g" helm-charts/charts/csi-vxflexos/values.yaml
+sed -i "s/^volumeNamePrefix:.*/volumeNamePrefix:\ $clusterName/g" helm-charts/charts/csi-vxflexos/values.yaml
 #
 #MODIFY K8S VERSION IN THE HELM CHART
 sed -i "s/^kubeVersion.*/kubeVersion: \"${eksdistroversion}\"/g" helm-charts/charts/csi-vxflexos/Chart.yaml
 #
 #INSTALL POWERFLEX CSI USING HELM
 cd helm-charts/charts
-helm install powerflex-csi-450 -n vxflexos csi-vxflexos/ --values csi-vxflexos/values.yaml
+helm install vxflexos -n vxflexos csi-vxflexos/ --values csi-vxflexos/values.yaml
 #cd $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer
 #
 #sed -i "s/\/dell\//\/thecloudgarage\//g" csi-install.sh
