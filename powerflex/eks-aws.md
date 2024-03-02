@@ -20,6 +20,7 @@ mkdir -p $CLUSTER_NAME
 ```
 
 ### Create a bare-bones EKS cluster
+Please change the version as per your requirement
 ```
 cat <<EOF > $CLUSTER_NAME/$CLUSTER_NAME.yaml
 # Please change the name, region, vpc, subnet, instance type and other specs
@@ -63,7 +64,7 @@ kubectl get nodes
 NOTE: Dell's SCINI tar files for various OS and kernels can be accessed via ftp://QNzgdxXix:Aw3wFAwAq3@ftp.emc.com
 
 ### Add a Nodegroup with APEX Block AWS/PowerFlex4.5 SDC
-Add a un-managed node group with Custom AMI, i.e. Canonical ubuntu AMI for EKS https://cloud-images.ubuntu.com/docs/aws/eks/
+* Please change the AMI ID as per the cluster version. Canonical ubuntu AMI for EKS https://cloud-images.ubuntu.com/docs/aws/eks/
 ```
 cat <<EOF > $CLUSTER_NAME/$CLUSTER_NAME-nodegroup.yaml
 apiVersion: eksctl.io/v1alpha5
