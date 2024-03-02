@@ -28,7 +28,7 @@ kind: ClusterConfig
 metadata:
   name: ${CLUSTER_NAME}
   region: eu-west-1
-  version: "1.25"
+  version: "1.27"
 vpc:
   publicAccessCIDRs: ["0.0.0.0/0"]
   id: "vpc-00bc8b021dafb7a92"  # (optional, must match VPC ID used for each subnet below)
@@ -77,7 +77,7 @@ nodeGroups:
       group: md-0
     instanceType: t2.medium
     amiFamily: Ubuntu2004
-    ami: ami-062ebd5f10a9d1a90
+    ami: ami-06cea40b075348c5f
     privateNetworking: true
     desiredCapacity: 2
     securityGroups:
@@ -93,10 +93,16 @@ nodeGroups:
 
       # Note "--node-labels=\${NODE_LABELS}" needs the above helper sourced to work, otherwise will have to be defined manually.
       /etc/eks/bootstrap.sh \${CLUSTER_NAME} --container-runtime containerd --kubelet-extra-args "--node-labels=\${NODE_LABELS}" --apiserver-endpoint \${API_SERVER_URL} --b64-cluster-ca \${B64_CLUSTER_CA}
+      #
       cd /home/ubuntu
       wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/get-powerflex-info.sh
       wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/eks-sdc-new.sh
       sed -i "s/mdm-ip-addresses/172.26.2.124,172.26.2.125,172.26.2.126/g" eks-sdc-new.sh
+      #
+      TOKEN=`curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600"`
+      hostname=$(curl -s http://169.254.169.254/latest/meta-data/hostname -H "X-aws-ec2-metadata-token: \$TOKEN")
+      sudo hostnamectl set-hostname \$hostname
+      #
       chmod +x *.sh
       sudo ./eks-sdc-new.sh
 EOF
