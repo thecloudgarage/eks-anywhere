@@ -63,7 +63,7 @@ kubectl get nodes
 ```
 NOTE: Dell's SCINI tar files for various OS and kernels can be accessed via ftp://QNzgdxXix:Aw3wFAwAq3@ftp.emc.com
 
-### Create the NodeGroup (k8s version 1.27 and below)
+### Create the NodeGroup (k8s version 1.28 and below)
 * Please change the AMI ID as per the cluster version. Canonical ubuntu AMI for EKS https://cloud-images.ubuntu.com/docs/aws/eks/
 ```
 cat <<EOF > $CLUSTER_NAME/$CLUSTER_NAME-nodegroup.yaml
