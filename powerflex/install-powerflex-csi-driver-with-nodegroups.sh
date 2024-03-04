@@ -16,18 +16,15 @@ read -sp 'passwordOfPowerFlexCluster: ' passwordOfPowerFlexCluster
 echo "Enter Node Group name on which drivers will be installed, e.g. md-0"
 read -p 'nodeSelectorGroupName: ' nodeSelectorGroupName
 echo -e "\n"
-#export nodeSelectorLabel=group:\ $nodeSelectorGroupName
+#
 KUBECONFIG=$HOME/$clusterName/$clusterName-eks-cluster.kubeconfig
 mkdir -p $HOME/$clusterName
 cd $HOME/$clusterName
-#git clone -b v$csiReleaseNumber https://github.com/dell/csi-powerflex.git
-#cd $HOME/$clusterName/csi-powerflex
-#Added to accomodate higher releases of csi driver installations
-#eksdistroversion=$(kubectl get nodes -o=jsonpath='{.items[0].status.nodeInfo.kubeletVersion}')
+#
 eksdistroversion=$(kubectl version -o json | jq -r '.serverVersion.gitVersion')
 export eksdistroversion
 #
-#INSTALL EXTERNAL SNAPSHOTTER
+#INSTALL EXTERNAL SNAPSHOTTER ON SPECIFIED NODEGROUP
 cd $HOME/$clusterName/
 git clone https://github.com/kubernetes-csi/external-snapshotter/
 cd ./external-snapshotter
