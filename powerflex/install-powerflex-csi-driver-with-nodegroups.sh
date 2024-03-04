@@ -1,7 +1,7 @@
 #!/bin/bash
 echo "Enter Cluster Name on which CSI driver needs to be installed"
 read -p 'clusterName: ' clusterName
-echo "Enter PowerFlex CSI release version, e.g. 2.6.0"
+echo "Enter PowerFlex CSI release version, e.g. 2.6.0, 2.7.0, 2.8.0, 2.9.1, 2.9.2"
 read -p 'csiReleaseNumber: ' csiReleaseNumber
 echo "Enter IP or FQDN of the powerflex cluster"
 read -p 'ipOrFqdnOfPowerFlexCluster: ' ipOrFqdnOfpowerflexCluster
