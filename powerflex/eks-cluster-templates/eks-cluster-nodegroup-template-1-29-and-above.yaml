@@ -8,7 +8,7 @@ nodeGroups:
     labels:
       group: md-0
     instanceType: t2.medium
-    amiFamily: Ubuntu2004
+    amiFamily: Ubuntu2204
     ami: ami-0515d38cb0a9671bd
     privateNetworking: true
     desiredCapacity: 2
