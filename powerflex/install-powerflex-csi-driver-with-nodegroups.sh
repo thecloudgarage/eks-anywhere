@@ -53,7 +53,7 @@ kubectl create secret generic vxflexos-config -n vxflexos --from-file=config=sec
 #DOWNLOAD THE HELM CHART FROM DELL REPOSITORY
 git clone --quiet -c advice.detachedHead=false -b csi-vxflexos-$csiReleaseNumber https://github.com/dell/helm-charts
 #
-#REMOVE THE INIT SDC CONTAINER
+#REMOVE THE INIT SDC CONTAINER. ALTHOUGH 2.9.2 VERSION CLAIMS A FIX, I AM STILL RETAINING THE MANUAL WORKAROUND TO REMOVE INIT CONTAINER
 sed -i '/^ *\initContainers:/{
 :sub;
   $b eof;
@@ -70,33 +70,16 @@ sed -i '/^ *\initContainers:/{
 sed -i "/nodeSelector:$/ a\ \ \ \ group: $nodeSelectorGroupName" helm-charts/charts/csi-vxflexos/values.yaml
 #
 #MODIFY VOLUME PREFIXES
-#sed -i "s/k8s/$clusterName/g" helm-charts/charts/csi-vxflexos/values.yaml
 sed -i "s/^volumeNamePrefix:.*/volumeNamePrefix:\ $clusterName/g" helm-charts/charts/csi-vxflexos/values.yaml
 #
-#MODIFY K8S VERSION IN THE HELM CHART
+#MODIFY K8S VERSION IN THE HELM CHART TO CUSTOM VALUE USED BY EKS DISTRO
 sed -i "s/^kubeVersion.*/kubeVersion: \"${eksdistroversion}\"/g" helm-charts/charts/csi-vxflexos/Chart.yaml
 #
 #INSTALL POWERFLEX CSI USING HELM
 cd helm-charts/charts
 helm install vxflexos -n vxflexos csi-vxflexos/ --values csi-vxflexos/values.yaml
-#cd $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer
 #
-#sed -i "s/\/dell\//\/thecloudgarage\//g" csi-install.sh
-#sed -i "s/helm-charts/dell-helm-charts/g" csi-install.sh
-#
-#sed -i '/git$/r'<(
-#echo "wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/csi-helper.sh"
-#echo "chmod +x csi-helper.sh"
-#echo "./csi-helper.sh"
-#) csi-install.sh
-#
-#
-#cd $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer
-#wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/my-powerflex-settings.yaml
-#sed -i "s/csivol/$clusterName-vol/g" my-powerflex-settings.yaml
-#sed -i "/nodeSelector:$/ a\ \ \ \ group: $nodeSelectorGroupName" my-powerflex-settings.yaml
-#cd $HOME/$clusterName/csi-powerflex/dell-csi-helm-installer
-#./csi-install.sh --namespace vxflexos --values ./my-powerflex-settings.yaml --skip-verify --skip-verify-node
+#INSTALL STORAGE CLASS AND VOLUME SNAPSHOT CLASS
 cd $HOME/$clusterName/csi-powerflex/
 wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/powerflex-storage-class.yaml
 wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerflex/powerflex-volumesnapshotclass.yaml
