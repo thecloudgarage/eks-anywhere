@@ -7,9 +7,10 @@ sudo apt install tree libaio1 linux-image-6.5.0-21-generic libnuma1 uuid-runtime
 cd /home/ubuntu
 #
 cp /etc/default/grub /etc/default/grub.backup
-# In the above list of packages, we have installed 5.4.0-167-generic linux kernel for ubuntu 20.04
+# In the above list of packages, we have installed 6.5.0-21-generic linux kernel for ubuntu 22.04
 # This ensures compatability with the scini driver files available in Dell FTP site
-# Below we are setting the grub to boot from 167 generic kernel version
+# Below we are setting the grub to boot from generic kernel version
+#
 sed -i \
 s/GRUB_DEFAULT=0/GRUB_DEFAULT='"Advanced options for Ubuntu>Ubuntu, with Linux 6.5.0-21-generic"'/g \
 /etc/default/grub
