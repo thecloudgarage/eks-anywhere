@@ -12,5 +12,6 @@ EKSA_RELEASE_VERSION=$(curl -sL https://anywhere-assets.eks.amazonaws.com/releas
 BUNDLE_MANIFEST_URL=$(curl -s https://anywhere-assets.eks.amazonaws.com/releases/eks-a/manifest.yaml | yq ".spec.releases[] | select(.version==\"$EKSA_RELEASE_VERSION\").bundleManifestUrl")
 IMAGEBUILDER_TARBALL_URI=$(curl -s $BUNDLE_MANIFEST_URL | yq ".spec.versionsBundles[0].eksD.imagebuilder.uri")
 curl -s $IMAGEBUILDER_TARBALL_URI | tar xz ./image-builder
-sudo install -m 0755 ./image-builder /usr/local/bin/image-builder   
+sudo install -m 0755 ./image-builder /usr/local/bin/image-builder
+cd -
 exit
