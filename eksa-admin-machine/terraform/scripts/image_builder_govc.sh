@@ -16,7 +16,7 @@ export EKSA_RELEASE_VERSION
 export BUNDLE_MANIFEST_URL
 export IMAGEBUILDER_TARBALL_URI
 echo $IMAGEBUILDER_TARBALL_URI > /home/image-builder/imagebuilder-tarball-uri.txt
-curl -s $IMAGEBUILDER_TARBALL_URI | tar xz ./image-builder
+sudo curl -s $IMAGEBUILDER_TARBALL_URI | sudo tar xz ./image-builder
 sudo cp image-builder /usr/local/bin
 #sudo install -m 0755 ./image-builder /usr/local/bin/image-builder
 cd -
