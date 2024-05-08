@@ -13,6 +13,8 @@ sudo curl -L -o - https://github.com/vmware/govmomi/releases/latest/download/gov
 export EKSA_RELEASE_VERSION=$(curl -sL https://anywhere-assets.eks.amazonaws.com/releases/eks-a/manifest.yaml | yq ".spec.latestVersion")
 export BUNDLE_MANIFEST_URL=$(curl -s https://anywhere-assets.eks.amazonaws.com/releases/eks-a/manifest.yaml | yq ".spec.releases[] | select(.version==\"$EKSA_RELEASE_VERSION\").bundleManifestUrl")
 export IMAGEBUILDER_TARBALL_URI=$(curl -s $BUNDLE_MANIFEST_URL | yq ".spec.versionsBundles[0].eksD.imagebuilder.uri")
+echo $EKSA_RELEASE_VERSION > /home/image-builder/eksa_release_version.txt
+echo $BUNDLE_MANIFEST_URL > /home/image-builder/bundle_manifest_url.txt
 echo $IMAGEBUILDER_TARBALL_URI > /home/image-builder/imagebuilder-tarball-uri.txt
 sudo curl -s $IMAGEBUILDER_TARBALL_URI | sudo tar xz ./image-builder
 sudo cp image-builder /usr/local/bin
