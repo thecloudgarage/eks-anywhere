@@ -218,8 +218,7 @@ resource "null_resource" "install_image_builder_and_govc_1" {
       "sleep 10",
       "echo ${var.virtual_machine_root_password} | sudo -S ls",
       "echo \"GOVC_DATACENTER=${var.vsphere_datacenter}; export GOVC_DATACENTER\" >> ~/.profile",
-      "sudo snap install yq",
-      "sudo apt install jq unzip make ansible python3 python3-setuptools python3-dev python3-pip -y",
+      "echo \"EKSA_SKIP_VALIDATE_DEPENDENCIES=true; export EKSA_SKIP_VALIDATE_DEPENDENCIES\" >> ~/.profile",
       "$HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/image_builder_govc.sh",
       "sleep 10"
     ]
