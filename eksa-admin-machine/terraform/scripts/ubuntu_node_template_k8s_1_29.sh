@@ -13,9 +13,11 @@ echo $eksd_release_tag
 vsphere_content_library=eks-anywhere-template-$RANDOM
 govc library.create -dc=$GOVC_DATACENTER "$vsphere_content_library"
 sed -i "s/vsphere_content_library/$vsphere_content_library/g" $HOME/vsphere-connection.json
+#export EKSA_SKIP_VALIDATE_DEPENDENCIES=true
+source /home/image-builder/.profile
 image-builder build --os ubuntu --hypervisor vsphere --release-channel 1-29 --vsphere-config $HOME/vsphere-connection.json
 export vsphere_templates_folder_full_path=/$GOVC_DATACENTER/vm/$vsphere_templates_folder
-mv $HOME/ubuntu.ova $HOME/$ubuntu_template_name.ova
+mv $HOME/ubuntu-2004-kube-1-29.ova $HOME/$ubuntu_template_name.ova
 govc library.import $vsphere_content_library $HOME/$ubuntu_template_name.ova
 govc library.deploy -dc=$GOVC_DATACENTER -pool $vsphere_resource_pool -folder $vsphere_templates_folder_full_path /$vsphere_content_library/$ubuntu_template_name $ubuntu_template_name
 govc snapshot.create -dc=$GOVC_DATACENTER -vm $ubuntu_template_name root
