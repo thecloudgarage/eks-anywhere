@@ -4,7 +4,7 @@
 * On the EKS Admin machine., create the SSH keys for Gitlab that Flux will use
 * In my example, I am storing the generated keys as $HOME/.ssh/gitlab
 ```
-ssh-keygen -t ecdsa -C "user_admin@your-domain-name"
+ssh-keygen -t ecdsa -C "user_admin@your-domain-name" (for azure AD, use the principal name)
 ```
 * Provide The name of the key as a path on the EKS Admin machine, e.g. $HOME/.ssh/gitlab
 * This key name will be used to perform SSH by Flux to read/write into GitLab
@@ -16,7 +16,8 @@ chmod 600 $HOME/.ssh/gitlab
 * Now that the public key is in Gitlab, we scan it and store it in our known hosts file
 * In this case, and specifically for EKSA we will create a separate known hosts file for EKSA purposes
 ```
-ssh-keyscan -t -p 2224 ecdsa your-gitlab-server-FQDN >> my_eksa_known_hosts
+cd $HOME/.ssh/
+ssh-keyscan -t ecdsa your-gitlab-server-FQDN >> my_eksa_known_hosts (without https or the port number)
 ```
 * EKSA will use two variables and automatically inject them for FLUX operations (secret creation, connecting to gitlab, etc.)
 * Let's export these two variables on the EKS Admin machine (note I am using my example references, i.e. gitlab and my_eksa_known_hosts
