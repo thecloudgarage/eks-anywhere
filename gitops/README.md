@@ -29,6 +29,7 @@ ssh -i gitlab git@gitlab1.poc.thecloudgarage.com -p 2224
 * Also ensure the FluxConfig configuration uses the correct SSH port number in the repositoryUrl for SSH (In my case it's 2224)
 * In addition, create an empty repository before-hand with the name specified in the FluxConfig in Cluster's YAML
 * Example:
+```
 ---
 apiVersion: anywhere.eks.amazonaws.com/v1alpha1
 kind: FluxConfig
@@ -40,7 +41,7 @@ spec:
       sshKeyAlgorithm: ecdsa
 ```
 
-# PROBLEM: The below specified method by AWS did not work
+# PROBLEM: The below specified method by AWS in the official EKS-A doc did not work
 ```
 cd $HOME/.ssh/
 ssh-keyscan -t ecdsa your-gitlab-server-FQDN >> my_eksa_known_hosts (without https or the port number)
