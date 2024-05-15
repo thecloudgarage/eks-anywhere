@@ -11,7 +11,7 @@ echo "SSH_KNOWN_HOSTS=/home/ubuntu/.ssh/known_hosts; export SSH_KNOWN_HOSTS" >> 
 echo "EKSA_GIT_KNOWN_HOSTS=/home/ubuntu/.ssh/known_hosts; export EKSA_GIT_KNOWN_HOSTS" >> ~/.profile
 source .profile
 ```
-Generate SSH keys for Gitlab
+* Generate SSH keys for Gitlab
 ```
 ssh-keygen -t ecdsa -C "user_admin@your-domain-name" (for azure AD, use the principal name,e.g. ambar@ambaru2ubegmail.onmicrosoft.com)
 eval "$(ssh-agent -s)" && ssh-add $EKSA_GIT_PRIVATE_KEY
