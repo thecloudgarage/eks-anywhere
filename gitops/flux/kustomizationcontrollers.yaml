@@ -1,0 +1,187 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: gitops-deployments
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  ref:
+    branch: main
+  secretRef:
+    name: flux-system
+  url: ssh://git@gitlab1.poc.thecloudgarage.com:2224/ambar/gitops-deployments.git
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: namespaces
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  path: "./infrastructure/namespaces"
+  wait: true
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: gitops-deployments
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: vault-secrets-operator
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  path: "./infrastructure/vault-secrets-operator"
+  dependsOn:
+    - name: namespaces
+  wait: true
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: gitops-deployments
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: vault-connection
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  path: "./infrastructure/vault-connection"
+  dependsOn:
+    - name: vault-secrets-operator
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: gitops-deployments
+  patches:
+    - patch: |
+        - op: replace
+          path: /spec/mount
+          value: clusterName
+      target:
+        kind: VaultAuth
+        name: vault-auth
+        namespace: default
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: vault-secrets
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  path: "./infrastructure/vault-secrets"
+  dependsOn:
+    - name: vault-connection
+  wait: true
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: gitops-deployments
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: external-snapshotter
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  path: "./infrastructure/external-snapshotter"
+  dependsOn:
+    - name: vault-secrets
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: gitops-deployments
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: csi-powerscale
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  path: "./infrastructure/csi-powerscale"
+  dependsOn:
+    - name: vault-secrets
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: gitops-deployments
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: metrics-server
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  path: "./infrastructure/metrics-server"
+  dependsOn:
+    - name: vault-secrets
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: gitops-deployments
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: isovalent-phase-1
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  path: "./infrastructure/isovalent-phase-1"
+  dependsOn:
+    - name: external-snapshotter
+#  wait: true
+  healthChecks:
+    - apiVersion: batch/v1
+      kind: Job
+      name: cilium-patch-default
+      namespace: kube-system
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: gitops-deployments
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: isovalent-phase-2
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  path: "./infrastructure/isovalent-phase-2"
+#  wait: true
+  healthChecks:
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: cilium-operator
+      namespace: kube-system
+  dependsOn:
+    - name: isovalent-phase-1
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: gitops-deployments
+  patches:
+    - patch: |
+        - op: replace
+          path: /spec/values/cluster/name
+          value: clusterName
+      target:
+        kind: HelmRelease
+        name: cilium-enterprise
+        namespace: flux-system
+    - patch: |
+        - op: replace
+          path: /spec/values/cluster/id
+          value: clusterId
+      target:
+        kind: HelmRelease
+        name: cilium-enterprise
+        namespace: flux-system
