@@ -62,6 +62,11 @@ metadata:
 EOF
 ```
 Install kserve for model serving
+
+![image](https://github.com/user-attachments/assets/238b55bc-16ec-4aab-9bb7-77198adfb45a)
+![image](https://github.com/user-attachments/assets/e788b275-3969-4db5-8057-7a53574a5b9a)
+
+
 ```
 curl -s "https://raw.githubusercontent.com/kserve/kserve/release-0.11/hack/quick_install.sh" | bash
 ```
