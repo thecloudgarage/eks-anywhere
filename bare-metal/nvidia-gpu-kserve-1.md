@@ -74,10 +74,8 @@ Validate Istio Ingress Gateway
 ```
 kubectl get svc istio-ingressgateway -n istio-system
 ```
-Deploy a LLM based on bloom7b1
+Deploy a custom model based on HuggingFace BERT with KServe
 ```
-kubectl create namespace kserve-test
-
 cat <<EOF | kubectl apply -f -
 apiVersion: "serving.kserve.io/v1beta1"
 kind: "InferenceService"
