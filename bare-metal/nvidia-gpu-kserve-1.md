@@ -113,3 +113,39 @@ curl -v \
   -d '{"prompt": "Who is the president of the USA"}' \
   http://${INGRESS_HOST}:${INGRESS_PORT}/v1/models/bloom7b1:predict
 ```
+
+NEW TEST
+```
+cat <<EOF | kubectl apply -f -
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: llama-2-7b
+spec:
+  predictor:
+    containers:
+      - args:
+        - --port
+        - "8080"
+        - --model
+        - /mnt/models
+      command:
+        - python3
+        - -m
+        - vllm.entrypoints.api_server
+      env:
+        - name: STORAGE_URI
+          value: gcs://kfserving-examples/llm/huggingface/llama
+      image: kserve/vllmserver:latest
+      name: kserve-container
+      resources:
+        limits:
+          cpu: "4"
+          memory: 50Gi
+          nvidia.com/gpu: "1"
+        requests:
+          cpu: "1"
+          memory: 50Gi
+          nvidia.com/gpu: "1"
+EOF
+```
