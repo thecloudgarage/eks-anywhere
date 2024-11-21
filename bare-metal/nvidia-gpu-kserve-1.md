@@ -102,7 +102,10 @@ EOF
 ```
 Run a sample test for the LLM service
 ```
-SERVICE_HOSTNAME=$(kubectl get inferenceservice bloom7b1 -n kserve-test -o jsonpath='{.status.url}' | cut -d "/" -f 3)
+kubectl get inferenceservice -A 
+export SERVICE_HOSTNAME=$(kubectl get inferenceservice bloom7b1 -n kserve-test -o jsonpath='{.status.url}' | cut -d "/" -f 3)
+export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].port}')
 
 curl -v \
   -H "Host: ${SERVICE_HOSTNAME}" \
