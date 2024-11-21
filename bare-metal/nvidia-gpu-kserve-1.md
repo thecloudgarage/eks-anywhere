@@ -78,7 +78,7 @@ Deploy a LLM based on bloom7b1
 ```
 kubectl create namespace kserve-test
 
-cat <<EOF | kubectl apply -f 
+cat <<EOF | kubectl apply -f -
 apiVersion: serving.kserve.io/v1beta1
 kind: InferenceService
 metadata:
