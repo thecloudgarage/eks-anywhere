@@ -79,16 +79,16 @@ Deploy a LLM based on bloom7b1
 kubectl create namespace kserve-test
 
 cat <<EOF | kubectl apply -f -
-apiVersion: serving.kserve.io/v1beta1
-kind: InferenceService
+apiVersion: "serving.kserve.io/v1beta1"
+kind: "InferenceService"
 metadata:
-  name: "bloom7b1"
-  namespace: "kserve-test"
+  labels:
+    controller-tools.k8s.io: "1.0"
+  name: "kserve-custom-model"
 spec:
   predictor:
-    pytorch:
-      runtimeVersion: 0.8.2
-      storageUri: gs://kfserving-examples/models/torchserve/llm/Huggingface_accelerate/bloom
+    containers:
+    - image: vinayaks117/kserve-model-repo:v1.0
       resources:
         limits:
           cpu: "2"
@@ -103,49 +103,11 @@ EOF
 Run a sample test for the LLM service
 ```
 kubectl get inferenceservice -A 
-export SERVICE_HOSTNAME=$(kubectl get inferenceservice bloom7b1 -n kserve-test -o jsonpath='{.status.url}' | cut -d "/" -f 3)
-export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].port}')
+kubectl port-forward -n istio-system service/istio-ingressgateway 8081:80
 
-curl -v \
-  -H "Host: ${SERVICE_HOSTNAME}" \
-  -H "Content-Type: application/json" \
-  -d '{"prompt": "Who is the president of the USA"}' \
-  http://${INGRESS_HOST}:${INGRESS_PORT}/v1/models/bloom7b1:predict
-```
-
-NEW TEST
-```
-cat <<EOF | kubectl apply -f -
-apiVersion: serving.kserve.io/v1beta1
-kind: InferenceService
-metadata:
-  name: llama-2-7b
-spec:
-  predictor:
-    containers:
-      - args:
-        - --port
-        - "8080"
-        - --model
-        - /mnt/models
-      command:
-        - python3
-        - -m
-        - vllm.entrypoints.api_server
-      env:
-        - name: STORAGE_URI
-          value: gcs://kfserving-examples/llm/huggingface/llama
-      image: kserve/vllmserver:latest
-      name: kserve-container
-      resources:
-        limits:
-          cpu: "4"
-          memory: 50Gi
-          nvidia.com/gpu: "1"
-        requests:
-          cpu: "1"
-          memory: 50Gi
-          nvidia.com/gpu: "1"
+cat <<EOF > input.json
+{"sequence": "Hello, my cats are cute."}
 EOF
+
+curl -v -H "Host: kserve-custom-model.default.example.com" http://localhost:8081/v1/models/bert-sentiment:predict  -d @./input.json
 ```
