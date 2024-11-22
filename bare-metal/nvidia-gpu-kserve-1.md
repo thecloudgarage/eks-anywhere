@@ -75,6 +75,8 @@ Validate Istio Ingress Gateway
 kubectl get svc istio-ingressgateway -n istio-system
 ```
 Let's Serve the Hugging Face LLM model using vLLM backend
+- Ensure that you have an access token setup in HuggingFace by viewing the license agreement and clicking on model card
+- You have applied for the model access for Llama3 in Huggingface and it shows as accepted in your profile settings > gated repos status
 ```
 kubectl apply -f - <<EOF
 apiVersion: serving.kserve.io/v1beta1
@@ -107,7 +109,9 @@ EOF
 Verify the Inference Service
 ```
 kubectl get inferenceservices huggingface-llama3
+kubectl get pods
 ```
+# DO NOT PROGRESS UNLESS THE ASSOCIATED POD SAYS READY 2/2
 Determine the ingress IP and ports
 ```
 export MODEL_NAME=llama3
