@@ -75,6 +75,19 @@ Validate Istio Ingress Gateway
 kubectl get svc istio-ingressgateway -n istio-system
 ```
 Let's Serve the Hugging Face LLM model using vLLM backend
+Create the secret with your HuggingFace token
+```
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Secret
+metadata:
+    name: hf-secret
+type: Opaque    
+stringData:
+    HF_TOKEN: "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"
+EOF
+```
+Create the Inference service
 ```
 kubectl apply -f - <<EOF
 apiVersion: serving.kserve.io/v1beta1
@@ -89,6 +102,13 @@ spec:
       args:
         - --model_name=llama3
         - --model_id=meta-llama/meta-llama-3-8b-instruct
+      env:
+        - name: HF_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: hf-secret
+              key: HF_TOKEN
+              optional: false
       resources:
         limits:
           cpu: "6"
@@ -99,6 +119,7 @@ spec:
           memory: 24Gi
           nvidia.com/gpu: "1"
 EOF
+
 ```
 Verify the Inference Service
 ```
