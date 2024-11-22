@@ -99,7 +99,7 @@ spec:
           memory: 24Gi
           nvidia.com/gpu: "1"
 EOF
-``
+```
 Verify the Inference Service
 ```
 kubectl get inferenceservices huggingface-llama3
