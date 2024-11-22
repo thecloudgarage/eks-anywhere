@@ -74,3 +74,47 @@ Validate Istio Ingress Gateway
 ```
 kubectl get svc istio-ingressgateway -n istio-system
 ```
+Let's Serve the Hugging Face LLM model using vLLM backend
+```
+kubectl apply -f - <<EOF
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: huggingface-llama3
+spec:
+  predictor:
+    model:
+      modelFormat:
+        name: huggingface
+      args:
+        - --model_name=llama3
+        - --model_id=meta-llama/meta-llama-3-8b-instruct
+      resources:
+        limits:
+          cpu: "6"
+          memory: 24Gi
+          nvidia.com/gpu: "1"
+        requests:
+          cpu: "6"
+          memory: 24Gi
+          nvidia.com/gpu: "1"
+EOF
+``
+Verify the Inference Service
+```
+kubectl get inferenceservices huggingface-llama3
+```
+Determine the ingress IP and ports
+```
+export MODEL_NAME=llama3
+export SERVICE_HOSTNAME=$(kubectl get inferenceservice huggingface-llama3 -o jsonpath='{.status.url}' | cut -d "/" -f 3)
+export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].port}')
+```
+Validate the inference service
+```
+curl -v http://${INGRESS_HOST}:${INGRESS_PORT}/openai/v1/completions \
+-H "content-type: application/json" -H "Host: ${SERVICE_HOSTNAME}" \
+-d '{"model": "llama3", "prompt": "Write a poem about colors", "stream":false, "max_tokens": 30}'
+```
+
