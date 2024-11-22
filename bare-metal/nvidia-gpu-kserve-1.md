@@ -84,7 +84,7 @@ metadata:
     name: hf-secret
 type: Opaque    
 stringData:
-    HF_TOKEN: "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"
+    HF_TOKEN: "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"
 EOF
 ```
 Create the Inference service
