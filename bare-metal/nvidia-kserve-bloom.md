@@ -35,7 +35,7 @@ cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: Secret
 metadata:
-  name: s3creds-1
+  name: s3creds
   annotations:
      serving.kserve.io/s3-endpoint: 172.29.198.74:9000 # replace with your s3 endpoint 
      serving.kserve.io/s3-usehttps: "0" # by default 1, if testing with minio you can set to 0
