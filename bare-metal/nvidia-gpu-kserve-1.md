@@ -183,6 +183,20 @@ Install METALLB Load Balancer
 helm repo add metallb https://metallb.github.io/metallb
 helm install metallb metallb/metallb --wait --timeout 15m --namespace metallb-system --create-namespace
 ```
+If already installed
+```
+helm upgrade --install metallb metallb/metallb --wait --timeout 15m --namespace metallb-system
+```
+
+Validate the metallb pods
+```
+kubectl get pods -n metallb-system
+NAME                                  READY   STATUS    RESTARTS   AGE
+metallb-controller-77cb7f5d88-t4wr7   1/1     Running   0          53s
+metallb-speaker-6xk5g                 4/4     Running   0          53s
+metallb-speaker-flsjj                 4/4     Running   0          53s
+metallb-speaker-r7f8h                 4/4     Running   0          53s
+```
 Create L2 Advertisements for MetalLB
 ```
 cat <<EOF | kubectl apply -f -
