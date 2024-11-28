@@ -147,6 +147,10 @@ helm install --wait --generate-name -n gpu-operator --create-namespace nvidia/gp
 kubectl get pods -n gpu-operator
 kubectl get node -o json | jq '.items[].metadata.labels'
 ```
+If already installed, then use the upgrade
+```
+helm upgrade --install --wait $(helm list -n gpu-operator | grep gpu-operator | awk '{print $1}') -n gpu-operator nvidia/gpu-operator
+```
 Validate a sample application using L40S GPUs
 ```
 cat <<EOF | kubectl apply -f -
