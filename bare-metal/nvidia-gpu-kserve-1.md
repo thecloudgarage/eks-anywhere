@@ -260,6 +260,7 @@ metadata:
   namespace: metallb-system
 EOF
 ```
+## Let's play with KSERVE
 Install kserve for model serving
 
 ![image](https://github.com/user-attachments/assets/238b55bc-16ec-4aab-9bb7-77198adfb45a)
