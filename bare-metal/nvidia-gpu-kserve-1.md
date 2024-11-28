@@ -74,7 +74,7 @@ Validate Istio Ingress Gateway
 ```
 kubectl get svc istio-ingressgateway -n istio-system
 ```
-Let's Serve the Hugging Face LLM model using vLLM backend
+Let's Serve the Hugging Face LLAMA 3.1 8B LLM model using vLLM backend
 - Ensure that you have an access token setup in HuggingFace by viewing the license agreement and clicking on model card
 - You have applied for the model access for Llama3 in Huggingface and it shows as accepted in your profile settings > gated repos status
 ```
@@ -125,4 +125,44 @@ curl -v http://${INGRESS_HOST}:${INGRESS_PORT}/openai/v1/completions \
 -H "content-type: application/json" -H "Host: ${SERVICE_HOSTNAME}" \
 -d '{"model": "llama3", "prompt": "Write a poem about colors", "stream":false, "max_tokens": 30}'
 ```
-
+Let's serve HuggingFace Bloom7b1 model
+```
+kubectl apply -f - <<EOF
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: bigscience-bloom-7b1
+spec:
+  predictor:
+    model:
+      modelFormat:
+        name: huggingface
+      args:
+        - --model_name=bloom-7b1
+        - --model_id=bigscience/bloom-7b1
+      env:
+        - name: HF_TOKEN
+          value: "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"
+      resources:
+        limits:
+          cpu: "6"
+          memory: 32Gi
+          nvidia.com/gpu: "1"
+        requests:
+          cpu: "6"
+          memory: 32Gi
+          nvidia.com/gpu: "1"
+EOF
+```
+Validate
+```
+curl -v \
+  -H "Host: ${SERVICE_HOSTNAME}" \
+  -H "Content-Type: application/json" \
+  -d '{
+		"model": "bloom-7b1",
+		"prompt": "Once upon a time,",
+		"max_tokens": 512,
+		"temperature": 0.5
+	}' http://${INGRESS_HOST}:${INGRESS_PORT}/openai/v1/completions
+```
