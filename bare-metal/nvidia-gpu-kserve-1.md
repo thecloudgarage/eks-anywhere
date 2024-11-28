@@ -174,10 +174,53 @@ spec:
           nvidia.com/gpu: 2 #change count based on number of GPU slots
 EOF
 ```
-Observe the nvidia-sim application
+Note: The Image download and container creation takes some time. Observe the nvidia-sim application
 ```
 kubectl get pods -n gpu-operator
-kubectl logs <pod-name> -n gpu-operator
+kubectl logs nvidia-smi -n gpu-operator
+```
+Sample output
+```
+kubectl logs nvidia-smi -n gpu-operator
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.3.1
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+Thu Nov 28 05:49:55 2024
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.127.05             Driver Version: 550.127.05     CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA L40S                    On  |   00000000:0D:00.0 Off |                    0 |
+| N/A   32C    P8             36W /  350W |       1MiB /  46068MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA L40S                    On  |   00000000:B5:00.0 Off |                    0 |
+| N/A   32C    P8             35W /  350W |       1MiB /  46068MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
 ```
 Install METALLB Load Balancer
 ```
@@ -225,6 +268,55 @@ Install kserve for model serving
 
 ```
 curl -s "https://raw.githubusercontent.com/kserve/kserve/release-0.13/hack/quick_install.sh" | bash
+```
+A quick glimpse of all relevant pods
+```
+for namespace in kserve knative-serving istio-system metallb-system gpu-operator; do
+kubectl get pods -n $namespace -o wide
+done
+```
+Example output
+```
+for namespace in kserve knative-serving istio-system metallb-system gpu-operator; do kubectl get pods -n $namespace; done
+NAME                                         READY   STATUS    RESTARTS   AGE
+kserve-controller-manager-768d8f5457-57vp4   2/2     Running   0          46m
+NAME                                    READY   STATUS    RESTARTS   AGE
+activator-56cffc7754-5xvdb              1/1     Running   0          48m
+autoscaler-858cbd4dd6-7blf6             1/1     Running   0          48m
+controller-686ff8bbc8-jd7mt             1/1     Running   0          48m
+net-istio-controller-5df666b44c-qmlq8   1/1     Running   0          48m
+net-istio-webhook-ff6665657-kqv9m       1/1     Running   0          48m
+webhook-6fdc5964f6-2cwbd                1/1     Running   0          48m
+NAME                                    READY   STATUS    RESTARTS   AGE
+istio-ingressgateway-7db5d74887-7cm48   1/1     Running   0          48m
+istiod-77dc68476c-gw4rw                 1/1     Running   0          48m
+NAME                                  READY   STATUS    RESTARTS   AGE
+metallb-controller-77cb7f5d88-t4wr7   1/1     Running   0          24m
+metallb-speaker-6xk5g                 4/4     Running   0          24m
+metallb-speaker-flsjj                 4/4     Running   0          24m
+metallb-speaker-r7f8h                 4/4     Running   0          24m
+NAME                                                              READY   STATUS      RESTARTS   AGE
+gpu-feature-discovery-44wlm                                       1/1     Running     0          69m
+gpu-feature-discovery-4j6lw                                       1/1     Running     0          69m
+gpu-operator-1732769849-node-feature-discovery-gc-57dccb75trz5d   1/1     Running     0          70m
+gpu-operator-1732769849-node-feature-discovery-master-5fd9k7lfz   1/1     Running     0          70m
+gpu-operator-1732769849-node-feature-discovery-worker-422mx       1/1     Running     0          70m
+gpu-operator-1732769849-node-feature-discovery-worker-mqkh5       1/1     Running     0          70m
+gpu-operator-1732769849-node-feature-discovery-worker-s2jl6       1/1     Running     0          70m
+gpu-operator-755556f9f8-pgbzz                                     1/1     Running     0          70m
+nvidia-container-toolkit-daemonset-lkcgj                          1/1     Running     0          69m
+nvidia-container-toolkit-daemonset-rp8w7                          1/1     Running     0          69m
+nvidia-cuda-validator-ncmqg                                       0/1     Completed   0          67m
+nvidia-cuda-validator-w2jrv                                       0/1     Completed   0          66m
+nvidia-dcgm-exporter-njftc                                        1/1     Running     0          69m
+nvidia-dcgm-exporter-wrb65                                        1/1     Running     0          69m
+nvidia-device-plugin-daemonset-8ww7n                              1/1     Running     0          69m
+nvidia-device-plugin-daemonset-tkrkn                              1/1     Running     0          69m
+nvidia-driver-daemonset-9r6jj                                     1/1     Running     0          70m
+nvidia-driver-daemonset-mfz9n                                     1/1     Running     0          70m
+nvidia-operator-validator-pcdzq                                   1/1     Running     0          69m
+nvidia-operator-validator-r9trz                                   1/1     Running     0          69m
+nvidia-smi                                                        0/1     Completed   0          20m
 ```
 Validate Istio Ingress Gateway
 ```
