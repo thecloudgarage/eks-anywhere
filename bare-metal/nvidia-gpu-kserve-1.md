@@ -322,7 +322,7 @@ Validate Istio Ingress Gateway
 ```
 kubectl get svc istio-ingressgateway -n istio-system
 ```
-Let's Serve the Hugging Face LLAMA 3.1 8B LLM model using vLLM backend
+### Deploying Hugging Face LLAMA 3.1 8B LLM model using vLLM backend
 - Ensure that you have an access token setup in HuggingFace by viewing the license agreement and clicking on model card
 - You have applied for the model access for Llama3 in Huggingface and it shows as accepted in your profile settings > gated repos status
 ```
@@ -359,7 +359,6 @@ Verify the Inference Service
 kubectl get inferenceservices huggingface-llama3
 kubectl get pods
 ```
-# DO NOT PROGRESS UNLESS THE ASSOCIATED POD SAYS READY 2/2
 Determine the ingress IP and ports
 ```
 export MODEL_NAME=llama3
@@ -373,7 +372,7 @@ curl -v http://${INGRESS_HOST}:${INGRESS_PORT}/openai/v1/completions \
 -H "content-type: application/json" -H "Host: ${SERVICE_HOSTNAME}" \
 -d '{"model": "llama3", "prompt": "Write a poem about colors", "stream":false, "max_tokens": 30}'
 ```
-Let's serve HuggingFace Bloom7b1 model
+### Deploying HuggingFace Bloom7b1 model
 ```
 kubectl apply -f - <<EOF
 apiVersion: serving.kserve.io/v1beta1
@@ -413,4 +412,59 @@ curl -v \
 		"max_tokens": 512,
 		"temperature": 0.5
 	}' http://${INGRESS_HOST}:${INGRESS_PORT}/openai/v1/completions
+```
+### Deploying Transformer (Pre/Post processing) and BERT for predictions
+```
+kubectl patch cm config-deployment --patch '{"data":{"registriesSkippingTagResolving":"nvcr.io"}}' -n knative-serving
+kubectl patch cm config-deployment --patch '{"data":{"progressDeadline": "600s"}}' -n knative-serving
+
+cat <<EOF | kubectl apply -f -
+apiVersion: "serving.kserve.io/v1beta1"
+kind: "InferenceService"
+metadata:
+  name: "bert-v2"
+spec:
+  transformer:
+    containers:
+      - name: kserve-container      
+        image: kfserving/bert-transformer-v2:latest
+        command:
+          - "python"
+          - "-m"
+          - "bert_transformer_v2"
+        env:
+          - name: STORAGE_URI
+            value: "gs://kfserving-examples/models/triton/bert-transformer"
+  predictor:
+    triton:
+      runtimeVersion: 20.10-py3
+      resources:
+        limits:
+          cpu: "1"
+          memory: 8Gi
+          nvidia.com/gpu: "1"
+        requests:
+          cpu: "1"
+          memory: 8Gi
+          nvidia.com/gpu: "1"
+      storageUri: "gs://kfserving-examples/models/triton/bert"
+EOF
+
+cat <<EOF > input-bert.json
+{
+  "instances": [
+    "What President is credited with the original notion of putting Americans in space?"
+  ]
+}
+EOF
+```
+Validate
+```
+MODEL_NAME=bert-v2
+INPUT_PATH=@./input-bert.json
+SERVICE_HOSTNAME=$(kubectl get inferenceservices bert-v2 -o jsonpath='{.status.url}' | cut -d "/" -f 3)
+export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].port}')
+
+curl -v -H "Host: ${SERVICE_HOSTNAME}" -H "Content-Type: application/json" -d $INPUT_PATH http://${INGRESS_HOST}:${INGRESS_PORT}/v1/models/$MODEL_NAME:predict
 ```
