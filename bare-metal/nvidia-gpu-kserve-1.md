@@ -170,7 +170,7 @@ spec:
         - "nvidia-smi"
       resources:
         limits:
-          nvidia.com/gpu: 1
+          nvidia.com/gpu: 2 #change count based on number of GPU slots
 EOF
 ```
 Observe the nvidia-sim application
