@@ -1,6 +1,7 @@
 Create the EKS Anywhere on Bare Metal Cluster
 ```
- eksctl anywhere create cluster --hardware-csv hardware.csv -f clusterconfig.yaml -v 4
+eksctl anywhere create cluster --hardware-csv hardware.csv -f clusterconfig.yaml -v 4
+
 2024-11-27T21:39:57.501-0600    V0      Warning: The recommended number of control plane nodes is 3 or 5
 2024-11-27T21:39:57.592-0600    V4      Reading release manifest        {"url": "https://anywhere-assets.eks.amazonaws.com/releases/eks-a/manifest.yaml"}
 2024-11-27T21:39:57.773-0600    V4      Reading bundles manifest        {"url": "https://anywhere-assets.eks.amazonaws.com/releases/bundles/78/manifest.yaml"}
