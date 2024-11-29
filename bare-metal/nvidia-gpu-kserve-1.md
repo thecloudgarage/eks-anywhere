@@ -414,7 +414,7 @@ curl -v \
 		"temperature": 0.5
 	}' http://${INGRESS_HOST}:${INGRESS_PORT}/openai/v1/completions
 ```
-### Deploying Transformer (Pre/Post processing) and BERT for predictions
+### Deploying Transformer (Pre/Post processing) and BERT for predictions on TRITON Inference runtime
 ```
 kubectl patch cm config-deployment --patch '{"data":{"registriesSkippingTagResolving":"nvcr.io"}}' -n knative-serving
 kubectl patch cm config-deployment --patch '{"data":{"progressDeadline": "600s"}}' -n knative-serving
@@ -469,3 +469,53 @@ export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -
 
 curl -v -H "Host: ${SERVICE_HOSTNAME}" -H "Content-Type: application/json" -d $INPUT_PATH http://${INGRESS_HOST}:${INGRESS_PORT}/v1/models/$MODEL_NAME:predict
 ```
+### Deploying the Huggingface model using TRITON Inference Runtime
+```
+cat <<EOF | kubectl apply -f -
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: huggingface-triton
+spec:
+  predictor:
+    model:
+      args:
+      - --log-verbose=1
+      modelFormat:
+        name: triton
+      protocolVersion: v2
+      resources:
+        limits:
+          cpu: "1"
+          memory: 8Gi
+          nvidia.com/gpu: "1"
+        requests:
+          cpu: "1"
+          memory: 8Gi
+          nvidia.com/gpu: "1"
+      runtimeVersion: 23.10-py3
+      storageUri: gs://kfserving-examples/models/triton/huggingface/model_repository
+  transformer:
+    containers:
+    - args:
+      - --model_name=bert
+      - --model_id=bert-base-uncased
+      - --predictor_protocol=v2
+      - --tensor_input_names=input_ids
+      image: kserve/huggingfaceserver:v0.13.1
+      name: kserve-container
+      resources:
+        limits:
+          cpu: "1"
+          memory: 2Gi
+        requests:
+          cpu: 100m
+          memory: 2Gi
+EOF
+
+MODEL_NAME=bert
+SERVICE_HOSTNAME=$(kubectl get inferenceservice huggingface-triton -o jsonpath='{.status.url}' | cut -d "/" -f 3)
+export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].port}')
+
+curl -H "content-type:application/json" -H "Host: ${SERVICE_HOSTNAME}" -v http://${INGRESS_HOST}:${INGRESS_PORT}/v1/models/${MODEL_NAME}:predict -d '{"instances": ["The capital of france is [MASK]."] }'
