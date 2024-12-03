@@ -251,7 +251,7 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-  - 172.29.198.75-172.29.198.75
+  - 172.29.198.75-172.29.198.76
 ---
 apiVersion: metallb.io/v1beta1
 kind: L2Advertisement
@@ -371,7 +371,7 @@ Validate the inference service
 ```
 curl -v http://${INGRESS_HOST}:${INGRESS_PORT}/openai/v1/completions \
 -H "content-type: application/json" -H "Host: ${SERVICE_HOSTNAME}" \
--d '{"model": "llama3", "prompt": "Write a poem about colors", "stream":false, "max_tokens": 30}'
+-d '{"model": "llama3", "prompt": "Write a poem about colors", "stream":false, "max_tokens": 30}' | jq .
 ```
 ### Deploying HuggingFace Bloom7b1 model
 ```
@@ -412,7 +412,7 @@ curl -v \
 		"prompt": "Once upon a time,",
 		"max_tokens": 512,
 		"temperature": 0.5
-	}' http://${INGRESS_HOST}:${INGRESS_PORT}/openai/v1/completions
+	}' http://${INGRESS_HOST}:${INGRESS_PORT}/openai/v1/completions | jq .
 ```
 ### Deploying Transformer (Pre/Post processing) and BERT for predictions on TRITON Inference runtime
 ```
@@ -467,7 +467,7 @@ SERVICE_HOSTNAME=$(kubectl get inferenceservices bert-v2 -o jsonpath='{.status.u
 export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].port}')
 
-curl -v -H "Host: ${SERVICE_HOSTNAME}" -H "Content-Type: application/json" -d $INPUT_PATH http://${INGRESS_HOST}:${INGRESS_PORT}/v1/models/$MODEL_NAME:predict
+curl -v -H "Host: ${SERVICE_HOSTNAME}" -H "Content-Type: application/json" -d $INPUT_PATH http://${INGRESS_HOST}:${INGRESS_PORT}/v1/models/$MODEL_NAME:predict | jq .
 ```
 ### Deploying the Huggingface model using TRITON Inference Runtime
 ```
@@ -518,4 +518,4 @@ SERVICE_HOSTNAME=$(kubectl get inferenceservice huggingface-triton -o jsonpath='
 export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].port}')
 
-curl -H "content-type:application/json" -H "Host: ${SERVICE_HOSTNAME}" -v http://${INGRESS_HOST}:${INGRESS_PORT}/v1/models/${MODEL_NAME}:predict -d '{"instances": ["The capital of france is [MASK]."] }'
+curl -H "content-type:application/json" -H "Host: ${SERVICE_HOSTNAME}" -v http://${INGRESS_HOST}:${INGRESS_PORT}/v1/models/${MODEL_NAME}:predict -d '{"instances": ["The capital of france is [MASK]."] }' | jq .
