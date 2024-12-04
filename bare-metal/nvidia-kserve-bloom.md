@@ -1,3 +1,4 @@
+
 Deploy a minio or any S3 compatible storage on a docker host. Example:
 ```
 rm -rf $HOME/minio
@@ -59,6 +60,9 @@ EOF
 Download the sample model from kserve google cloud storage bucket and copy it to the local S3 compatible storage. Ensure AWS credentials are created for the local S3 storage
 ```
 cd $HOME
+wget https://storage.googleapis.com/pub/gsutil.tar.gz
+tar xfz gsutil.tar.gz -C $HOME
+export PATH=${PATH}:$HOME/gsutil
 mkdir -p bloom
 gsutil cp gs://kfserving-examples/models/torchserve/llm/Huggingface_accelerate/bloom $HOME/bloom/
 aws --endpoint-url http://172.29.198.74:9000 s3 cp bloom s3://bloom --recursive
