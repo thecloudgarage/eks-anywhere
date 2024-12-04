@@ -95,6 +95,7 @@ curl -s "https://raw.githubusercontent.com/kserve/kserve/release-0.13/hack/quick
 
 kubectl get svc istio-ingressgateway -n istio-system
 
+kubectl patch cm config-deployment --patch '{"data":{"registriesSkippingTagResolving":"nvcr.io"}}' -n knative-serving
 
 cat <<EOF | kubectl apply -f -
 apiVersion: serving.kserve.io/v1beta1
