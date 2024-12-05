@@ -65,7 +65,14 @@ kubectl get svc
 * Open a terminal
 ```
 cd $HOME
-wget https://github.com/NVIDIA/DALI/archive/refs/heads/main.zip
+wget https://github.com/NVIDIA/DALI_extra/archive/refs/tags/v1.44.0.zip -O DALI.zip
+wget https://github.com/NVIDIA/DALI_extra/archive/refs/tags/v1.44.0.zip -O DALI_extra.zip
+unzip DALI-test.zip
+unzip DALI_extra.zip
+pip install nvidia-dali-cuda120
+pip install nvidia-dali-tf-plugin-cuda120
+pip install nvidia-dali-tf-plugin-cuda120
+
 unzip main.zip
 rm -rf main.zip
 wget https://github.com/NVIDIA/DALI_extra/archive/refs/heads/main.zip
@@ -77,4 +84,11 @@ pip install nvidia-dali-cuda120
 pip install nvidia-dali-tf-plugin-cuda120
 pip install nvidia-dali-tf-plugin-cuda120
 ```
-Open a new jupyter notebook and click on the DALI directory > docs > examples > getting started
+* Open a new jupyter notebook and click on the DALI directory > docs > examples > getting started
+* In the other notebooks in examples > image_processing, please change the value of
+```
+FROM
+test_data_root = os.environ["DALI_EXTRA_PATH"]
+  
+TO
+test_data_root = "/home/jovyan/DALI_extra"
