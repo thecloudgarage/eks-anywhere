@@ -1,3 +1,5 @@
+Jupyter notebook image is used from https://jupyter-docker-stacks.readthedocs.io/en/latest/index.html and more specifically the CUDA enabled image with TensorFlow
+
 ```
 cat <<EOF | kubectl apply -f -
 apiVersion: apps/v1
