@@ -24,9 +24,16 @@ spec:
         image: quay.io/jupyter/tensorflow-notebook:cuda-latest
         ports:
         - containerPort: 8888
-        securityContext:
-          allowPrivilegeEscalation: false
-          runAsUser: 0      
+        env:
+        - name: JUPYTER_ENABLE_LAB
+          value: "yes"
+        - name: GRANT_SUDO #Required for Sudo access
+          value: "yes"
+        - name: DALI_EXTRA_PATH
+          value: "/home/jovyan/DALI_extra"
+        securityContext: #Required to run as root
+          runAsUser: 0 
+          runAsGroup: 0   
         resources:
           limits:
             cpu: "1"
@@ -70,8 +77,10 @@ pip install --extra-index-url https://pypi.nvidia.com --upgrade nvidia-dali-tf-p
 pip install nvidia-nvjpeg-cu12
 sudo apt update -y
 sudo apt-get install git-lfs -y
+git clone https://github.com/NVIDIA/DALI.git
+git clone https://github.com/NVIDIA/DALI_extra.git
 ```
-Workaround if sudo is not working
+### Workaround if sudo is not working as the DALI_extra has huge files and requires git-lfs
 ```
 cd $HOME
 wget https://github.com/NVIDIA/DALI_extra/archive/refs/tags/v1.44.0.zip -O DALI.zip
