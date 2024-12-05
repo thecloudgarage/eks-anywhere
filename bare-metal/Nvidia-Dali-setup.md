@@ -65,8 +65,8 @@ kubectl get svc
 * Paste the token
 * Open a terminal
 ```
-pip install nvidia-dali-cuda120
-pip install nvidia-dali-tf-plugin-cuda120
+pip install --extra-index-url https://pypi.nvidia.com --upgrade nvidia-dali-cuda120
+pip install --extra-index-url https://pypi.nvidia.com --upgrade nvidia-dali-tf-plugin-cuda120
 pip install nvidia-nvjpeg-cu12
 sudo apt update -y
 sudo apt-get install git-lfs -y
