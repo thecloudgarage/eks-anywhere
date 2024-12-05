@@ -71,5 +71,8 @@ unzip main.zip
 rm -rf main.zip
 mv DALI-main DALI
 mv mv DALI_extra-main DALI_extra
+pip install nvidia-dali-cuda120
+pip install nvidia-dali-tf-plugin-cuda120
+pip install nvidia-dali-tf-plugin-cuda120
 ```
 Open a new jupyter notebook and click on the DALI directory > docs > examples > getting started
