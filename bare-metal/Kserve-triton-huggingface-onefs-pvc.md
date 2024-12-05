@@ -14,6 +14,7 @@ eksdistroversion=$(kubectl version -o json | jq -r '.serverVersion.gitVersion')
 export eksdistroversion
 
 #CLONE THE POWERSCALE CSI REPO
+rm -rf csi-powerscale
 mkdir -p csi-powerscale
 cd csi-powerscale
 git clone --quiet -c advice.detachedHead=false -b csi-isilon-$csiReleaseNumber https://github.com/dell/helm-charts
