@@ -3,17 +3,57 @@
 ![image](https://github.com/user-attachments/assets/b06ea771-4cf7-45ab-bd24-f06bd40f7161)
 
 Ensure you are on the machine where you can access the cluster via kubectl and also has the model_repository downloaded locally
+### Deploy Dell PowerScale CSI driver and Storage class
 ```
-wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/refs/heads/main/powerscale/install-powerscale-csi-driver.sh
-chmod +x install-powerscale-csi-driver.sh
-./install-powerscale-csi-driver.sh
+export powerScaleClusterName=F900-AI
+export userNameOfPowerScaleCluster=root
+export passwordOfPowerScaleCluster=XXXXX
+export ipOrFqdnOfPowerScaleCluster=172.29.208.91
+
+eksdistroversion=$(kubectl version -o json | jq -r '.serverVersion.gitVersion')
+export eksdistroversion
+#
+#INSTALL EXTERNAL SNAPSHOTTER
+git clone https://github.com/kubernetes-csi/external-snapshotter/
+cd ./external-snapshotter
+git checkout release-5.0
+kubectl kustomize client/config/crd | kubectl create -f -
+kubectl -n kube-system kustomize deploy/kubernetes/snapshot-controller | kubectl create -f -
+#CLONE THE POWERSCALE CSI REPO
+mkdir -p csi-powerscale
+cd csi-powerscale
+git clone --quiet -c advice.detachedHead=false -b csi-isilon-$csiReleaseNumber https://github.com/dell/helm-charts
+#MODIFY VOLUME PREFIXES
+sed -i "s/^volumeNamePrefix:.*/volumeNamePrefix:\ $clusterName/g" helm-charts/charts/csi-isilon/values.yaml
+sed -i "s/snapNamePrefix: snapshot/snapNamePrefix: $clusterName-snap/g" helm-charts/charts/csi-isilon/values.yaml
+sed -i 's/isiAuthType: 0/isiAuthType: 1/g' helm-charts/charts/csi-isilon/values.yaml
+#MODIFY K8S VERSION IN THE HELM CHART TO CUSTOM VALUE USED BY EKS DISTRO
+sed -i "s/^kubeVersion.*/kubeVersion: \"${eksdistroversion}\"/g" helm-charts/charts/csi-isilon/Chart.yaml
+#PREPARE FOR POWERSCALE CSI INSTALLATION
+kubectl create namespace csi-powerscale
+wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerscale/powerscale-creds.yaml
+wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerscale/emptysecret.yaml
+#BUILD CREDS FILE FOR POWERSCALE CSI
+sed -i "s/powerscale_cluster_name/$powerScaleClusterName/g" powerscale-creds.yaml
+sed -i "s/powerscale_username/$userNameOfPowerScaleCluster/g" powerscale-creds.yaml
+sed -i "s/powerscale_password/$passwordOfPowerScaleCluster/g" powerscale-creds.yaml
+sed -i "s/powerscale_endpoint/$ipOrFqdnOfPowerScaleCluster/g" powerscale-creds.yaml
+#CREATE SECRETS FOR POWERSCALE CSI
+kubectl create secret generic isilon-creds -n csi-powerscale --from-file=config=powerscale-creds.yaml -o yaml --dry-run=client | kubectl apply -f -
+kubectl create -f emptysecret.yaml
+#INSTALL POWERSCALE CSI
+cd helm-charts/charts
+helm install isilon -n csi-powerscale csi-isilon/ --values csi-isilon/values.yaml
+#CREATE STORAGE CLASS FOR POWERSCALE CSI
+wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerscale/powerscale-storageclass.yaml
+kubectl create -f powerscale-storageclass.yaml
 ```
-Validate the CSI driver and storage class
+### Validate the CSI driver and storage class
 ```
 kubectl get pods -n csi-powerscale
 kubectl get sc
 ```
-Create the Persitent volume dynamically via PVC
+### Create the Persitent volume dynamically via PVC
 ```
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
@@ -32,7 +72,7 @@ spec:
       storage: 4Gi
 EOF
 ```
-Create a Pod to copy the model_repository to the Persistent volume
+### Create a Pod to copy the model_repository to the Persistent volume
 ```
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
@@ -58,12 +98,12 @@ spec:
           cpu: "1"
 EOF
 ```
-Copy the model_repository to the Pod that further maps it to the persistent volume
+### Copy the model_repository to the Pod that further maps it to the persistent volume
 ```
 kubectl cp model_repository model-store-pod:/pv/ -c model-store
 kubectl exec -it model-store-pod -- bash
 ```
-Create the Kserve Inference service with the Storage URL pointing to the existing PVC
+### Create the Kserve Inference service with the Storage URL pointing to the existing PVC
 ```
 cat <<EOF | kubectl apply -f -
 apiVersion: serving.kserve.io/v1beta1
@@ -107,7 +147,7 @@ spec:
           memory: 2Gi
 EOF
 ```
-Validate
+### Validate
 ```
 MODEL_NAME=bert
 SERVICE_HOSTNAME=$(kubectl get inferenceservice huggingface-triton -o jsonpath='{.status.url}' | cut -d "/" -f 3)
