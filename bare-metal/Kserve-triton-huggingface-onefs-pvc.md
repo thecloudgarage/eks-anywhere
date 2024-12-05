@@ -115,8 +115,13 @@ tar: model_repository/roberta/1/model.pt: Cannot change ownership to uid 1001, g
 tar: model_repository/roberta/config.pbtxt: Cannot change ownership to uid 1001, gid 1001: Operation not permitted
 ```
 ### Validate if the model exists within the pod under the pv directory
+```
+# Exec into the pod
 kubectl exec -it model-store-pod -- bash
+
+# Validate the presence of model_repository
 ls -al pv
+exit
 ```
 ### Create the Kserve Inference service with the Storage URL pointing to the existing PVC
 ```
