@@ -1,3 +1,7 @@
+# The prowess of Dell PowerScale
+
+![image](https://github.com/user-attachments/assets/b06ea771-4cf7-45ab-bd24-f06bd40f7161)
+
 Ensure you are on the machine where you can access the cluster via kubectl and also has the model_repository downloaded locally
 ```
 wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/refs/heads/main/powerscale/install-powerscale-csi-driver.sh
