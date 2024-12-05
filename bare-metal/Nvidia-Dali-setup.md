@@ -71,18 +71,7 @@ unzip DALI-test.zip
 unzip DALI_extra.zip
 pip install nvidia-dali-cuda120
 pip install nvidia-dali-tf-plugin-cuda120
-pip install nvidia-dali-tf-plugin-cuda120
-
-unzip main.zip
-rm -rf main.zip
-wget https://github.com/NVIDIA/DALI_extra/archive/refs/heads/main.zip
-unzip main.zip
-rm -rf main.zip
-mv DALI-main DALI
-mv mv DALI_extra-main DALI_extra
-pip install nvidia-dali-cuda120
-pip install nvidia-dali-tf-plugin-cuda120
-pip install nvidia-dali-tf-plugin-cuda120
+pip install nvidia-nvjpeg-cu12
 ```
 * Open a new jupyter notebook and click on the DALI directory > docs > examples > getting started
 * In the other notebooks in examples > image_processing, please change the value of
