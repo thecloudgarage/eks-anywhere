@@ -65,14 +65,19 @@ kubectl get svc
 * Paste the token
 * Open a terminal
 ```
+pip install nvidia-dali-cuda120
+pip install nvidia-dali-tf-plugin-cuda120
+pip install nvidia-nvjpeg-cu12
+sudo apt update -y
+sudo apt-get install git-lfs -y
+```
+Workaround if sudo is not working
+```
 cd $HOME
 wget https://github.com/NVIDIA/DALI_extra/archive/refs/tags/v1.44.0.zip -O DALI.zip
 wget https://github.com/NVIDIA/DALI_extra/archive/refs/tags/v1.44.0.zip -O DALI_extra.zip
 unzip DALI-test.zip
 unzip DALI_extra.zip
-pip install nvidia-dali-cuda120
-pip install nvidia-dali-tf-plugin-cuda120
-pip install nvidia-nvjpeg-cu12
 ```
 * Open a new jupyter notebook and click on the DALI directory > docs > examples > getting started
 * In the other notebooks in examples > image_processing, please change the value of
