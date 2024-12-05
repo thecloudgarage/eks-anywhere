@@ -105,7 +105,18 @@ EOF
 ### Copy the model_repository to the Pod that further maps it to the persistent volume
 ```
 kubectl cp model_repository model-store-pod:/pv/ -c model-store
+
+#### IGNORE THE BELOW OBSERVED ERRORS
+tar: model_repository/.DS_Store: Cannot change ownership to uid 1001, gid 1001: Operation not permitted
+tar: model_repository/bert/1/model.pt: Cannot change ownership to uid 1001, gid 1001: Operation not permitted
+tar: model_repository/bert/config.pbtxt: Cannot change ownership to uid 1001, gid 1001: Operation not permitted
+tar: model_repository/roberta/.DS_Store: Cannot change ownership to uid 1001, gid 1001: Operation not permitted
+tar: model_repository/roberta/1/model.pt: Cannot change ownership to uid 1001, gid 1001: Operation not permitted
+tar: model_repository/roberta/config.pbtxt: Cannot change ownership to uid 1001, gid 1001: Operation not permitted
+```
+### Validate if the model exists within the pod under the pv directory
 kubectl exec -it model-store-pod -- bash
+ls -al pv
 ```
 ### Create the Kserve Inference service with the Storage URL pointing to the existing PVC
 ```
