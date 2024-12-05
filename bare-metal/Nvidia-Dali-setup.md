@@ -93,9 +93,9 @@ EOF
 Retrieve the token and External IP for the notebook service
 ```
 kubectl get pods
+kubectl get svc
 POD=$(kubectl get pod -l name=notebook-instance -o jsonpath="{.items[0].metadata.name}")
 kubectl exec -it $POD -- jupyter server list
-kubectl get svc
 ```
 * Open the browser for http://external-ip-of-notebook-svc
 * Paste the token
