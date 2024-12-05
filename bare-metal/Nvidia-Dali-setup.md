@@ -1,3 +1,32 @@
+### Install NVIDIA GPU operator
+```
+helm repo add nvidia https://helm.ngc.nvidia.com/nvidia && helm repo update
+helm install --wait --generate-name -n gpu-operator --create-namespace nvidia/gpu-operator
+```
+### Install MetalLB
+```
+helm repo add metallb https://metallb.github.io/metallb
+helm install metallb metallb/metallb --wait --timeout 15m --namespace metallb-system --create-namespace
+```
+### Configure MetalLB
+```
+cat <<EOF | kubectl apply -f -
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: first-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 172.29.198.75-172.29.198.76
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: example
+  namespace: metallb-system
+EOF
+```
 ### Deploy a Cuda Enabled TensorFlow packaged Jupyter Notebook instance
 Jupyter notebook image is used from https://jupyter-docker-stacks.readthedocs.io/en/latest/index.html and more specifically the CUDA enabled image with TensorFlow
 ```
@@ -80,6 +109,12 @@ sudo apt-get install git-lfs -y
 git clone https://github.com/NVIDIA/DALI.git
 git clone https://github.com/NVIDIA/DALI_extra.git
 ```
+
+
+
+
+
+
 ### Workaround if sudo is not working as the DALI_extra has huge files and requires git-lfs
 ```
 cd $HOME
