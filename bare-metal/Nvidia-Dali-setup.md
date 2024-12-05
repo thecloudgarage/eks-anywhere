@@ -91,4 +91,4 @@ FROM
 test_data_root = os.environ["DALI_EXTRA_PATH"]
   
 TO
-test_data_root = "/home/jovyan/DALI_extra"
+test_data_root = "/home/jovyan/DALI_extra-1.44.0"
