@@ -5,10 +5,12 @@
 Ensure you are on the machine where you can access the cluster via kubectl and also has the model_repository downloaded locally
 ### Deploy Dell PowerScale CSI driver and Storage class
 ```
+export csiReleaseNumber=2.10.0
 export powerScaleClusterName=F900-AI
 export userNameOfPowerScaleCluster=root
-export passwordOfPowerScaleCluster=XXXXX
 export ipOrFqdnOfPowerScaleCluster=172.29.208.91
+export passwordOfPowerScaleCluster=XXXXX
+
 
 eksdistroversion=$(kubectl version -o json | jq -r '.serverVersion.gitVersion')
 export eksdistroversion
