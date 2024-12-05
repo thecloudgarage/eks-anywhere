@@ -1,3 +1,7 @@
+# The Prowess of Dell ECS Object Storage
+
+![image](https://github.com/user-attachments/assets/154bf994-6050-41d2-947d-eb681c33ad61)
+
 Nvidia Triton Inference Server is a robust serving runtime thanks to its optmized performance, scalability, and flexibility. Combined with the expansive library of Hugging Face, which offers state-of-the-art natural language processing capabilities, it opens up immense possibilities for deploying production-ready Huggface Face transformer based models.
 
 By harnessing the power of these tools, here we'll show you how KServe can help further simplify the Triton Inference containers deployment and make efficient use of GPUs by automatically wiring up the open inference protocol between pre/post processing(tokenization) and model inference on triton inference container.
