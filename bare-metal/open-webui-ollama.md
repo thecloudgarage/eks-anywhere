@@ -45,9 +45,31 @@ kubectl create namespace open-webui
 kubectl apply -f https://raw.githubusercontent.com/open-webui/open-webui/main/kubernetes/manifest/base/webui-service.yaml
 kubectl apply -f https://raw.githubusercontent.com/open-webui/open-webui/main/kubernetes/manifest/base/webui-deployment.yaml
 ```
-Edit the open-webui deployment and comment the persistent volume dependency
+- Edit the open-webui deployment and comment the persistent volume dependency if you don't have a CSI integrated
+- Additionally change the base URL for Ollama to ollama.ollama.svc.cluster.local:11434
 ```
 KUBE_EDITOR="nano" kubectl edit deployment open-webui-deployment -n open-webui
 ```
-Edit the opeb-webui service and change it to LoadBalancer
+- Edit the opeb-webui service and change it to LoadBalancer
+- For persistent volume claims, ensure a default storage class exists
+```
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: open-webui-pvc
+  namespace: open-webui
+  labels:
+    name: open-webui-pvc
+    csi: powerscale
+spec:
+  storageClassName: powerscale
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 4Gi
+EOF
+```
+
 
