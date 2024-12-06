@@ -57,12 +57,43 @@ wget https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
 chmod +x install.sh
 #NOTE HOW WE ARE PASSING AN ENTER FOR THE INTERACTIVE PROMPT THAT THE INSTALL SCRIPT GENERATES TO CONFIRM FOR INSTALLATION
 sudo echo -ne '\n' | ./install.sh
-echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /home/ubuntu/.profile
+echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> /home/prd/.profile
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 ```
 Install Kustomize
 ```
 brew install kustomize
+```
+Install NVIDIA GPU Operator
+```
+helm repo add nvidia https://helm.ngc.nvidia.com/nvidia && helm repo update
+helm install --wait --generate-name -n gpu-operator --create-namespace nvidia/gpu-operator
+kubectl get pods -n gpu-operator
+kubectl get node -o json | jq '.items[].metadata.labels'
+```
+Install and Configure MetalLB
+```
+helm repo add metallb https://metallb.github.io/metallb
+helm install metallb metallb/metallb --wait --timeout 15m --namespace metallb-system --create-namespace
+cat <<EOF | kubectl apply -f -
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: first-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 172.29.198.75-172.29.198.76
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: example
+  namespace: metallb-system
+EOF
+```
+Install KubeFlow
+```
 git clone https://github.com/kubeflow/manifests.git
 cd manifests
 while ! kustomize build  example | kubectl apply -f - --server-side --force-conflicts; do echo "Retrying to apply resources"; sleep 10; done
