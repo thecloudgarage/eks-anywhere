@@ -111,11 +111,23 @@ Edit the service Type to LoadBalancer
 http://<external-ip-of-istio-ingress-gateway>
 Default credentials- user@example.com and 12341234
 ```
-Launch a notebook with tensorflow image
+- Launch an instance with tensorflow image
+- Create a notebook
 ```
 import tensorflow as tf
 print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 ```
+Launch a terminal
+```
+pip install tensorflow-datasets
+pip install tfds-nightly
+```
+Run the example notebook
+```
+https://www.tensorflow.org/datasets/keras_example
+https://github.com/tensorflow/datasets/blob/master/docs/keras_example.ipynb
+```
+
 ### Installing and configuring kubectl on windows
 ```
 https://site-ghwmnxe1v6.talkyard.net/-12/faq-how-to-set-up-kubeconfig-on-windows-wise-paasensaas-k8s-service
