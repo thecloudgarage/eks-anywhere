@@ -98,12 +98,25 @@ git clone https://github.com/kubeflow/manifests.git
 cd manifests
 while ! kustomize build  example | kubectl apply -f - --server-side --force-conflicts; do echo "Retrying to apply resources"; sleep 10; done
 ```
-Preferably on windows, download and run kubectl
+Accessing Kubeflow using Port Forward
 ```
-https://site-ghwmnxe1v6.talkyard.net/-12/faq-how-to-set-up-kubeconfig-on-windows-wise-paasensaas-k8s-service
+kubectl port-forward svc/istio-ingressgateway -n istio-system 8080:80
+http://127.0.0.1:8080
+Default credentials- user@example.com and 12341234
+```
+Accessing Kubeflow via Istio External IP
+```
+KUBE_EDITOR="nano" kubectl edit svc istio-ingressgateway -n istio-system
+Edit the service Type to LoadBalancer
+http://<external-ip-of-istio-ingress-gateway>
+Default credentials- user@example.com and 12341234
 ```
 Launch a notebook with tensorflow image
 ```
 import tensorflow as tf
 print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
+```
+### Installing and configuring kubectl on windows
+```
+https://site-ghwmnxe1v6.talkyard.net/-12/faq-how-to-set-up-kubeconfig-on-windows-wise-paasensaas-k8s-service
 ```
