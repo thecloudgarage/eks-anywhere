@@ -182,9 +182,17 @@ In general, there are two main approaches to distributed training popular in the
 
 In synchronous distributed training, each worker processes its part of the training dataset. Workers also communicate with each other to process their part of the gradient and aggregate results. The most popular approach to synchronous training is based on all-reduce algorithms. 
 
-Contrary to this, in asynchronous training, all learners work on the complete training data independently, updating parameters asynchronously. Async training is implemented via a parameter server architecture where parameter updates are aggregated and performed by a parameter server that coordinates the interactions between workers. 
+Contrary to this, in asynchronous training, all learners work on the complete training data independently, updating parameters asynchronously. Async training is implemented via a parameter server architecture where parameter updates are aggregated and performed by a parameter server that coordinates the interactions between workers.
 
-- Change the number of worker replicas based on number of GPU nodes.
+Generally a mixed bag of opinion in terms of what is better Asynchronous vs Synchronous in terms of performance/throughput. In sync training, all workers train over different slices of input data in sync, and aggregating gradients at each step. In async training, all workers are independently training over the input data and updating variables asynchronously. Typically sync training is supported via all-reduce and async through parameter server architecture. The final training result of async and sync parallel distributed training depends upon specific implementation, optimization, and training algorithm
+
+#### Deploy the Training Operator
+```
+kubectl apply --server-side --force-conflicts -k "github.com/kubeflow/training-operator.git/manifests/overlays/standalone?ref=v1.8.0"
+```
+#### Asynchronous Distributed training using Parameter Server
+
+- Start with 1 worker replica with 1 GPU and then consequently change the number of worker replicas/GPU based on capacity
 
 ```
 cat <<EOF | kubectl apply -f -
