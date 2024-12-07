@@ -174,7 +174,84 @@ Run the example notebook
 https://www.tensorflow.org/datasets/keras_example
 https://github.com/tensorflow/datasets/blob/master/docs/keras_example.ipynb
 ```
+### Distributed Training
 
+Scaling ML training involves the ability to increase the number of running workers/learners, CPUs/GPUs, or other compute resources available in the cluster. However, scaling Keras training jobs is not so straightforward because training an ML model with multiple workers requires a distributed strategy. It allows for substantially faster training iterations and speeds up ML experimentation and CI/CD pipelines, but building such a distributed strategy for ML training is hard because it can involve complex coordination between learners and aggregation of parameters. 
+
+In general, there are two main approaches to distributed training popular in the ML community today: synchronous and asynchronous training. 
+
+In synchronous distributed training, each worker processes its part of the training dataset. Workers also communicate with each other to process their part of the gradient and aggregate results. The most popular approach to synchronous training is based on all-reduce algorithms. 
+
+Contrary to this, in asynchronous training, all learners work on the complete training data independently, updating parameters asynchronously. Async training is implemented via a parameter server architecture where parameter updates are aggregated and performed by a parameter server that coordinates the interactions between workers. 
+
+- Change the number of worker replicas based on number of GPU nodes.
+
+```
+cat <<EOF | kubectl apply -f -
+apiVersion: "kubeflow.org/v1"
+kind: "TFJob"
+metadata:
+  name: "tf-smoke-gpu"
+spec:
+  tfReplicaSpecs:
+    PS:
+      replicas: 1
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          containers:
+            - args:
+                - python
+                - tf_cnn_benchmarks.py
+                - --batch_size=32
+                - --model=resnet50
+                - --variable_update=parameter_server
+                - --flush_stdout=true
+                - --num_gpus=1
+                - --local_parameter_device=cpu
+                - --device=cpu
+                - --data_format=NHWC
+              image: kubeflow/tf-benchmarks-cpu:v20171202-bdab599-dirty-284af3
+              name: tensorflow
+              ports:
+                - containerPort: 2222
+                  name: tfjob-port
+              resources:
+                limits:
+                  cpu: "1"
+              workingDir: /opt/tf-benchmarks/scripts/tf_cnn_benchmarks
+          restartPolicy: OnFailure
+    Worker:
+      replicas: 2
+      template:
+        metadata:
+          creationTimestamp: null
+        spec:
+          containers:
+            - args:
+                - python
+                - tf_cnn_benchmarks.py
+                - --batch_size=32
+                - --model=resnet50
+                - --variable_update=parameter_server
+                - --flush_stdout=true
+                - --num_gpus=1
+                - --local_parameter_device=cpu
+                - --device=gpu
+                - --data_format=NHWC
+              image: kubeflow/tf-benchmarks-gpu:v20171202-bdab599-dirty-284af3
+              name: tensorflow
+              ports:
+                - containerPort: 2222
+                  name: tfjob-port
+              resources:
+                limits:
+                  nvidia.com/gpu: 1
+              workingDir: /opt/tf-benchmarks/scripts/tf_cnn_benchmarks
+          restartPolicy: OnFailure
+EOF
+```
 ### Installing and configuring kubectl on windows
 ```
 https://site-ghwmnxe1v6.talkyard.net/-12/faq-how-to-set-up-kubeconfig-on-windows-wise-paasensaas-k8s-service
