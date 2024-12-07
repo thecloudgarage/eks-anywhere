@@ -106,9 +106,56 @@ Default credentials- user@example.com and 12341234
 ```
 Accessing Kubeflow via Istio External IP
 ```
-KUBE_EDITOR="nano" kubectl edit svc istio-ingressgateway -n istio-system
-Edit the service Type to LoadBalancer
-http://<external-ip-of-istio-ingress-gateway>
+# PATCH THE SERVICE TYPE FOR ISTIO INGRESS GATEWAY
+kubectl patch svc istio-ingressgateway -n istio-system -p '{"spec": {"type": "LoadBalancer"}}'
+
+# CREATE A CERTIFICATE
+cat <<EOF | kubectl apply -f -
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: istio-ingressgateway-certs
+  namespace: istio-system
+spec:
+  commonName: istio-ingressgateway.istio-system.svc
+  # Use ipAddresses if your LoadBalancer issues an IP
+  ipAddresses:
+  - <LoadBalancer IP>
+  # Use dnsNames if your LoadBalancer issues a hostname (eg DNS name from Civo dashboard)
+  dnsNames:
+  - <LoadBalancer HostName>
+  isCA: true
+  issuerRef:
+    kind: ClusterIssuer
+    name: kubeflow-self-signing-issuer
+  secretName: istio-ingressgateway-certs
+EOF
+
+# EDIT THE INGRESS GATEWAY OBJECT FOR KUBEFLOW-GATEWAY AND REPLACE THE VALUES STARTING FROM SPEC BLOCK
+cat <<EOF | kubectl apply -f -
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: kubeflow-gateway
+  namespace: kubeflow
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - '*'
+    port:
+      name: https
+      number: 443
+      protocol: HTTPS
+    tls:
+      mode: SIMPLE
+      privateKey: /etc/istio/ingressgateway-certs/tls.key
+      serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
+EOF
+
+# ACCESS KUBEFLOW DASHBOARD VIA HTTPS
+https://<external-ip-of-istio-ingress-gateway>
 Default credentials- user@example.com and 12341234
 ```
 - Launch an instance with tensorflow image
