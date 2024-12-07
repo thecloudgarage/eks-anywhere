@@ -1,3 +1,6 @@
+![image](https://github.com/user-attachments/assets/35590bff-5fdb-44e0-bf02-27880fd77746)
+
+
 Deploy Dell PowerScale CSI drivers and Storage Class
 ```
 export csiReleaseNumber=2.10.0
@@ -260,7 +263,48 @@ spec:
           restartPolicy: OnFailure
 EOF
 ```
+- Observations
+```
+1 worker 1 GPU
+INFO|2024-12-07T13:54:53|/opt/launcher.py|27| Step      Img/sec loss
+INFO|2024-12-07T13:54:54|/opt/launcher.py|27| 1 images/sec: 79.5 +/- 0.0 (jitter = 0.0) 10.803
+INFO|2024-12-07T13:54:57|/opt/launcher.py|27| 10        images/sec: 79.8 +/- 2.0 (jitter = 2.9) 8.642
+INFO|2024-12-07T13:55:01|/opt/launcher.py|27| 20        images/sec: 81.0 +/- 1.3 (jitter = 3.0) 8.531
+INFO|2024-12-07T13:55:05|/opt/launcher.py|27| 30        images/sec: 82.0 +/- 1.0 (jitter = 2.6) 8.038
+INFO|2024-12-07T13:55:09|/opt/launcher.py|27| 40        images/sec: 81.9 +/- 1.0 (jitter = 2.9) 9.497
+INFO|2024-12-07T13:55:13|/opt/launcher.py|27| 50        images/sec: 82.0 +/- 0.9 (jitter = 2.7) 7.858
+INFO|2024-12-07T13:55:17|/opt/launcher.py|27| 60        images/sec: 82.7 +/- 0.9 (jitter = 3.4) 8.721
+INFO|2024-12-07T13:55:20|/opt/launcher.py|27| 70        images/sec: 83.0 +/- 0.8 (jitter = 3.5) 8.039
+INFO|2024-12-07T13:55:24|/opt/launcher.py|27| 80        images/sec: 82.8 +/- 0.7 (jitter = 3.4) 7.931
+INFO|2024-12-07T13:55:28|/opt/launcher.py|27| 90        images/sec: 82.5 +/- 0.7 (jitter = 3.6) 7.806
+INFO|2024-12-07T13:55:32|/opt/launcher.py|27| 100       images/sec: 82.1 +/- 0.7 (jitter = 3.4) 7.945
+INFO|2024-12-07T13:55:32|/opt/launcher.py|27| ----------------------------------------------------------------
+INFO|2024-12-07T13:55:32|/opt/launcher.py|27| total images/sec: 82.40
+INFO|2024-12-07T13:55:32|/opt/launcher.py|27| ----------------------------------------------------------------
+
+2 workers 1 GPU
+
+INFO|2024-12-07T14:06:22|/opt/launcher.py|27| Step      Img/sec loss
+INFO|2024-12-07T14:06:22|/opt/launcher.py|27| 1 images/sec: 78.1 +/- 0.0 (jitter = 0.0) 9.057
+INFO|2024-12-07T14:06:25|/opt/launcher.py|27| 10        images/sec: 83.3 +/- 2.0 (jitter = 3.4) 8.282
+INFO|2024-12-07T14:06:29|/opt/launcher.py|27| 20        images/sec: 83.9 +/- 1.9 (jitter = 5.0) 8.037
+INFO|2024-12-07T14:06:33|/opt/launcher.py|27| 30        images/sec: 83.1 +/- 1.4 (jitter = 3.9) 7.929
+INFO|2024-12-07T14:06:37|/opt/launcher.py|27| 40        images/sec: 83.0 +/- 1.2 (jitter = 3.8) 9.025
+INFO|2024-12-07T14:06:41|/opt/launcher.py|27| 50        images/sec: 82.5 +/- 1.1 (jitter = 4.3) 7.934
+INFO|2024-12-07T14:06:45|/opt/launcher.py|27| 60        images/sec: 82.8 +/- 1.0 (jitter = 4.3) 8.365
+INFO|2024-12-07T14:06:48|/opt/launcher.py|27| 70        images/sec: 83.2 +/- 0.9 (jitter = 4.3) 7.904
+INFO|2024-12-07T14:06:52|/opt/launcher.py|27| 80        images/sec: 83.3 +/- 0.8 (jitter = 4.5) 7.925
+INFO|2024-12-07T14:06:56|/opt/launcher.py|27| 90        images/sec: 82.9 +/- 0.8 (jitter = 4.8) 7.929
+INFO|2024-12-07T14:07:00|/opt/launcher.py|27| 100       images/sec: 83.3 +/- 0.8 (jitter = 4.7) 7.886
+INFO|2024-12-07T14:07:00|/opt/launcher.py|27| ----------------------------------------------------------------
+INFO|2024-12-07T14:07:00|/opt/launcher.py|27| total images/sec: 167.40
+INFO|2024-12-07T14:07:00|/opt/launcher.py|27| ----------------------------------------------------------------
+
 ### Installing and configuring kubectl on windows
 ```
 https://site-ghwmnxe1v6.talkyard.net/-12/faq-how-to-set-up-kubeconfig-on-windows-wise-paasensaas-k8s-service
 ```
+### References
+- https://www.kubeflow.org/docs/components/training/user-guides/tensorflow/
+- https://iamondemand.com/blog/scaling-keras-on-kubernetes-with-kubeflow/#:~:text=Keras%20models%20deployed%20using%20Seldon,RAM%20load%20or%20network%20requests.
+- 
