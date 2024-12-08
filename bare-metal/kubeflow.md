@@ -111,6 +111,7 @@ Accessing Kubeflow via Istio External IP
 ```
 # PATCH THE SERVICE TYPE FOR ISTIO INGRESS GATEWAY
 kubectl patch svc istio-ingressgateway -n istio-system -p '{"spec": {"type": "LoadBalancer"}}'
+export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 
 # CREATE A CERTIFICATE
 cat <<EOF | kubectl apply -f -
@@ -123,10 +124,8 @@ spec:
   commonName: istio-ingressgateway.istio-system.svc
   # Use ipAddresses if your LoadBalancer issues an IP
   ipAddresses:
-  - <LoadBalancer IP>
+  - $INGRESS_HOST
   # Use dnsNames if your LoadBalancer issues a hostname (eg DNS name from Civo dashboard)
-  dnsNames:
-  - <LoadBalancer HostName>
   isCA: true
   issuerRef:
     kind: ClusterIssuer
@@ -299,7 +298,7 @@ INFO|2024-12-07T14:07:00|/opt/launcher.py|27| 100       images/sec: 83.3 +/- 0.8
 INFO|2024-12-07T14:07:00|/opt/launcher.py|27| ----------------------------------------------------------------
 INFO|2024-12-07T14:07:00|/opt/launcher.py|27| total images/sec: 167.40
 INFO|2024-12-07T14:07:00|/opt/launcher.py|27| ----------------------------------------------------------------
-
+```
 ### Installing and configuring kubectl on windows
 ```
 https://site-ghwmnxe1v6.talkyard.net/-12/faq-how-to-set-up-kubeconfig-on-windows-wise-paasensaas-k8s-service
