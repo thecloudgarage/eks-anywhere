@@ -192,7 +192,7 @@ Generally a mixed bag of opinion in terms of what is better Asynchronous vs Sync
 ```
 kubectl apply --server-side --force-conflicts -k "github.com/kubeflow/training-operator.git/manifests/overlays/standalone?ref=v1.8.0"
 ```
-#### Asynchronous Distributed training using Parameter Server
+#### TFJob Asynchronous Distributed training using Parameter Server
 
 - Start with 1 worker replica with 1 GPU and then consequently change the number of worker replicas/GPU based on capacity
 
@@ -299,6 +299,70 @@ INFO|2024-12-07T14:07:00|/opt/launcher.py|27| ----------------------------------
 INFO|2024-12-07T14:07:00|/opt/launcher.py|27| total images/sec: 167.40
 INFO|2024-12-07T14:07:00|/opt/launcher.py|27| ----------------------------------------------------------------
 ```
+
+### PyTorchJob 
+```
+cat <<EOF | kubectl create -f -
+apiVersion: "kubeflow.org/v1"
+kind: "PyTorchJob"
+metadata:
+  name: "pytorchjob-mnist"
+spec:
+  pytorchReplicaSpecs:
+    Master:
+      replicas: 1
+      restartPolicy: OnFailure
+      template:
+        metadata:
+          annotations:
+            sidecar.istio.io/inject: "false"
+        spec:
+          containers:
+            - name: pytorch
+              image: docker.io/kubeflowkatib/pytorch-mnist-gpu:latest
+              args:
+                - --epochs
+                - "20"
+                - --seed
+                - "7"
+                - --log-interval
+                - "256"
+                - --batch-size
+                - "512"
+              resources:
+                limits:
+                  cpu: 1
+                  memory: "3G"
+                  nvidia.com/gpu: 1
+    Worker:
+      replicas: 2
+      restartPolicy: OnFailure
+      template:
+        metadata:
+          annotations:
+            sidecar.istio.io/inject: "false"
+        spec:
+          containers:
+            - name: pytorch
+              image: docker.io/kubeflowkatib/pytorch-mnist-gpu:latest
+              args:
+                - --epochs
+                - "20"
+                - --seed
+                - "7"
+                - --log-interval
+                - "256"
+                - --batch-size
+                - "512"
+              resources:
+                limits:
+                  cpu: 1
+                  memory: "3G"
+                  nvidia.com/gpu: 1
+#  runPolicy:
+#    ttlSecondsAfterFinished: 600
+EOF
+```
 ### Installing and configuring kubectl on windows
 ```
 https://site-ghwmnxe1v6.talkyard.net/-12/faq-how-to-set-up-kubeconfig-on-windows-wise-paasensaas-k8s-service
@@ -306,4 +370,5 @@ https://site-ghwmnxe1v6.talkyard.net/-12/faq-how-to-set-up-kubeconfig-on-windows
 ### References
 - https://www.kubeflow.org/docs/components/training/user-guides/tensorflow/
 - https://iamondemand.com/blog/scaling-keras-on-kubernetes-with-kubeflow/#:~:text=Keras%20models%20deployed%20using%20Seldon,RAM%20load%20or%20network%20requests.
+- https://kueue.sigs.k8s.io/docs/tasks/run/kubeflow/pytorchjobs/
 - 
