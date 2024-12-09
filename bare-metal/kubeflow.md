@@ -132,14 +132,10 @@ spec:
   secretName: istio-ingressgateway-certs
 EOF
 
-# EDIT THE INGRESS GATEWAY OBJECT FOR KUBEFLOW-GATEWAY AND REPLACE THE VALUES STARTING FROM SPEC BLOCK
+# EDIT THE INGRESS GATEWAY OBJECT FOR KUBEFLOW-GATEWAY AND REPLACE THE VALUES STARTING FROM SERVER BLOCK
 
-KUBE_EDITOR="nano" kubectl edit gateway istio-ingressgateway -n istio-system
+KUBE_EDITOR="nano" kubectl edit -n kubeflow gateways.networking.istio.io kubeflow-gateway
 
-spec:
-  selector:
-    app: istio-ingressgateway
-    istio: ingressgateway
   servers:
   - hosts:
     - '*'
