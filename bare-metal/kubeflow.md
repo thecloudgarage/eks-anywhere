@@ -328,7 +328,7 @@ spec:
         spec:
           containers:
             - name: tensorflow
-              image: datascience-registry.cn-beijing.cr.aliyuncs.com/kubeflow-examples/multi_worker_strategy:0.1.1
+              image: thecloudgarage/multi_worker_strategy:0.1.1
               volumeMounts:
                 - mountPath: /train
                   name: training
@@ -413,4 +413,4 @@ https://site-ghwmnxe1v6.talkyard.net/-12/faq-how-to-set-up-kubeconfig-on-windows
 - https://www.kubeflow.org/docs/components/training/user-guides/tensorflow/
 - https://iamondemand.com/blog/scaling-keras-on-kubernetes-with-kubeflow/#:~:text=Keras%20models%20deployed%20using%20Seldon,RAM%20load%20or%20network%20requests.
 - https://kueue.sigs.k8s.io/docs/tasks/run/kubeflow/pytorchjobs/
-- 
+- datascience-registry.cn-beijing.cr.aliyuncs.com/kubeflow-examples/multi_worker_strategy:0.1.1
