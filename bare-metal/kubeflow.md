@@ -3,12 +3,11 @@
 
 Deploy Dell PowerScale CSI drivers and Storage Class
 ```
+export passwordOfPowerScaleCluster=XXXXX
 export csiReleaseNumber=2.10.0
 export powerScaleClusterName=F900-AI
 export userNameOfPowerScaleCluster=root
 export ipOrFqdnOfPowerScaleCluster=172.29.208.91
-export passwordOfPowerScaleCluster=XXXXX
-
 
 eksdistroversion=$(kubectl version -o json | jq -r '.serverVersion.gitVersion')
 export eksdistroversion
