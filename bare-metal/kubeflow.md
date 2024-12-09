@@ -134,14 +134,11 @@ spec:
 EOF
 
 # EDIT THE INGRESS GATEWAY OBJECT FOR KUBEFLOW-GATEWAY AND REPLACE THE VALUES STARTING FROM SPEC BLOCK
-cat <<EOF | kubectl apply -f -
-apiVersion: networking.istio.io/v1
-kind: Gateway
-metadata:
-  name: kubeflow-gateway
-  namespace: kubeflow
+
+```
 spec:
   selector:
+    app: istio-ingressgateway
     istio: ingressgateway
   servers:
   - hosts:
@@ -154,8 +151,7 @@ spec:
       mode: SIMPLE
       privateKey: /etc/istio/ingressgateway-certs/tls.key
       serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
-EOF
-
+```
 # ACCESS KUBEFLOW DASHBOARD VIA HTTPS
 https://<external-ip-of-istio-ingress-gateway>
 Default credentials- user@example.com and 12341234
