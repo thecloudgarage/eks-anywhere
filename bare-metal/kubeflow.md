@@ -299,8 +299,55 @@ INFO|2024-12-07T14:07:00|/opt/launcher.py|27| ----------------------------------
 INFO|2024-12-07T14:07:00|/opt/launcher.py|27| total images/sec: 167.40
 INFO|2024-12-07T14:07:00|/opt/launcher.py|27| ----------------------------------------------------------------
 ```
+#### TFJob Synchronous MultiWorker training for TensorFlow
+```
+export storageClassName=powerscale
 
-### PyTorchJob 
+cat << EOF | kubectl apply -f -
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: strategy-volume
+  labels:
+    app: strategy-volume
+spec:
+  storageClassName: ${storageClassName}
+  accessModes:
+  - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+EOF
+
+cat <<EOF | kubectl create -f -
+apiVersion: kubeflow.org/v1
+kind: TFJob
+metadata:
+  name: multi-worker
+spec:
+  tfReplicaSpecs:
+    Worker:
+      replicas: 2
+      restartPolicy: Never
+      template:
+        spec:
+          containers:
+            - name: tensorflow
+              image: datascience-registry.cn-beijing.cr.aliyuncs.com/kubeflow-examples/multi_worker_strategy:0.1.1
+              volumeMounts:
+                - mountPath: /train
+                  name: training
+              resources:
+                limits:
+                  nvidia.com/gpu: 1
+          volumes:
+            - name: training
+              persistentVolumeClaim:
+                claimName: strategy-volume
+EOF
+```
+
+### PyTorchJob Distributed Training for PyTorch
 ```
 cat <<EOF | kubectl create -f -
 apiVersion: "kubeflow.org/v1"
