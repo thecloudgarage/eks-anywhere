@@ -150,7 +150,8 @@ spec:
       privateKey: /etc/istio/ingressgateway-certs/tls.key
       serverCertificate: /etc/istio/ingressgateway-certs/tls.crt
 ```
-# ACCESS KUBEFLOW DASHBOARD VIA HTTPS
+### ACCESS KUBEFLOW DASHBOARD VIA HTTPS
+```
 https://<external-ip-of-istio-ingress-gateway>
 Default credentials- user@example.com and 12341234
 ```
