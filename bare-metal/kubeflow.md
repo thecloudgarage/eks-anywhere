@@ -115,7 +115,7 @@ export INGRESS_HOST=$(kubectl -n istio-system get service istio-ingressgateway -
 
 # CREATE A CERTIFICATE
 cat <<EOF | kubectl apply -f -
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: istio-ingressgateway-certs
