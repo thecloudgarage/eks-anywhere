@@ -134,6 +134,8 @@ EOF
 
 # EDIT THE INGRESS GATEWAY OBJECT FOR KUBEFLOW-GATEWAY AND REPLACE THE VALUES STARTING FROM SPEC BLOCK
 
+KUBE_EDITOR="nano" kubectl edit gateway istio-ingressgateway -n istio-system
+
 spec:
   selector:
     app: istio-ingressgateway
