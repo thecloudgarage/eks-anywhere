@@ -410,6 +410,116 @@ spec:
 #    ttlSecondsAfterFinished: 600
 EOF
 ```
+### WORK-IN-PROGRESS 
+```
+kubectl apply -f https://raw.githubusercontent.com/aws-samples/aws-do-eks/main/Container-Root/eks/deployment/etcd/etcd-deployment.yaml
+
+JOB_NAME=fsdp
+RDZV_HOST=etcd
+RDZV_PORT=2379
+NUM_WORKERS=2
+GPU_PER_WORKER=2
+EFA_PER_WORKER=0
+MODEL_NAME=meta-llama/Llama-2-7b-hf
+HF_TOKEN="Your-huggingface-token"
+CMD="huggingface-cli login --token ${HF_TOKEN} && torchrun --nproc_per_node=${GPU_PER_WORKER} --nnodes=${NUM_WORKERS} recipes/finetuning/finetuning.py --num_epochs=3 --batch_size_training=3 --enable_fsdp --model_name $MODEL_NAME --output_dir ."
+DOCKERHUB_USER_NAME=thecloudgarage
+IMAGE=fsdp
+TAG=":llama2"
+
+cat > ./Dockerfile <<EOF
+FROM pytorch/pytorch:2.5.1-cuda12.4-cudnn9-runtime
+#FROM pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt update && apt install -y git vim curl htop
+RUN mkdir -p /workspace/
+WORKDIR /workspace
+RUN git clone -b aws-do-fsdp  https://github.com/meta-llama/llama-recipes.git
+WORKDIR /workspace/llama-recipes
+RUN pip3 install -U pip setuptools
+RUN pip3 install fsspec==2023.1.0
+RUN pip3 install huggingface_hub==0.17.0
+RUN pip3 install -r requirements.txt
+RUN pip3 install -e .
+RUN pip3 install tabulate
+# The following two lines can be used to switch to the nighhtly pytorch build if needed
+#RUN pip3 uninstall -y torch
+#RUN pip3 install --pre torch --index-url https://download.pytorch.org/whl/nightly/cu121
+RUN pip3 install protobuf
+RUN rm -rf /root/.cache
+RUN apt-get clean
+ENV PYTHONPATH="/workspace/llama-recipes/src"
+RUN pip3 install awscli pynvml python-etcd
+EOF
+
+
+docker built -t $DOCKERHUB_USER_NAME/${IMAGE}${TAG}
+docker image push $DOCKERHUB_USER_NAME/${IMAGE}${TAG}
+
+cat > ./fsdp.yaml <<EOF
+apiVersion: kubeflow.org/v1
+kind: PyTorchJob
+metadata:
+  name: $JOB_NAME
+spec:
+  elasticPolicy:
+    rdzvBackend: etcd
+    rdzvHost: $RDZV_HOST
+    rdzvPort: $RDZV_PORT
+    rdzvId: '1' #ENSURE THIS VALUE IS CHANGED EVERY TIME YOU REDEPLOY
+    minReplicas: 1
+    maxReplicas: 4
+    maxRestarts: 100
+    metrics:
+      - type: Resource
+        resource:
+          name: cpu
+          target:
+            type: Utilization
+            averageUtilization: 90
+  pytorchReplicaSpecs:
+    Worker:
+      replicas: $NUM_WORKERS
+      restartPolicy: OnFailure
+      template:
+        metadata:
+          labels:
+            app: $JOB_NAME
+        spec:
+          volumes:
+            - name: shmem
+              hostPath:
+                path: /dev/shm
+          nodeSelector:
+            gputype: 'l40s'
+          containers:
+            - name: pytorch
+              image: '$DOCKERHUB_USER_NAME/${IMAGE}${TAG}'
+              imagePullPolicy: Always
+              resources:
+                requests:
+                  nvidia.com/gpu: 2
+                limits:
+                  nvidia.com/gpu: 2
+              env:
+                - name: LOGLEVEL
+                  value: DEBUG
+                - name: NCCL_DEBUG
+                  value: INFO
+                - name: TORCH_NCCL_ASYNC_ERROR_HANDLING
+                  value: '1'
+                - name: CUDA_VISIBLE_DEVICES
+                  value: '0,1'
+              command:
+                - bash
+                - '-c'
+                - '${CMD}'
+              volumeMounts:
+                - name: shmem
+                  mountPath: /dev/shm
+EOF
+```
+
 ### Installing and configuring kubectl on windows
 ```
 https://site-ghwmnxe1v6.talkyard.net/-12/faq-how-to-set-up-kubeconfig-on-windows-wise-paasensaas-k8s-service
@@ -419,3 +529,4 @@ https://site-ghwmnxe1v6.talkyard.net/-12/faq-how-to-set-up-kubeconfig-on-windows
 - https://iamondemand.com/blog/scaling-keras-on-kubernetes-with-kubeflow/#:~:text=Keras%20models%20deployed%20using%20Seldon,RAM%20load%20or%20network%20requests.
 - https://kueue.sigs.k8s.io/docs/tasks/run/kubeflow/pytorchjobs/
 - datascience-registry.cn-beijing.cr.aliyuncs.com/kubeflow-examples/multi_worker_strategy:0.1.1
+- https://aws.amazon.com/blogs/machine-learning/scale-llms-with-pytorch-2-0-fsdp-on-amazon-eks-part-2/
