@@ -528,6 +528,220 @@ NET/Plugin : dlerror=libnccl-net.so: cannot open shared object file: No such fil
 is harmless. It just means that NCCL did not find an external network plugin (e.g. to support IB/SHARP).
 It defaults back to its internal plugin, which supports IB Verbs, RoCE and Sockets.
 
+LOGS
+```
+kubectl get pods
+NAME                    READY   STATUS    RESTARTS   AGE
+etcd-6bcc78d587-s57jp   1/1     Running   0          4h22m
+fsdp-worker-0           1/1     Running   0          27m
+fsdp-worker-1           1/1     Running   0          27m
+[prd@csctmp-r760-18 fsdp-test]$
+[prd@csctmp-r760-18 fsdp-test]$
+[prd@csctmp-r760-18 fsdp-test]$
+[prd@csctmp-r760-18 fsdp-test]$
+[prd@csctmp-r760-18 fsdp-test]$ kubectl logs fsdp-worker-1
+The token has not been saved to the git credentials helper. Pass `add_to_git_credential=True` in this function directly or `--add-to-git-credential` if using via `huggingface-cli` if you want to set the git credential as well.
+Token is valid (permission: fineGrained).
+The token `t2` has been saved to /root/.cache/huggingface/stored_tokens
+Your token has been saved to /root/.cache/huggingface/token
+Login successful.
+The current active token is: `t2`
+W1210 18:28:00.405000 1 site-packages/torch/distributed/run.py:793]
+W1210 18:28:00.405000 1 site-packages/torch/distributed/run.py:793] *****************************************
+W1210 18:28:00.405000 1 site-packages/torch/distributed/run.py:793] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed.
+W1210 18:28:00.405000 1 site-packages/torch/distributed/run.py:793] *****************************************
+I1210 18:28:00.405000 1 site-packages/torch/distributed/launcher/api.py:194] Starting elastic_operator with launch configs:
+I1210 18:28:00.405000 1 site-packages/torch/distributed/launcher/api.py:194]   entrypoint       : recipes/finetuning/finetuning.py
+I1210 18:28:00.405000 1 site-packages/torch/distributed/launcher/api.py:194]   min_nodes        : 2
+I1210 18:28:00.405000 1 site-packages/torch/distributed/launcher/api.py:194]   max_nodes        : 2
+I1210 18:28:00.405000 1 site-packages/torch/distributed/launcher/api.py:194]   nproc_per_node   : 2
+I1210 18:28:00.405000 1 site-packages/torch/distributed/launcher/api.py:194]   run_id           : 1
+I1210 18:28:00.405000 1 site-packages/torch/distributed/launcher/api.py:194]   rdzv_backend     : etcd
+I1210 18:28:00.405000 1 site-packages/torch/distributed/launcher/api.py:194]   rdzv_endpoint    : etcd:2379
+I1210 18:28:00.405000 1 site-packages/torch/distributed/launcher/api.py:194]   rdzv_configs     : {'timeout': 900}
+I1210 18:28:00.405000 1 site-packages/torch/distributed/launcher/api.py:194]   max_restarts     : 100
+I1210 18:28:00.405000 1 site-packages/torch/distributed/launcher/api.py:194]   monitor_interval : 0.1
+I1210 18:28:00.405000 1 site-packages/torch/distributed/launcher/api.py:194]   log_dir          : /tmp/torchelastic_4tl8luxn
+I1210 18:28:00.405000 1 site-packages/torch/distributed/launcher/api.py:194]   metrics_cfg      : {}
+I1210 18:28:00.405000 1 site-packages/torch/distributed/launcher/api.py:194]
+INFO 2024-12-10 18:28:00,562 Etcd machines: ['http://0.0.0.0:2379']
+I1210 18:28:00.568000 1 site-packages/torch/distributed/elastic/agent/server/api.py:845] [default] starting workers for entrypoint: python3.11
+I1210 18:28:00.569000 1 site-packages/torch/distributed/elastic/agent/server/api.py:662] [default] Rendezvous'ing worker group
+INFO 2024-12-10 18:28:00,569 Attempting to join next rendezvous
+INFO 2024-12-10 18:28:00,574 New rendezvous state created: {'status': 'joinable', 'version': '1', 'participants': []}
+INFO 2024-12-10 18:28:00,591 Joined rendezvous version 1 as rank 0. Full state: {'status': 'joinable', 'version': '1', 'participants': [0]}
+INFO 2024-12-10 18:28:00,591 Waiting for remaining peers.
+INFO 2024-12-10 18:28:01,708 All peers arrived. Confirming membership.
+INFO 2024-12-10 18:28:01,745 Waiting for confirmations from all peers.
+INFO 2024-12-10 18:28:01,774 Rendezvous version 1 is complete. Final state: {'status': 'final', 'version': '1', 'participants': [0, 1], 'keep_alives': ['/torchelastic/p2p/run_1/rdzv/v_1/rank_0', '/torchelastic/p2p/run_1/rdzv/v_1/rank_1'], 'num_workers_waiting': 0}
+INFO 2024-12-10 18:28:01,774 Creating EtcdStore as the c10d::Store implementation
+I1210 18:28:01.790000 1 site-packages/torch/distributed/elastic/agent/server/api.py:525] [default] Rendezvous complete for workers. Result:
+I1210 18:28:01.790000 1 site-packages/torch/distributed/elastic/agent/server/api.py:525]   restart_count=0
+I1210 18:28:01.790000 1 site-packages/torch/distributed/elastic/agent/server/api.py:525]   master_addr=fsdp-worker-1
+I1210 18:28:01.790000 1 site-packages/torch/distributed/elastic/agent/server/api.py:525]   master_port=39765
+I1210 18:28:01.790000 1 site-packages/torch/distributed/elastic/agent/server/api.py:525]   group_rank=0
+I1210 18:28:01.790000 1 site-packages/torch/distributed/elastic/agent/server/api.py:525]   group_world_size=2
+I1210 18:28:01.790000 1 site-packages/torch/distributed/elastic/agent/server/api.py:525]   local_ranks=[0, 1]
+I1210 18:28:01.790000 1 site-packages/torch/distributed/elastic/agent/server/api.py:525]   role_ranks=[0, 1]
+I1210 18:28:01.790000 1 site-packages/torch/distributed/elastic/agent/server/api.py:525]   global_ranks=[0, 1]
+I1210 18:28:01.790000 1 site-packages/torch/distributed/elastic/agent/server/api.py:525]   role_world_sizes=[4, 4]
+I1210 18:28:01.790000 1 site-packages/torch/distributed/elastic/agent/server/api.py:525]   global_world_sizes=[4, 4]
+I1210 18:28:01.790000 1 site-packages/torch/distributed/elastic/agent/server/api.py:525]
+I1210 18:28:01.790000 1 site-packages/torch/distributed/elastic/agent/server/api.py:670] [default] Starting worker group
+I1210 18:28:01.790000 1 site-packages/torch/distributed/elastic/agent/server/local_elastic_agent.py:291] use_agent_store: False
+I1210 18:28:01.790000 1 site-packages/torch/distributed/elastic/agent/server/local_elastic_agent.py:192] Environment variable 'TORCHELASTIC_ENABLE_FILE_TIMER' not found. Do not start FileTimerServer.
+I1210 18:28:01.791000 1 site-packages/torch/distributed/elastic/agent/server/local_elastic_agent.py:229] Environment variable 'TORCHELASTIC_HEALTH_CHECK_PORT' not found. Do not start health check.
+/workspace/llama-recipes/src/llama_recipes/model_checkpointing/checkpoint_handler.py:17: DeprecationWarning: `torch.distributed._shard.checkpoint` will be deprecated, use `torch.distributed.checkpoint` instead
+  from torch.distributed._shard.checkpoint import (
+/workspace/llama-recipes/src/llama_recipes/model_checkpointing/checkpoint_handler.py:17: DeprecationWarning: `torch.distributed._shard.checkpoint` will be deprecated, use `torch.distributed.checkpoint` instead
+  from torch.distributed._shard.checkpoint import (
+Clearing GPU cache for all ranks
+--> Running with torch dist debug set to detail
+Downloading shards: 100%|██████████| 2/2 [10:16<00:00, 308.42s/it]
+Downloading shards: 100%|██████████| 2/2 [10:17<00:00, 308.89s/it]
+Loading checkpoint shards: 100%|██████████| 2/2 [00:05<00:00,  2.52s/it]
+Loading checkpoint shards: 100%|██████████| 2/2 [00:05<00:00,  2.52s/it]
+--> Model meta-llama/Llama-2-7b-hf
+
+--> meta-llama/Llama-2-7b-hf has 6738.415616 Million params
+
+bFloat16 enabled for mixed precision - using bfSixteen policy
+--> applying fsdp activation checkpointing...
+--> applying fsdp activation checkpointing...
+Generating train split: 100%|██████████| 14732/14732 [00:00<00:00, 44079.11 examples/s]
+Generating test split: 100%|██████████| 819/819 [00:00<00:00, 5505.54 examples/s]
+Generating validation split: 100%|██████████| 818/818 [00:00<00:00, 5580.25 examples/s]
+Map: 100%|██████████| 14732/14732 [00:00<00:00, 43608.68 examples/s]
+Map: 100%|██████████| 14732/14732 [00:00<00:00, 43310.93 examples/s]
+Map: 100%|██████████| 14732/14732 [00:09<00:00, 1508.06 examples/s]
+--> Training Set Length = 14732
+Map: 100%|██████████| 14732/14732 [00:09<00:00, 1504.38 examples/s]
+Map: 100%|██████████| 818/818 [00:00<00:00, 37561.48 examples/s]
+Map: 100%|██████████| 818/818 [00:00<00:00, 1525.76 examples/s]
+Map: 100%|██████████| 818/818 [00:00<00:00, 1522.25 examples/s]]
+--> Validation Set Length = 818
+Preprocessing dataset: 100%|██████████| 14732/14732 [00:02<00:00, 5587.46it/s]
+Preprocessing dataset: 100%|██████████| 14732/14732 [00:02<00:00, 5506.40it/s]
+Preprocessing dataset: 100%|██████████| 818/818 [00:00<00:00, 5783.29it/s]
+Preprocessing dataset: 100%|██████████| 818/818 [00:00<00:00, 5372.98it/s]
+/opt/conda/lib/python3.11/site-packages/torch/cuda/memory.py:365: FutureWarning: torch.cuda.reset_max_memory_allocated now calls torch.cuda.reset_peak_memory_stats, which resets /all/ peak memory stats.
+  warnings.warn(
+Training Epoch: 1:   0%|          | 0/64 [00:00<?, ?it/s]/opt/conda/lib/python3.11/site-packages/torch/cuda/memory.py:365: FutureWarning: torch.cuda.reset_max_memory_allocated now calls torch.cuda.reset_peak_memory_stats, which resets /all/ peak memory stats.
+  warnings.warn(
+fsdp-worker-1:73:73 [0] NCCL INFO Bootstrap : Using eth0:192.168.1.136<0>
+fsdp-worker-1:73:73 [0] NCCL INFO NET/Plugin: No plugin found (libnccl-net.so)
+fsdp-worker-1:73:73 [0] NCCL INFO NET/Plugin: Plugin load returned 2 : libnccl-net.so: cannot open shared object file: No such file or directory : when loading libnccl-net.so
+fsdp-worker-1:73:73 [0] NCCL INFO NET/Plugin: Using internal network plugin.
+fsdp-worker-1:73:73 [0] NCCL INFO cudaDriverVersion 12040
+NCCL version 2.21.5+cuda12.4
+fsdp-worker-1:74:74 [1] NCCL INFO cudaDriverVersion 12040
+fsdp-worker-1:74:74 [1] NCCL INFO Bootstrap : Using eth0:192.168.1.136<0>
+fsdp-worker-1:74:74 [1] NCCL INFO NET/Plugin: No plugin found (libnccl-net.so)
+fsdp-worker-1:74:74 [1] NCCL INFO NET/Plugin: Plugin load returned 2 : libnccl-net.so: cannot open shared object file: No such file or directory : when loading libnccl-net.so
+fsdp-worker-1:74:74 [1] NCCL INFO NET/Plugin: Using internal network plugin.
+fsdp-worker-1:73:356 [0] NCCL INFO Failed to open libibverbs.so[.1]
+fsdp-worker-1:73:356 [0] NCCL INFO NET/Socket : Using [0]eth0:192.168.1.136<0>
+fsdp-worker-1:73:356 [0] NCCL INFO Using non-device net plugin version 0
+fsdp-worker-1:73:356 [0] NCCL INFO Using network Socket
+fsdp-worker-1:74:357 [1] NCCL INFO Failed to open libibverbs.so[.1]
+fsdp-worker-1:74:357 [1] NCCL INFO NET/Socket : Using [0]eth0:192.168.1.136<0>
+fsdp-worker-1:74:357 [1] NCCL INFO Using non-device net plugin version 0
+fsdp-worker-1:74:357 [1] NCCL INFO Using network Socket
+fsdp-worker-1:74:357 [1] NCCL INFO ncclCommInitRank comm 0x56169dab8e50 rank 1 nranks 4 cudaDev 1 nvmlDev 1 busId b5000 commId 0x89739f751af3a52d - Init START
+fsdp-worker-1:73:356 [0] NCCL INFO ncclCommInitRank comm 0x56340ebcd160 rank 0 nranks 4 cudaDev 0 nvmlDev 0 busId d000 commId 0x89739f751af3a52d - Init START
+fsdp-worker-1:74:357 [1] NCCL INFO Setting affinity for GPU 1 to aaaaaaaa,aaaaaaaa
+fsdp-worker-1:73:356 [0] NCCL INFO Setting affinity for GPU 0 to 55555555,55555555
+fsdp-worker-1:74:357 [1] NCCL INFO comm 0x56169dab8e50 rank 1 nRanks 4 nNodes 2 localRanks 2 localRank 1 MNNVL 0
+fsdp-worker-1:74:357 [1] NCCL INFO Trees [0] -1/-1/-1->1->0 [1] -1/-1/-1->1->0
+fsdp-worker-1:74:357 [1] NCCL INFO P2P Chunksize set to 131072
+fsdp-worker-1:73:356 [0] NCCL INFO comm 0x56340ebcd160 rank 0 nRanks 4 nNodes 2 localRanks 2 localRank 0 MNNVL 0
+fsdp-worker-1:73:356 [0] NCCL INFO Channel 00/02 :    0   1   2   3
+fsdp-worker-1:73:356 [0] NCCL INFO Channel 01/02 :    0   1   2   3
+fsdp-worker-1:73:356 [0] NCCL INFO Trees [0] 1/2/-1->0->-1 [1] 1/-1/-1->0->2
+fsdp-worker-1:73:356 [0] NCCL INFO P2P Chunksize set to 131072
+fsdp-worker-1:73:356 [0] NCCL INFO Channel 00/0 : 3[1] -> 0[0] [receive] via NET/Socket/0
+fsdp-worker-1:73:356 [0] NCCL INFO Channel 01/0 : 3[1] -> 0[0] [receive] via NET/Socket/0
+fsdp-worker-1:73:356 [0] NCCL INFO Channel 00 : 0[0] -> 1[1] via SHM/direct/direct
+fsdp-worker-1:73:356 [0] NCCL INFO Channel 01 : 0[0] -> 1[1] via SHM/direct/direct
+fsdp-worker-1:74:357 [1] NCCL INFO Channel 00/0 : 1[1] -> 2[0] [send] via NET/Socket/0
+fsdp-worker-1:74:357 [1] NCCL INFO Channel 01/0 : 1[1] -> 2[0] [send] via NET/Socket/0
+fsdp-worker-1:73:356 [0] NCCL INFO Connected all rings
+fsdp-worker-1:73:356 [0] NCCL INFO Channel 00/0 : 2[0] -> 0[0] [receive] via NET/Socket/0
+fsdp-worker-1:73:356 [0] NCCL INFO Channel 01/0 : 2[0] -> 0[0] [receive] via NET/Socket/0
+fsdp-worker-1:73:356 [0] NCCL INFO Channel 00/0 : 0[0] -> 2[0] [send] via NET/Socket/0
+fsdp-worker-1:73:356 [0] NCCL INFO Channel 01/0 : 0[0] -> 2[0] [send] via NET/Socket/0
+fsdp-worker-1:74:357 [1] NCCL INFO Connected all rings
+fsdp-worker-1:74:357 [1] NCCL INFO Channel 00 : 1[1] -> 0[0] via SHM/direct/direct
+fsdp-worker-1:74:357 [1] NCCL INFO Channel 01 : 1[1] -> 0[0] via SHM/direct/direct
+fsdp-worker-1:74:357 [1] NCCL INFO Connected all trees
+fsdp-worker-1:74:357 [1] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+fsdp-worker-1:74:357 [1] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+fsdp-worker-1:73:356 [0] NCCL INFO Connected all trees
+fsdp-worker-1:73:356 [0] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+fsdp-worker-1:73:356 [0] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+fsdp-worker-1:74:357 [1] NCCL INFO TUNER/Plugin: Plugin load returned 2 : libnccl-net.so: cannot open shared object file: No such file or directory : when loading libnccl-tuner.so
+fsdp-worker-1:74:357 [1] NCCL INFO TUNER/Plugin: Using internal tuner plugin.
+fsdp-worker-1:74:357 [1] NCCL INFO ncclCommInitRank comm 0x56169dab8e50 rank 1 nranks 4 cudaDev 1 nvmlDev 1 busId b5000 commId 0x89739f751af3a52d - Init COMPLETE
+fsdp-worker-1:73:356 [0] NCCL INFO TUNER/Plugin: Plugin load returned 2 : libnccl-net.so: cannot open shared object file: No such file or directory : when loading libnccl-tuner.so
+fsdp-worker-1:73:356 [0] NCCL INFO TUNER/Plugin: Using internal tuner plugin.
+fsdp-worker-1:73:356 [0] NCCL INFO ncclCommInitRank comm 0x56340ebcd160 rank 0 nranks 4 cudaDev 0 nvmlDev 0 busId d000 commId 0x89739f751af3a52d - Init COMPLETE
+Training Epoch: 1/3, step 63/64 completed (loss: 1.088591456413269): 100%|██████████| 64/64 [13:23<00:00, 12.56s/it]
+Training Epoch: 1/3, step 63/64 completed (loss: 1.0633320808410645): 100%|██████████| 64/64 [13:23<00:00, 12.55s/it]
+Max CUDA memory allocated was 31 GB
+Max CUDA memory reserved was 42 GB
+Peak active CUDA memory was 35 GB
+CUDA Malloc retries : 0
+CPU Total Peak Memory consumed during the train (max): 3 GB
+evaluating Epoch: 100%|██████████| 11/11 [00:44<00:00,  4.05s/it]
+evaluating Epoch: 100%|██████████| 11/11 [00:44<00:00,  4.05s/it]
+ eval_ppl=tensor(2.8432, device='cuda:0') eval_epoch_loss=tensor(1.0449, device='cuda:0')
+ Saving the FSDP model checkpoints using SHARDED_STATE_DICT
+===================================================== Saving the FSDP model checkpoints using SHARDED_STATE_DICT
+
+=====================================================
+Saving model to /workspace/llama-recipes/PATH/to/save/FSDP/model/fine-tuned-meta-llama/Llama-2-7b-hf
+/opt/conda/lib/python3.11/site-packages/torch/distributed/fsdp/fully_sharded_data_parallel.py:690: FutureWarning: FSDP.state_dict_type() and FSDP.set_state_dict_type() are being deprecated. Please use APIs, get_state_dict() and set_state_dict(), which can support different parallelisms, FSDP1, FSDP2, DDP. API doc: https://pytorch.org/docs/stable/distributed.checkpoint.html#torch.distributed.checkpoint.state_dict.get_state_dict .Tutorial: https://pytorch.org/tutorials/recipes/distributed_checkpoint_recipe.html .
+  warnings.warn(
+/opt/conda/lib/python3.11/site-packages/torch/distributed/fsdp/fully_sharded_data_parallel.py:690: FutureWarning: FSDP.state_dict_type() and FSDP.set_state_dict_type() are being deprecated. Please use APIs, get_state_dict() and set_state_dict(), which can support different parallelisms, FSDP1, FSDP2, DDP. API doc: https://pytorch.org/docs/stable/distributed.checkpoint.html#torch.distributed.checkpoint.state_dict.get_state_dict .Tutorial: https://pytorch.org/tutorials/recipes/distributed_checkpoint_recipe.html .
+  warnings.warn(
+/opt/conda/lib/python3.11/site-packages/torch/distributed/fsdp/_state_dict_utils.py:732: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  local_shape = tensor.shape
+/opt/conda/lib/python3.11/site-packages/torch/distributed/fsdp/_state_dict_utils.py:744: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.shape,
+/opt/conda/lib/python3.11/site-packages/torch/distributed/fsdp/_state_dict_utils.py:746: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.dtype,
+/opt/conda/lib/python3.11/site-packages/torch/distributed/fsdp/_state_dict_utils.py:747: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.device,
+/opt/conda/lib/python3.11/site-packages/torch/distributed/fsdp/_state_dict_utils.py:732: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  local_shape = tensor.shape
+/opt/conda/lib/python3.11/site-packages/torch/distributed/fsdp/_state_dict_utils.py:744: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.shape,
+/opt/conda/lib/python3.11/site-packages/torch/distributed/fsdp/_state_dict_utils.py:746: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.dtype,
+/opt/conda/lib/python3.11/site-packages/torch/distributed/fsdp/_state_dict_utils.py:747: FutureWarning: Please use DTensor instead and we are deprecating ShardedTensor.
+  tensor.device,
+/workspace/llama-recipes/src/llama_recipes/model_checkpointing/checkpoint_handler.py:112: FutureWarning: `save_state_dict` is deprecated and will be removed in future versions.Please use `save` instead.
+  dist_cp.save_state_dict(
+/workspace/llama-recipes/src/llama_recipes/model_checkpointing/checkpoint_handler.py:112: FutureWarning: `save_state_dict` is deprecated and will be removed in future versions.Please use `save` instead.
+  dist_cp.save_state_dict(
+fsdp-worker-1:73:384 [0] NCCL INFO Channel 00/1 : 3[1] -> 0[0] [receive] via NET/Socket/0/Shared
+fsdp-worker-1:73:384 [0] NCCL INFO Channel 01/1 : 3[1] -> 0[0] [receive] via NET/Socket/0/Shared
+fsdp-worker-1:74:385 [1] NCCL INFO Channel 00 : 1[1] -> 0[0] via SHM/direct/direct
+fsdp-worker-1:74:385 [1] NCCL INFO Channel 01 : 1[1] -> 0[0] via SHM/direct/direct
+fsdp-worker-1:73:384 [0] NCCL INFO Channel 00/1 : 2[0] -> 0[0] [receive] via NET/Socket/0/Shared
+fsdp-worker-1:73:384 [0] NCCL INFO Channel 01/1 : 2[0] -> 0[0] [receive] via NET/Socket/0/Shared
+fsdp-worker-1:73:387 [0] NCCL INFO Channel 00 : 0[0] -> 1[1] via SHM/direct/direct
+fsdp-worker-1:73:387 [0] NCCL INFO Channel 01 : 0[0] -> 1[1] via SHM/direct/direct
+fsdp-worker-1:73:387 [0] NCCL INFO Channel 00/1 : 0[0] -> 2[0] [send] via NET/Socket/0/Shared
+fsdp-worker-1:73:387 [0] NCCL INFO Channel 01/1 : 0[0] -> 2[0] [send] via NET/Socket/0/Shared
+fsdp-worker-1:73:387 [0] NCCL INFO Channel 00/1 : 0[0] -> 3[1] [send] via NET/Socket/0/Shared
+fsdp-worker-1:73:387 [0] NCCL INFO Channel 01/1 : 0[0] -> 3[1] [send] via NET/Socket/0/Shared
+Sharded state checkpoint saved to /workspace/llama-recipes/PATH/to/save/FSDP/model/fine-tuned-meta-llama/Llama-2-7b-hf
+Checkpoint Time = 24.8918
+
+best eval loss on epoch 1 is 1.0449419021606445
+Epoch 1: train_perplexity=4.3019, train_epoch_loss=1.4591, epoch time 804.0793660259951s
+```
 ### Installing and configuring kubectl on windows
 ```
 https://site-ghwmnxe1v6.talkyard.net/-12/faq-how-to-set-up-kubeconfig-on-windows-wise-paasensaas-k8s-service
