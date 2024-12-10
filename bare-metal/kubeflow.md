@@ -169,8 +169,12 @@ Run the example notebook
 https://www.tensorflow.org/datasets/keras_example
 https://github.com/tensorflow/datasets/blob/master/docs/keras_example.ipynb
 ```
-### Distributed Training
-
+#### Deploy the Training Operator
+```
+kubectl apply --server-side --force-conflicts -k "github.com/kubeflow/training-operator.git/manifests/overlays/standalone?ref=v1.8.0"
+```
+#### TensorFlow Distributed Training
+![image](https://github.com/user-attachments/assets/6c14937c-8c08-43ee-af7d-21445f1f7b55)
 Scaling ML training involves the ability to increase the number of running workers/learners, CPUs/GPUs, or other compute resources available in the cluster. However, scaling Keras training jobs is not so straightforward because training an ML model with multiple workers requires a distributed strategy. It allows for substantially faster training iterations and speeds up ML experimentation and CI/CD pipelines, but building such a distributed strategy for ML training is hard because it can involve complex coordination between learners and aggregation of parameters. 
 
 In general, there are two main approaches to distributed training popular in the ML community today: synchronous and asynchronous training. 
@@ -181,10 +185,7 @@ Contrary to this, in asynchronous training, all learners work on the complete tr
 
 Generally a mixed bag of opinion in terms of what is better Asynchronous vs Synchronous in terms of performance/throughput. In sync training, all workers train over different slices of input data in sync, and aggregating gradients at each step. In async training, all workers are independently training over the input data and updating variables asynchronously. Typically sync training is supported via all-reduce and async through parameter server architecture. The final training result of async and sync parallel distributed training depends upon specific implementation, optimization, and training algorithm
 
-#### Deploy the Training Operator
-```
-kubectl apply --server-side --force-conflicts -k "github.com/kubeflow/training-operator.git/manifests/overlays/standalone?ref=v1.8.0"
-```
+
 #### TFJob Asynchronous Distributed training using Parameter Server
 ![image](https://github.com/user-attachments/assets/d50002e2-2a62-4a80-9e95-e2ce7f38a404)
 
