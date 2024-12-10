@@ -186,6 +186,8 @@ Generally a mixed bag of opinion in terms of what is better Asynchronous vs Sync
 kubectl apply --server-side --force-conflicts -k "github.com/kubeflow/training-operator.git/manifests/overlays/standalone?ref=v1.8.0"
 ```
 #### TFJob Asynchronous Distributed training using Parameter Server
+![image](https://github.com/user-attachments/assets/d50002e2-2a62-4a80-9e95-e2ce7f38a404)
+
 
 - Start with 1 worker replica with 1 GPU and then consequently change the number of worker replicas/GPU based on capacity
 
@@ -341,6 +343,8 @@ EOF
 ```
 
 ### PyTorchJob Distributed Training for PyTorch
+![image](https://github.com/user-attachments/assets/c5acff3a-ea3c-4f64-8776-02f46e8330d0)
+
 ```
 cat <<EOF | kubectl create -f -
 apiVersion: "kubeflow.org/v1"
