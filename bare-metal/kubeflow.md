@@ -519,6 +519,14 @@ spec:
                   mountPath: /dev/shm
 EOF
 ```
+NOTE: Before the epochs start one might notice the below error and it's harmless
+
+This message
+
+NET/Plugin : dlerror=libnccl-net.so: cannot open shared object file: No such file or directory No plugin found (libnccl-net.so), using internal implementation
+
+is harmless. It just means that NCCL did not find an external network plugin (e.g. to support IB/SHARP).
+It defaults back to its internal plugin, which supports IB Verbs, RoCE and Sockets.
 
 ### Installing and configuring kubectl on windows
 ```
