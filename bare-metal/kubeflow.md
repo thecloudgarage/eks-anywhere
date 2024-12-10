@@ -759,6 +759,44 @@ Epoch 1: train_perplexity=4.3019, train_epoch_loss=1.4591, epoch time 804.079366
  eval_ppl=tensor(3.2116, device='cuda:0') eval_epoch_loss=tensor(1.1668, device='cuda:0')
 Epoch 2: train_perplexity=2.1021, train_epoch_loss=0.7429, epoch time 799.0331504560017s
 ```
+Final completion 
+```
+kubectl get pods
+NAME                    READY   STATUS      RESTARTS   AGE
+etcd-6bcc78d587-s57jp   1/1     Running     0          4h49m
+fsdp-worker-0           0/1     Completed   0          54m
+fsdp-worker-1           0/1     Completed   0          54m
+
+Log snip from worker-1
+
+Epoch 2: train_perplexity=2.1021, train_epoch_loss=0.7429, epoch time 799.0331504560017s
+Training Epoch: 3/3, step 63/64 completed (loss: 0.32121676206588745): 100%|██████████| 64/64 [13:17<00:00, 12.46s/it]
+Training Epoch: 3/3, step 63/64 completed (loss: 0.33586135506629944): 100%|██████████| 64/64 [13:17<00:00, 12.46s/it]
+Max CUDA memory allocated was 31 GB
+Max CUDA memory reserved was 39 GB
+Peak active CUDA memory was 35 GB
+CUDA Malloc retries : 0
+CPU Total Peak Memory consumed during the train (max): 4 GB
+evaluating Epoch: 100%|██████████| 11/11 [00:43<00:00,  3.99s/it]
+evaluating Epoch: 100%|██████████| 11/11 [00:43<00:00,  3.99s/it]
+ eval_ppl=tensor(3.9945, device='cuda:0') eval_epoch_loss=tensor(1.3849, device='cuda:0')
+Epoch 3: train_perplexity=1.4599, train_epoch_loss=0.3784, epoch time 798.1608263160015s
+training params are saved in /workspace/llama-recipes/PATH/to/save/FSDP/model/fine-tuned-meta-llama/Llama-2-7b-hf/train_params.yaml
+Key: avg_train_prep, Value: 2.6213136514027915
+Key: avg_train_loss, Value: 0.8601231575012207
+Key: avg_eval_prep, Value: 3.349799871444702
+Key: avg_eval_loss, Value: 1.0449419021606445
+Key: avg_epoch_time, Value: 800.4244475993328
+Key: avg_checkpoint_time, Value: 8.298205651333168
+fsdp-worker-1:74:358 [1] NCCL INFO [Service thread] Connection closed by localRank 1
+[rank0]:[W1210 19:21:29.239577265 ProcessGroupNCCL.cpp:1250] Warning: WARNING: process group has NOT been destroyed before we destruct ProcessGroupNCCL. On normal program exit, the application should call destroy_process_group to ensure that any pending NCCL operations have finished in this process. In rare cases this process can exit before this point and block the progress of another member of the process group. This constraint has always been present,  but this warning has only been added since PyTorch 2.4 (function operator())
+fsdp-worker-1:73:360 [0] NCCL INFO [Service thread] Connection closed by localRank 0
+fsdp-worker-1:74:444 [1] NCCL INFO comm 0x56169dab8e50 rank 1 nranks 4 cudaDev 1 busId b5000 - Abort COMPLETE
+fsdp-worker-1:73:445 [0] NCCL INFO comm 0x56340ebcd160 rank 0 nranks 4 cudaDev 0 busId d000 - Abort COMPLETE
+I1210 19:21:30.193000 1 site-packages/torch/distributed/elastic/agent/server/api.py:864] [default] worker group successfully finished. Waiting 300 seconds for other agents to finish.
+I1210 19:21:30.193000 1 site-packages/torch/distributed/elastic/agent/server/api.py:917] Local worker group finished (WorkerState.SUCCEEDED). Waiting 300 seconds for other agents to finish
+I1210 19:21:30.219000 1 site-packages/torch/distributed/elastic/agent/server/api.py:931] Done waiting for other agents. Elapsed: 0.025619029998779297 seconds
+```
 After a job is complete, it needs to be deleted before initiating a new run. We’ve also observed that deleting the etcd pod and letting it restart prior to launching a new job helps avoid a RendezvousClosedError. Else we can change the rdzvId: '1' in the YAML to a different number.
 
 ### Installing and configuring kubectl on windows
