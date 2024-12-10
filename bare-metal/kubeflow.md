@@ -746,6 +746,19 @@ Checkpoint Time = 24.8918
 best eval loss on epoch 1 is 1.0449419021606445
 Epoch 1: train_perplexity=4.3019, train_epoch_loss=1.4591, epoch time 804.0793660259951s
 ```
+Log snips
+```
+[prd@csctmp-r760-18 fsdp-test]$ kubectl logs fsdp-worker-0 | grep epoch
+ eval_ppl=tensor(2.8432, device='cuda:0') eval_epoch_loss=tensor(1.0449, device='cuda:0')
+ eval_ppl=tensor(3.2116, device='cuda:0') eval_epoch_loss=tensor(1.1668, device='cuda:0')
+
+[prd@csctmp-r760-18 fsdp-test]$ kubectl logs fsdp-worker-1 | grep epoch
+ eval_ppl=tensor(2.8432, device='cuda:0') eval_epoch_loss=tensor(1.0449, device='cuda:0')
+best eval loss on epoch 1 is 1.0449419021606445
+Epoch 1: train_perplexity=4.3019, train_epoch_loss=1.4591, epoch time 804.0793660259951s
+ eval_ppl=tensor(3.2116, device='cuda:0') eval_epoch_loss=tensor(1.1668, device='cuda:0')
+Epoch 2: train_perplexity=2.1021, train_epoch_loss=0.7429, epoch time 799.0331504560017s
+```
 After a job is complete, it needs to be deleted before initiating a new run. We’ve also observed that deleting the etcd pod and letting it restart prior to launching a new job helps avoid a RendezvousClosedError. Else we can change the rdzvId: '1' in the YAML to a different number.
 
 ### Installing and configuring kubectl on windows
