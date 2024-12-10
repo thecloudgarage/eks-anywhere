@@ -346,6 +346,8 @@ EOF
 ```
 
 ### PyTorchJob Distributed Training for PyTorch
+![image](https://github.com/user-attachments/assets/82d72e00-5b47-453b-81b1-0aed24309d0b)
+
 ![image](https://github.com/user-attachments/assets/c5acff3a-ea3c-4f64-8776-02f46e8330d0)
 
 ```
