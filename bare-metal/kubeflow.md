@@ -410,7 +410,11 @@ spec:
 #    ttlSecondsAfterFinished: 600
 EOF
 ```
-### WORK-IN-PROGRESS 
+### WORK-IN-PROGRESS PyTorch FSDP to fine tune a LLAMA2 model
+Having a replica of the model on each GPU restricts the size of the model that can be accommodated in a DDP workflow. FSDP helps overcome this limitation by sharding model parameters, optimizer states, and gradients across data parallel workers while still preserving the simplicity of data parallelism.
+
+![image](https://github.com/user-attachments/assets/959310e8-52fe-405f-a23a-d1f3a8690c49)
+
 ```
 kubectl apply -f https://raw.githubusercontent.com/aws-samples/aws-do-eks/main/Container-Root/eks/deployment/etcd/etcd-deployment.yaml
 
@@ -742,6 +746,8 @@ Checkpoint Time = 24.8918
 best eval loss on epoch 1 is 1.0449419021606445
 Epoch 1: train_perplexity=4.3019, train_epoch_loss=1.4591, epoch time 804.0793660259951s
 ```
+After a job is complete, it needs to be deleted before initiating a new run. We’ve also observed that deleting the etcd pod and letting it restart prior to launching a new job helps avoid a RendezvousClosedError. Else we can change the rdzvId: '1' in the YAML to a different number.
+
 ### Installing and configuring kubectl on windows
 ```
 https://site-ghwmnxe1v6.talkyard.net/-12/faq-how-to-set-up-kubeconfig-on-windows-wise-paasensaas-k8s-service
