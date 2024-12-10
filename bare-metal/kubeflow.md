@@ -187,6 +187,8 @@ Generally a mixed bag of opinion in terms of what is better Asynchronous vs Sync
 
 
 #### TFJob Asynchronous Distributed training using Parameter Server
+![image](https://github.com/user-attachments/assets/10c94ded-2c69-4b31-a9c5-0b8344d7da92)
+
 ![image](https://github.com/user-attachments/assets/d50002e2-2a62-4a80-9e95-e2ce7f38a404)
 
 
