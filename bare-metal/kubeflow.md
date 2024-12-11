@@ -425,7 +425,7 @@ NUM_WORKERS=2
 GPU_PER_WORKER=2
 EFA_PER_WORKER=0
 MODEL_NAME=meta-llama/Llama-2-7b-hf
-HF_TOKEN="Your-huggingface-token"
+HF_TOKEN="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"
 CMD="huggingface-cli login --token ${HF_TOKEN} && torchrun --nproc_per_node=${GPU_PER_WORKER} --nnodes=${NUM_WORKERS} recipes/finetuning/finetuning.py --num_epochs=3 --batch_size_training=3 --enable_fsdp --model_name $MODEL_NAME --output_dir ."
 DOCKERHUB_USER_NAME=thecloudgarage
 IMAGE=fsdp
