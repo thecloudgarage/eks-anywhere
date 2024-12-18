@@ -212,7 +212,7 @@ spec:
             - args:
                 - python
                 - tf_cnn_benchmarks.py
-                - --batch_size=32
+                - --batch_size=256
                 - --model=resnet50
                 - --variable_update=parameter_server
                 - --flush_stdout=true
@@ -240,7 +240,7 @@ spec:
             - args:
                 - python
                 - tf_cnn_benchmarks.py
-                - --batch_size=32
+                - --batch_size=256
                 - --model=resnet50
                 - --variable_update=parameter_server
                 - --flush_stdout=true
