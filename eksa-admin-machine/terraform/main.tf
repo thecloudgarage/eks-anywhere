@@ -53,6 +53,7 @@ resource "vsphere_virtual_machine" "vm-one" {
   resource_pool_id = data.vsphere_resource_pool.pool.id
   guest_id         = data.vsphere_virtual_machine.template.guest_id
   scsi_type        = data.vsphere_virtual_machine.template.scsi_type
+  firmware  = efi #for vsphere8
 
   # Set network parameters
   network_interface {
