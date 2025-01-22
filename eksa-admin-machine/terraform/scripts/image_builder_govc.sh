@@ -3,8 +3,14 @@ mkdir -p /home/image-builder/.ssh
 sudo mkdir -p /tmp/eks-image-builder-cni
 sudo chown -R image-builder:image-builder /tmp/eks-image-builder-cni
 sudo apt install jq unzip make python3 python3-setuptools python3-dev python3-pip -y
-sudo snap install yq
+#
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt update -y
+sudo apt install python3.9 -y
+sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 2
+sudo update-alternatives --config python3
 python3 -m pip install --user ansible
+sudo snap install yq
 echo "packages installed" > /home/image-builder/done.txt
 #sudo apt install python3 python3-setuptools python3-dev python3-pip -y
 echo "HostKeyAlgorithms +ssh-rsa" >> /home/image-builder/.ssh/config
