@@ -1,8 +1,8 @@
 ### EKSA Admin machine (ubuntu user)
 ```
-export virtual_machine_root_password=
-export vsphere_user=
-export vsphere_password=
+export virtual_machine_root_password=""
+export vsphere_user=""
+export vsphere_password=""
 #
 sudo apt-get update -y
 sudo apt install git -y
@@ -45,16 +45,16 @@ sleep 60
 ```
 ### EKSA Admin machine (image-builder user)
 ```
-export vsphere_server=
-export vsphere_user=
-export vsphere_password=
-export vsphere_datastore=
-export vsphere_datacenter=
-export vsphere_compute_cluster=
-export virtual_machine_root_password=
-export vsphere_templates_folder=
-export vsphere_resource_pool=
-export vsphere_network=
+export vsphere_server="vcenter01.demo.local"
+export vsphere_user=""
+export vsphere_password=""
+export vsphere_datastore="nfs-datastore"
+export vsphere_datacenter=""
+export vsphere_compute_cluster="cluster"
+export virtual_machine_root_password=""
+export vsphere_templates_folder="Templates"
+export vsphere_resource_pool="eksa"
+export vsphere_network="VLAN0-prod-vm-network"
 #
 echo $virtual_machine_root_password | sudo -S ls
 cd /home/image-builder
