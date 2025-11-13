@@ -60,7 +60,7 @@ echo "GOVC_PASSWORD=$vsphere_password; export GOVC_PASSWORD" >> ~/.profile
 echo "GOVC_INSECURE=true; export GOVC_INSECURE" >> ~/.profile
 echo "GOVC_DATASTORE=$vsphere_datastore; export GOVC_DATASTORE" >> ~/.profile
 echo "GOVC_DATACENTER=$vsphere_datacenter; export GOVC_DATACENTER" >> ~/.profile
-echo "EKSA_SKIP_VALIDATE_DEPENDENCIES=true; export EKSA_SKIP_VALIDATE_DEPENDENCIES\" >> ~/.profile
+echo "EKSA_SKIP_VALIDATE_DEPENDENCIES=true; export EKSA_SKIP_VALIDATE_DEPENDENCIES" >> ~/.profile
 git clone https://github.com/thecloudgarage/eks-anywhere.git
 find $HOME/eks-anywhere/ -name "*.sh" -type f -print0 | xargs -0 chmod +x
 cp $HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/vsphere-connection.json $HOME/vsphere-connection.json
