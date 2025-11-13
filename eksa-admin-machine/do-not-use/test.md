@@ -1,3 +1,4 @@
+### EKSA Admin machine (ubuntu user)
 ```
 export virtual_machine_root_password=
 export vsphere_user=
@@ -43,17 +44,18 @@ brew install fluxcd/tap/flux
 sleep 60
 
 ```
-Switch to image-builder user
+### EKSA Admin machine (image-builder user)
 ```
 export vsphere_server=
 export vsphere_user=
 export vsphere_password=
 export vsphere_datastore=
 export vsphere_datacenter=
-vsphere_compute_cluster=
+export vsphere_compute_cluster=
 export virtual_machine_root_password=
-vsphere_templates_folder=
-vsphere_resource_pool=
+export vsphere_templates_folder=
+export vsphere_resource_pool=
+export vsphere_network=
 #
 echo $virtual_machine_root_password | sudo -S ls
 cd /home/image-builder
