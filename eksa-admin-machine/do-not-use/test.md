@@ -50,7 +50,10 @@ export vsphere_user=
 export vsphere_password=
 export vsphere_datastore=
 export vsphere_datacenter=
+vsphere_compute_cluster=
 export virtual_machine_root_password=
+vsphere_templates_folder=
+vsphere_resource_pool=
 #
 echo $virtual_machine_root_password | sudo -S ls
 cd /home/image-builder
@@ -95,4 +98,14 @@ sudo curl -s $IMAGEBUILDER_TARBALL_URI | sudo tar xz ./image-builder
 sudo cp image-builder /usr/local/bin
 #sudo install -m 0755 ./image-builder /usr/local/bin/image-builder
 cd -
+sed -i 's/vsphere_compute_cluster/$vsphere_compute_cluster/g' $HOME/vsphere-connection.json
+sed -i 's/vsphere_datacenter/$vsphere_datacenter/g' $HOME/vsphere-connection.json
+sed -i 's/vsphere_datastore/$vsphere_datastore/g' $HOME/vsphere-connection.json
+sed -i 's/vsphere_templates_folder/$vsphere_templates_folder/g' $HOME/vsphere-connection.json
+sed -i 's/vsphere_network/$vsphere_network/g' $HOME/vsphere-connection.json
+sed -i 's/vsphere_password/$vsphere_password/g' $HOME/vsphere-connection.json
+sed -i 's/vsphere_resource_pool/$vsphere_resource_pool/g' $HOME/vsphere-connection.json
+sed -i 's/vsphere_user/$vsphere_user/g' $HOME/vsphere-connection.json
+sed -i 's/vsphere_server/$vsphere_server/g' $HOME/vsphere-connection.json
+cp $HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/ubuntu_node_template* $HOME/
 ```
