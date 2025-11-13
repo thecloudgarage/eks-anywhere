@@ -24,7 +24,7 @@ curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 echo -e "" | sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
 apt-cache policy docker-ce
 sudo apt install docker-ce -y
-sudo usermod -aG docker ubuntu
+sudo usermod -aG docker $USER
 wget https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
 chmod +x install.sh
 #NOTE HOW WE ARE PASSING AN ENTER FOR THE INTERACTIVE PROMPT THAT THE INSTALL SCRIPT GENERATES TO CONFIRM FOR INSTALLATION
