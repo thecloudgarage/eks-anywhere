@@ -7,4 +7,14 @@ find $HOME/eks-anywhere/ -name "*.sh" -type f -print0 | xargs -0 chmod +x
 cp $HOME/eks-anywhere/cluster-ops/*.sh $HOME/
 sed -i 's/virtual_machine_root_password/$virtual_machine_root_password/g' $HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/eksa-admin-machine-bootstrap-utils.sh
 $HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/eksa-admin-machine-bootstrap-utils.sh
+#
+#
+sleep 60
+echo $virtual_machine_root_password | sudo -S touch temp.txt
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+brew install aws/tap/eks-anywhere
+brew tap hashicorp/tap
+brew install hashicorp/tap/terraform
+brew install argocd
+brew install fluxcd/tap/flux
 ```
