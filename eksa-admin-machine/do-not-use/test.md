@@ -1,9 +1,12 @@
 ### EKSA Admin machine (ubuntu user)
+Export variables
 ```
 export virtual_machine_root_password=""
 export vsphere_user=""
 export vsphere_password=""
-#
+```
+Bootstrap
+```
 sudo apt-get update -y
 sudo apt install git -y
 cd $HOME && git clone https://github.com/thecloudgarage/eks-anywhere.git
@@ -38,12 +41,9 @@ brew tap hashicorp/tap
 brew install hashicorp/tap/terraform
 brew install argocd
 brew install fluxcd/tap/flux
-#
-#
-sleep 60
-
 ```
 ### EKSA Admin machine (image-builder user)
+Export variables
 ```
 export vsphere_server="vcenter01.demo.local"
 export vsphere_user=""
@@ -55,7 +55,9 @@ export virtual_machine_root_password=""
 export vsphere_templates_folder="Templates"
 export vsphere_resource_pool="eksa"
 export vsphere_network="VLAN0-prod-vm-network"
-#
+```
+Bootstrap
+```
 echo $virtual_machine_root_password | sudo -S ls
 cd /home/image-builder
 echo "GOVC_URL=$vsphere_server; export GOVC_URL" >> ~/.profile
