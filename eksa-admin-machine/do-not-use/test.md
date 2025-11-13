@@ -45,6 +45,13 @@ sleep 60
 ```
 Switch to image-builder user
 ```
+export vsphere_server=
+export vsphere_user=
+export vsphere_password=
+export vsphere_datastore=
+export vsphere_datacenter=
+export virtual_machine_root_password=
+#
 echo $virtual_machine_root_password | sudo -S ls
 cd /home/image-builder
 echo "GOVC_URL=$vsphere_server; export GOVC_URL" >> ~/.profile
