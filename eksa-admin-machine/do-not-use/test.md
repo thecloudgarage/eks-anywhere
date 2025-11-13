@@ -1,5 +1,7 @@
 ```
-export virtual_machine_root_password=ubuntu
+export virtual_machine_root_password=
+export vsphere_user=
+export vsphere_password=
 sudo apt-get update -y
 sudo apt-get install git -y
 cd $HOME && git clone https://github.com/thecloudgarage/eks-anywhere.git
@@ -17,4 +19,10 @@ brew tap hashicorp/tap
 brew install hashicorp/tap/terraform
 brew install argocd
 brew install fluxcd/tap/flux
+#
+#
+sleep 60
+sed -i '/^EKSA_VSPHERE_/d' ~/.profile
+echo "EKSA_VSPHERE_USERNAME=$vsphere_user; export EKSA_VSPHERE_USERNAME" >> ~/.profile
+echo "EKSA_VSPHERE_PASSWORD=$vsphere_password; export EKSA_VSPHERE_PASSWORD" >> ~/.profile
 ```
