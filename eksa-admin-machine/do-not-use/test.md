@@ -4,6 +4,8 @@ export virtual_machine_root_password=
 export vsphere_user=
 export vsphere_password=
 #
+sudo apt-get update -y
+sudo apt install git -y
 cd $HOME && git clone https://github.com/thecloudgarage/eks-anywhere.git
 find $HOME/eks-anywhere/ -name "*.sh" -type f -print0 | xargs -0 chmod +x
 cp $HOME/eks-anywhere/cluster-ops/*.sh $HOME/
