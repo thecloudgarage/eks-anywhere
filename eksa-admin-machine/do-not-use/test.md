@@ -153,7 +153,7 @@ spec:
   controlPlaneConfiguration:
     count: 2
     endpoint:
-      host: "api-server-ip"
+      host: "192.168.1.100"
     machineGroupRef:
       kind: VSphereMachineConfig
       name: workload-cluster-name-cp
@@ -240,7 +240,7 @@ spec:
   memoryMiB: 8192
   numCPUs: 4
   osFamily: ubuntu
-  template: "ubuntu-2004-kube-v1.21"
+  template: "ubuntu-2004-kube-v1.31"
   resourcePool: "eksa"
   users:
   - name: capv
