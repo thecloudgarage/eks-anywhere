@@ -135,3 +135,116 @@ sed -i "s/vsphere_user/$vsphere_user/g" $HOME/vsphere-connection.json
 sed -i "s/vsphere_server/$vsphere_server/g" $HOME/vsphere-connection.json
 cp $HOME/eks-anywhere/eksa-admin-machine/terraform/scripts/ubuntu_node_template* $HOME/
 ```
+### Sample cluster template
+```
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: Cluster
+metadata:
+ name: workload-cluster-name
+spec:
+  clusterNetwork:
+    cni: cilium
+    pods:
+      cidrBlocks:
+      - 172.16.0.0/16
+    services:
+      cidrBlocks:
+      - 10.96.0.0/12
+  controlPlaneConfiguration:
+    count: 2
+    endpoint:
+      host: "api-server-ip"
+    machineGroupRef:
+      kind: VSphereMachineConfig
+      name: workload-cluster-name-cp
+  datacenterRef:
+    kind: VSphereDatacenterConfig
+    name: workload-cluster-name-dcconfig
+  externalEtcdConfiguration:
+    count: 3
+    machineGroupRef:
+      kind: VSphereMachineConfig
+      name: workload-cluster-name-etcd
+  kubernetesVersion: "1.21"
+  managementCluster:
+    name: management-cluster-name
+  workerNodeGroupConfigurations:
+  - count: 2
+    machineGroupRef:
+      kind: VSphereMachineConfig
+      name: workload-cluster-name-wk
+    name: md-0
+
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: VSphereDatacenterConfig
+metadata:
+  name: workload-cluster-name-dcconfig
+spec:
+  datacenter: "democenter"
+  insecure: true
+  network: "VLAN0-prod-vm-network"
+  server: "vcenter01.demo.local"
+  thumbprint: "F7:A3:92:55:2D:73:B1:BA:1C:77:A8:AC:A3:AD:F3:62:8A:E0:53:CE"
+
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: VSphereMachineConfig
+metadata:
+  name: workload-cluster-name-cp
+spec:
+  datastore: "nfs-datastore"
+#  diskGiB: 25
+#  cloneMode: "fullClone"
+  folder: "eksa"
+  memoryMiB: 8192
+  numCPUs: 4
+  osFamily: ubuntu
+  template: "ubuntu-2004-kube-v1.21"
+  resourcePool: "eksa"
+  users:
+  - name: capv
+    sshAuthorizedKeys:
+    - ""
+
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: VSphereMachineConfig
+metadata:
+  name: workload-cluster-name-wk
+spec:
+  datastore: "nfs-datastore"
+#  diskGiB: 25
+#  cloneMode: "fullClone"
+  folder: "eksa"
+  memoryMiB: 8192
+  numCPUs: 4
+  osFamily: ubuntu
+  template: "ubuntu-2004-kube-v1.21"
+  resourcePool: "eksa"
+  users:
+  - name: capv
+    sshAuthorizedKeys:
+    - ""
+
+---
+apiVersion: anywhere.eks.amazonaws.com/v1alpha1
+kind: VSphereMachineConfig
+metadata:
+  name: workload-cluster-name-etcd
+spec:
+  datastore: "nfs-datastore"
+#  diskGiB: 25
+#  cloneMode: "fullClone"
+  folder: "eksa"
+  memoryMiB: 8192
+  numCPUs: 4
+  osFamily: ubuntu
+  template: "ubuntu-2004-kube-v1.21"
+  resourcePool: "eksa"
+  users:
+  - name: capv
+    sshAuthorizedKeys:
+    - ""
+
+---
