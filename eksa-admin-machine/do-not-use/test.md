@@ -1,9 +1,16 @@
 ### EKSA Admin machine (ubuntu user)
 Export variables
 ```
-export virtual_machine_root_password=""
+export vsphere_server="vcenter01.demo.local"
 export vsphere_user=""
 export vsphere_password=""
+export vsphere_datastore="nfs-datastore"
+export vsphere_datacenter=""
+export vsphere_compute_cluster="cluster"
+export virtual_machine_root_password=""
+export vsphere_templates_folder="Templates"
+export vsphere_resource_pool="eksa"
+export vsphere_network="VLAN0-prod-vm-network"
 ```
 Bootstrap
 ```
@@ -19,6 +26,16 @@ cp $HOME/eks-anywhere/cluster-ops/*.sh $HOME/
 sed -i '/^EKSA_VSPHERE_/d' ~/.profile
 echo "EKSA_VSPHERE_USERNAME=$vsphere_user; export EKSA_VSPHERE_USERNAME" >> ~/.profile
 echo "EKSA_VSPHERE_PASSWORD=$vsphere_password; export EKSA_VSPHERE_PASSWORD" >> ~/.profile
+#
+echo "vsphere_server=$vsphere_server; export vsphere_server" >> ~/.profile
+echo "vsphere_user=$vsphere_user; export vsphere_user" >> ~/.profile
+echo "vsphere_password=$vsphere_password; export vsphere_password" >> ~/.profile
+echo "vsphere_datacenter=$vsphere_datacenter; export vsphere_datacenter" >> ~/.profile
+echo "vsphere_compute_cluster=$vsphere_compute_cluster; export vsphere_compute_cluster" >> ~/.profile
+echo "vsphere_datastore=$vsphere_datastore; export vsphere_datastore" >> ~/.profile
+echo "vsphere_network=$vsphere_server; export vsphere_network" >> ~/.profile
+echo "vsphere_templates_folder=$vsphere_templates_folder; export vsphere_templates_folder" >> ~/.profile
+echo "vsphere_resource_pool=$vsphere_resource_pool; export vsphere_resource_pool" >> ~/.profile
 #
 sudo adduser --gecos "" --disabled-password image-builder
 sudo chpasswd <<<image-builder:$virtual_machine_root_password
@@ -58,6 +75,7 @@ export virtual_machine_root_password=""
 export vsphere_templates_folder="Templates"
 export vsphere_resource_pool="eksa"
 export vsphere_network="VLAN0-prod-vm-network"
+#
 ```
 Bootstrap
 ```
