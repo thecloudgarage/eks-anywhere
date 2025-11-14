@@ -9,6 +9,9 @@ Bootstrap
 ```
 sudo apt-get update -y
 sudo apt install git -y
+sudo sysctl fs.inotify.max_user_watches=524288
+sudo sysctl fs.inotify.max_user_instances=512
+#
 cd $HOME && git clone https://github.com/thecloudgarage/eks-anywhere.git
 find $HOME/eks-anywhere/ -name "*.sh" -type f -print0 | xargs -0 chmod +x
 cp $HOME/eks-anywhere/cluster-ops/*.sh $HOME/
