@@ -32,9 +32,9 @@ cd csi-powerstore
 git clone --quiet -c advice.detachedHead=false -b csi-powerstore-$csiReleaseNumber https://github.com/dell/helm-charts
 #
 #MODIFY VOLUME PREFIXES
-sed -i "s/^volumeNamePrefix:.*/volumeNamePrefix:\ $clusterName/g" helm-charts/charts/csi-powerstore/values.yaml
+sed -i "s/volumeNamePrefix:.*/volumeNamePrefix:\ $clusterName/g" helm-charts/charts/csi-powerstore/values.yaml
 sed -i "s/snapNamePrefix: snapshot/snapNamePrefix: $clusterName-snap/g" helm-charts/charts/csi-powerstore/values.yaml
-sed -i "s/csi-node/eksa-node/g"' helm-charts/charts/csi-powerstore/values.yaml
+sed -i "s/csi-node/eksa-node/g" helm-charts/charts/csi-powerstore/values.yaml
 #
 #MODIFY K8S VERSION IN THE HELM CHART TO CUSTOM VALUE USED BY EKS DISTRO
 sed -i "s/^kubeVersion.*/kubeVersion: \"${eksdistroversion}\"/g" helm-charts/charts/csi-powerstore/Chart.yaml
