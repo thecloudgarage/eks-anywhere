@@ -58,6 +58,7 @@ helm install powerstore -n csi-powerstore csi-powerstore/ --values csi-powerstor
 #
 #CREATE STORAGE CLASS FOR POWERSCALE CSI
 wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/refs/heads/main/powerstore/powerstore-ext4-iscsi-topology-storage-class.yaml
+wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/refs/heads/main/powerstore/powerstore-ext4-iscsi-storage-class.yaml
 wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/refs/heads/main/powerstore/powerstore-ext4-iscsi-snap-class.yaml
 sed -i "s/Unique/$globalIdOfPowerStoreArray/g" powerstore-ext4-iscsi-topology-storage-class.yaml
 kubectl create -f powerstore-ext4-iscsi-topology-storage-class.yaml
