@@ -41,7 +41,7 @@ sed -i "s/^kubeVersion.*/kubeVersion: \"${eksdistroversion}\"/g" helm-charts/cha
 #
 #PREPARE FOR POWERSTORE CSI INSTALLATION
 kubectl create namespace csi-powerstore
-wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/main/powerscale/powerstore-creds.yaml
+wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/refs/heads/main/powerstore/powerstore-secret.yaml
 #
 #BUILD CREDS FILE FOR POWERSCALE CSI
 sed -i "s/powerstore_endpoint/$ipOrFqdnOfPowerStoreArray/g" powerstore-creds.yaml
