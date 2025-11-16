@@ -45,7 +45,7 @@ arrays:
     #   None: No block protocol can be used
     #   auto: FC, iSCSI or NVMe/TCP protocol will be used
     # Default Value: None
-    blockProtocol: "auto"
+    blockProtocol: "ISCSI"
 
     # nasName: what NAS should be used for NFS volumes
     # Allowed Values: string - (name of NAS server)
