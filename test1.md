@@ -1,3 +1,4 @@
+echo -e "iface.transport_name = tcp\niface.net_ifacename = eth0" | sudo tee /etc/iscsi/ifaces/iface0
 sudo vi /etc/sysconfig/network/ifcfg-eth0
 
 DEVICE=eth0
