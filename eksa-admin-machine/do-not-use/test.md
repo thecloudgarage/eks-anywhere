@@ -341,5 +341,5 @@ spec:
             name: hello-world
             port:
               number: 80
-EOF 
+EOF
 ```
