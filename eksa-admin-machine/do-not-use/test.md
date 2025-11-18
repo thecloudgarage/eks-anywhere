@@ -250,6 +250,7 @@ spec:
     - ""
 
 ---
+```
 Install MetalLB
 ```
 helm repo add metallb https://metallb.github.io/metallb
