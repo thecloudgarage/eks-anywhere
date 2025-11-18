@@ -250,3 +250,95 @@ spec:
     - ""
 
 ---
+Install MetalLB
+```
+helm repo add metallb https://metallb.github.io/metallb
+helm install metallb metallb/metallb --wait --timeout 15m --namespace metallb-system --create-namespace
+```
+Configure MetalLB
+```
+cat <<EOF | kubectl apply -f -
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: first-pool
+  namespace: metallb-system
+spec:
+  addresses:
+  - 192.168.1.200-192.168.1.201
+---
+apiVersion: metallb.io/v1beta1
+kind: L2Advertisement
+metadata:
+  name: example
+  namespace: metallb-system
+EOF
+```
+NGINX Ingress Controller
+```
+kubectl apply -f https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/refs/heads/main/ingress-controllers/nginx-ingress-controller.yaml
+```
+Sample Ingress Enabled App
+```
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: hello-world
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: hello-world
+  name: hello-world
+  namespace: hello-world
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: hello-world
+  template:
+    metadata:
+      labels:
+        app: hello-world
+    spec:
+      containers:
+#      - image: gcr.io/google-samples/node-hello:1.0
+      - image: us-docker.pkg.dev/google-samples/containers/gke/hello-app:1.0
+        name: hello-world
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-world
+  namespace: hello-world
+spec:
+  selector:
+    app: hello-world
+  ports:
+    - port: 80
+      targetPort: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginx-ingress
+  namespace: hello-world
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - pathType: Prefix
+        path: "/hello-world"
+        backend:
+          service:
+            name: hello-world
+            port:
+              number: 80
+EOF 
+```
