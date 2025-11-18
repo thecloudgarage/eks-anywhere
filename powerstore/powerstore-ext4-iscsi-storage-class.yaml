@@ -62,14 +62,4 @@ allowVolumeExpansion: true
 #   until a Pod using the PersistentVolumeClaim is created
 # Optional: true
 # Default value: Immediate
-volumeBindingMode: WaitForFirstConsumer
-
-# allowedTopologies: helps scheduling pods on worker nodes which match all of below expressions.
-# replace "-iscsi" with "-fc", "-nvmetcp", "-nvmefc" or "-nfs" at the end to use FC, NVMeTCP, NVMeFC, or NFS enabled hosts
-# replace "12.34.56.78" with PowerStore endpoint IP
-# Optional: true
-allowedTopologies:
-  - matchLabelExpressions: 
-      - key: "group"
-        values:
-          - "groupValue"
+volumeBindingMode: Immediate
