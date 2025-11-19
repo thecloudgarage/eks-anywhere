@@ -31,10 +31,6 @@ mkdir -p csi-powerstore
 cd csi-powerstore
 git clone --quiet -c advice.detachedHead=false -b csi-powerstore-$csiReleaseNumber https://github.com/dell/helm-charts
 #
-#MODIFY VOLUME PREFIXES
-sed -i "s/volumeNamePrefix:.*/volumeNamePrefix:\ $clusterName/g" helm-charts/charts/csi-powerstore/values.yaml
-sed -i "s/snapNamePrefix:.*/snapNamePrefix: $clusterName-snap/g" helm-charts/charts/csi-powerstore/values.yaml
-#
 #MODIFY K8S VERSION IN THE HELM CHART TO CUSTOM VALUE USED BY EKS DISTRO
 sed -i "s/^kubeVersion.*/kubeVersion: \"${eksdistroversion}\"/g" helm-charts/charts/csi-powerstore/Chart.yaml
 #
@@ -56,7 +52,6 @@ cd helm-charts/charts
 helm install powerstore -n csi-powerstore csi-powerstore/ --values csi-powerstore/values.yaml
 #
 #CREATE STORAGE CLASS FOR POWERSCALE CSI
-wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/refs/heads/main/powerstore/powerstore-ext4-iscsi-topology-storage-class.yaml
 wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/refs/heads/main/powerstore/powerstore-ext4-iscsi-storage-class.yaml
 wget https://raw.githubusercontent.com/thecloudgarage/eks-anywhere/refs/heads/main/powerstore/powerstore-ext4-iscsi-snap-class.yaml
 sed -i "s/Unique/$globalIdOfPowerStoreArray/g" powerstore-ext4-iscsi-topology-storage-class.yaml
