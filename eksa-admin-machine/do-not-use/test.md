@@ -332,6 +332,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/ssl-passthrough: "false" # Our controller is enabled with SSL Passthrough, so we are disabling it on the ingress resource
 spec:
+  ingressClassName: nginx
   rules:
   - http:
       paths:
